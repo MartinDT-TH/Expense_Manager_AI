@@ -1298,7 +1298,7 @@ class _ExportOptionButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final scale = (MediaQuery.of(context).size.width / 390).clamp(0.85, 1.0);
     return InkWell(
-      onTap: onTap,
+      onTap: isPremium ? () => _showPremiumRequiredDialog(context) : onTap,
       borderRadius: BorderRadius.circular(16),
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 18 * scale),
@@ -1342,6 +1342,127 @@ class _ExportOptionButton extends StatelessWidget {
             ],
           ],
         ),
+      ),
+    );
+  }
+
+  void _showPremiumRequiredDialog(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final scale = (MediaQuery.of(context).size.width / 390).clamp(0.85, 1.0);
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: isDark ? const Color(0xFF1E1E1E) : Colors.white,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: const Color(0xFFE17055).withOpacity(0.1),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: const Icon(
+                Icons.workspace_premium,
+                color: Color(0xFFE17055),
+                size: 24,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Text(
+              'Premium Feature',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: isDark ? Colors.white : const Color(0xFF2D3436),
+              ),
+            ),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Export your reports in ${label.toUpperCase()} format to easily share and analyze your financial data.',
+              style: TextStyle(
+                color: isDark ? Colors.grey[400] : Colors.grey[700],
+                height: 1.5,
+              ),
+            ),
+            const SizedBox(height: 16),
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: isDark ? const Color(0xFF2A2A2A) : Colors.grey[100],
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Column(
+                children: [
+                  _buildPremiumFeatureRow(Icons.download_rounded, 'Export in ${label} format', isDark),
+                  _buildPremiumFeatureRow(Icons.share_rounded, 'Share with others', isDark),
+                  _buildPremiumFeatureRow(Icons.cloud_download_rounded, 'Save to cloud', isDark),
+                ],
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(
+              'Maybe Later',
+              style: TextStyle(color: Colors.grey[600]),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Premium upgrade coming soon!'),
+                  backgroundColor: Color(0xFF6C5CE7),
+                ),
+              );
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFFE17055),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(Icons.workspace_premium, color: Colors.white, size: 16),
+                SizedBox(width: 6 * scale),
+                const Text(
+                  'Upgrade Now',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPremiumFeatureRow(IconData icon, String text, bool isDark) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        children: [
+          Icon(icon, size: 18, color: const Color(0xFFE17055)),
+          const SizedBox(width: 10),
+          Text(
+            text,
+            style: TextStyle(
+              fontSize: 14,
+              color: isDark ? Colors.grey[300] : Colors.grey[700],
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -25,7 +25,7 @@ class CategoryRepositoryImpl implements CategoryRepository {
   Future<Either<Failure, List<Category>>> getCategories() async {
     try {
       // When connected, prefer remote to get correct GUIDs
-      if (await networkInfo.isConnected) {
+      if (networkInfo.isConnected) {
         try {
           final remoteCategories = await remoteDataSource.getCategories();
           // Update local with remote data (correct IDs)
@@ -52,7 +52,7 @@ class CategoryRepositoryImpl implements CategoryRepository {
   Future<Either<Failure, List<Category>>> getExpenseCategories() async {
     try {
       // When connected, prefer remote to get correct GUIDs
-      if (await networkInfo.isConnected) {
+      if (networkInfo.isConnected) {
         try {
           final remoteCategories = await remoteDataSource.getCategoriesByType(CategoryType.expense);
           await localDataSource.upsertCategories(remoteCategories);
@@ -76,7 +76,7 @@ class CategoryRepositoryImpl implements CategoryRepository {
   Future<Either<Failure, List<Category>>> getIncomeCategories() async {
     try {
       // When connected, prefer remote to get correct GUIDs
-      if (await networkInfo.isConnected) {
+      if (networkInfo.isConnected) {
         try {
           final remoteCategories = await remoteDataSource.getCategoriesByType(CategoryType.income);
           await localDataSource.upsertCategories(remoteCategories);
@@ -129,7 +129,7 @@ class CategoryRepositoryImpl implements CategoryRepository {
       await localDataSource.insertCategory(newCategory);
 
       // Try to sync to server
-      if (await networkInfo.isConnected) {
+      if (networkInfo.isConnected) {
         try {
           final remoteCategory = await remoteDataSource.createCategory(newCategory);
           await localDataSource.markAsSynced(remoteCategory.id);
@@ -164,7 +164,7 @@ class CategoryRepositoryImpl implements CategoryRepository {
       await localDataSource.updateCategory(updatedCategory);
 
       // Try to sync to server
-      if (await networkInfo.isConnected) {
+      if (networkInfo.isConnected) {
         try {
           final remoteCategory = await remoteDataSource.updateCategory(updatedCategory);
           await localDataSource.markAsSynced(remoteCategory.id);
@@ -195,7 +195,7 @@ class CategoryRepositoryImpl implements CategoryRepository {
       await localDataSource.deleteCategory(id);
 
       // Try to sync to server
-      if (await networkInfo.isConnected) {
+      if (networkInfo.isConnected) {
         try {
           await remoteDataSource.deleteCategory(id);
           await localDataSource.markAsSynced(id);
@@ -215,7 +215,7 @@ class CategoryRepositoryImpl implements CategoryRepository {
   @override
   Future<Either<Failure, void>> syncCategories() async {
     try {
-      if (!await networkInfo.isConnected) {
+      if (!networkInfo.isConnected) {
         return const Left(NetworkFailure());
       }
 

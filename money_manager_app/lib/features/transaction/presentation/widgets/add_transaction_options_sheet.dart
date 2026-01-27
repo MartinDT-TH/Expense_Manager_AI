@@ -5,6 +5,8 @@ import '../../../../core/di/injection_container.dart';
 import '../../../../core/services/cloudinary_service.dart';
 import '../../../../core/services/image_picker_service.dart';
 import '../../../../core/services/ocr_service.dart';
+import '../../../auth/presentation/bloc/auth_bloc.dart';
+import '../../../auth/presentation/bloc/auth_state.dart';
 import '../screens/add_transaction_screen.dart';
 import '../bloc/transaction_bloc.dart';
 import '../bloc/transaction_event.dart';
@@ -49,6 +51,9 @@ class _AddTransactionOptionsSheetState extends State<AddTransactionOptionsSheet>
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final authState = context.watch<AuthBloc>().state;
+    final isPremiumUser = authState is Authenticated && authState.user.isPremium;
+    final isFreemiumUser = !isPremiumUser;
     final scale = (MediaQuery.of(context).size.width / 390).clamp(0.85, 1.0);
     return Container(
       decoration: BoxDecoration(
@@ -107,6 +112,7 @@ class _AddTransactionOptionsSheetState extends State<AddTransactionOptionsSheet>
                   badgeColor: const Color(0xFFE17055),
                   badgeIcon: Icons.workspace_premium,
                   onTap: _showImageSourcePicker,
+                  isLocked: isFreemiumUser,
                 ),
                 SizedBox(height: 16 * scale),
 
@@ -141,6 +147,12 @@ class _AddTransactionOptionsSheetState extends State<AddTransactionOptionsSheet>
   }
 
   void _showImageSourcePicker() {
+    final authState = context.read<AuthBloc>().state;
+    final isPremiumUser = authState is Authenticated && authState.user.isPremium;
+    if (!isPremiumUser) {
+      _showPremiumRequiredDialog();
+      return;
+    }
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final scale = (MediaQuery.of(context).size.width / 390).clamp(0.85, 1.0);
     showModalBottomSheet(
@@ -357,132 +369,135 @@ class _AddTransactionOptionsSheetState extends State<AddTransactionOptionsSheet>
     String? badgeText,
     Color? badgeColor,
     IconData? badgeIcon,
+    bool isLocked = false,
   }) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final scale = (MediaQuery.of(context).size.width / 390).clamp(0.85, 1.0);
-    
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: EdgeInsets.all(18 * scale),
-        decoration: BoxDecoration(
-          color: isDark ? const Color(0xFF2A2A2A) : AddTransactionOptionsSheet.creamBackground,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: isDark 
-                ? iconColor.withOpacity(0.3) 
-                : iconColor.withOpacity(0.2),
-            width: 1.5,
-          ),
-        ),
-        child: Row(
-          children: [
-            // Icon Container
-            Container(
-              width: 52 * scale,
-              height: 52 * scale,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    iconColor.withOpacity(0.15),
-                    iconColor.withOpacity(0.05),
-                  ],
-                ),
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Icon(
-                icon,
-                color: iconColor,
-                size: 26 * scale,
-              ),
-            ),
-            SizedBox(width: 14 * scale),
 
-            // Text Content
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Text(
-                        title,
-                        style: TextStyle(
-                          fontSize: 15 * scale,
-                          fontWeight: FontWeight.w600,
-                          color: isDark ? Colors.white : Colors.black87,
-                        ),
-                      ),
-                      if (badgeText != null) ...[
-                        SizedBox(width: 8 * scale),
-                        Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 8 * scale,
-                            vertical: 3 * scale,
-                          ),
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: [
-                                badgeColor ?? Colors.orange,
-                                (badgeColor ?? Colors.orange).withOpacity(0.8),
-                              ],
-                            ),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(
-                                badgeIcon ?? Icons.auto_awesome,
-                                size: 10 * scale,
-                                color: Colors.white,
-                              ),
-                              SizedBox(width: 4 * scale),
-                              Text(
-                                badgeText,
-                                style: TextStyle(
-                                  fontSize: 10 * scale,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ],
-                  ),
-                  SizedBox(height: 4 * scale),
-                  Text(
-                    subtitle,
-                    style: TextStyle(
-                      fontSize: 12 * scale,
-                      color: isDark ? Colors.grey[400] : Colors.grey[600],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            // Arrow
-            Container(
-              width: 30 * scale,
-              height: 30 * scale,
-              decoration: BoxDecoration(
-                color: iconColor.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Icon(
-                Icons.arrow_forward_ios,
-                size: 12 * scale,
-                color: iconColor,
-              ),
-            ),
-          ],
+    final card = Container(
+      padding: EdgeInsets.all(18 * scale),
+      decoration: BoxDecoration(
+        color: isDark ? const Color(0xFF2A2A2A) : AddTransactionOptionsSheet.creamBackground,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: isDark
+              ? iconColor.withOpacity(0.3)
+              : iconColor.withOpacity(0.2),
+          width: 1.5,
         ),
       ),
+      child: Row(
+        children: [
+          // Icon Container
+          Container(
+            width: 52 * scale,
+            height: 52 * scale,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  iconColor.withOpacity(0.15),
+                  iconColor.withOpacity(0.05),
+                ],
+              ),
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Icon(
+              icon,
+              color: iconColor,
+              size: 26 * scale,
+            ),
+          ),
+          SizedBox(width: 14 * scale),
+
+          // Text Content
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Text(
+                      title,
+                      style: TextStyle(
+                        fontSize: 15 * scale,
+                        fontWeight: FontWeight.w600,
+                        color: isDark ? Colors.white : Colors.black87,
+                      ),
+                    ),
+                    if (badgeText != null) ...[
+                      SizedBox(width: 8 * scale),
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 8 * scale,
+                          vertical: 3 * scale,
+                        ),
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              badgeColor ?? Colors.orange,
+                              (badgeColor ?? Colors.orange).withOpacity(0.8),
+                            ],
+                          ),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              badgeIcon ?? Icons.auto_awesome,
+                              size: 10 * scale,
+                              color: Colors.white,
+                            ),
+                            SizedBox(width: 4 * scale),
+                            Text(
+                              badgeText,
+                              style: TextStyle(
+                                fontSize: 10 * scale,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+                SizedBox(height: 4 * scale),
+                Text(
+                  subtitle,
+                  style: TextStyle(
+                    fontSize: 12 * scale,
+                    color: isDark ? Colors.grey[400] : Colors.grey[600],
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          // Arrow
+          Container(
+            width: 30 * scale,
+            height: 30 * scale,
+            decoration: BoxDecoration(
+              color: iconColor.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Icon(
+              Icons.arrow_forward_ios,
+              size: 12 * scale,
+              color: iconColor,
+            ),
+          ),
+        ],
+      ),
+    );
+
+    return GestureDetector(
+      onTap: isLocked ? _showPremiumRequiredDialog : onTap,
+      child: card,
     );
   }
 

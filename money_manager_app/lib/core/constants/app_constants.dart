@@ -1,9 +1,8 @@
 class AppConstants {
   AppConstants._();
 
-  // API
-  // Đổi IP này thành IP máy tính của bạn khi chạy trên thiết bị thật
-  static const String pcIpAddress = '192.168.100.116';
+  // API   // 10.12.16.73    192.168.100.116
+  static const String pcIpAddress = '192.168.100.116'; // Đổi IP này thành IP máy tính của bạn khi chạy trên thiết bị thật
   static const String baseUrl = 'http://$pcIpAddress:5166/api'; // Real device
   static const String baseUrlEmulator = 'http://10.0.2.2:5166/api'; // Android emulator
   static const String baseUrlIOS = 'http://localhost:5166/api';

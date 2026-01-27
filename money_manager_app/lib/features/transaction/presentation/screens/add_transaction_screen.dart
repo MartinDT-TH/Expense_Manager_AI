@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -17,6 +18,8 @@ import '../../../group/domain/entities/group.dart';
 import '../../../group/presentation/bloc/group_bloc.dart';
 import '../../../group/presentation/bloc/group_event.dart';
 import '../../../group/presentation/bloc/group_state.dart';
+import '../../../auth/presentation/bloc/auth_bloc.dart';
+import '../../../auth/presentation/bloc/auth_state.dart';
 import '../../../wallet/domain/entities/wallet.dart';
 import '../../../wallet/presentation/bloc/wallet_bloc.dart';
 import '../../../wallet/presentation/bloc/wallet_event.dart';
@@ -1213,6 +1216,9 @@ class _AddTransactionViewState extends State<_AddTransactionView> {
 
   void _showImageSourcePicker() {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final authState = context.read<AuthBloc>().state;
+    final isPremiumUser = authState is Authenticated && authState.user.isPremium;
+    final isFreemiumUser = !isPremiumUser;
     final scale = (MediaQuery.of(context).size.width / 390).clamp(0.85, 1.0);
     showModalBottomSheet(
       context: context,
@@ -1321,60 +1327,81 @@ class _AddTransactionViewState extends State<_AddTransactionView> {
     required Color color,
     required VoidCallback onTap,
     String? badgeText,
+    bool isLocked = false,
   }) {
     final scale = (MediaQuery.of(context).size.width / 390).clamp(0.85, 1.0);
-    return GestureDetector(
-      onTap: onTap,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Stack(
-            clipBehavior: Clip.none,
-            children: [
-              Container(
-                padding: EdgeInsets.all(14 * scale),
-                decoration: BoxDecoration(
-                  color: color.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Icon(icon, color: color, size: 28 * scale),
+    final button = Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Stack(
+          clipBehavior: Clip.none,
+          children: [
+            Container(
+              padding: EdgeInsets.all(14 * scale),
+              decoration: BoxDecoration(
+                color: color.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(16),
               ),
-              if (badgeText != null)
-                Positioned(
-                  right: -4,
-                  top: -6,
-                  child: Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 6 * scale,
-                      vertical: 2 * scale,
+              child: Icon(icon, color: color, size: 28 * scale),
+            ),
+            if (badgeText != null)
+              Positioned(
+                right: -4,
+                top: -6,
+                child: Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 6 * scale,
+                    vertical: 2 * scale,
+                  ),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFFFC107),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Text(
+                    badgeText,
+                    style: TextStyle(
+                      fontSize: 9 * scale,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.black87,
                     ),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFFFC107),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Text(
-                      badgeText,
-                      style: TextStyle(
-                        fontSize: 9 * scale,
-                        fontWeight: FontWeight.w700,
-                        color: Colors.black87,
+                  ),
+                ),
+              ),
+            if (isLocked)
+              Positioned.fill(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(16),
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
+                    child: Container(
+                      color: Colors.black.withOpacity(0.35),
+                      alignment: Alignment.center,
+                      child: const Icon(
+                        Icons.lock,
+                        size: 20,
+                        color: Colors.white,
                       ),
                     ),
                   ),
                 ),
-            ],
+              ),
+          ],
+        ),
+        SizedBox(height: 6 * scale),
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 12 * scale,
+            fontWeight: FontWeight.w500,
+            color: color,
           ),
-          SizedBox(height: 6 * scale),
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: 12 * scale,
-              fontWeight: FontWeight.w500,
-              color: color,
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
+    );
+
+    return GestureDetector(
+      onTap: isLocked ? null : onTap,
+      child: button,
     );
   }
 

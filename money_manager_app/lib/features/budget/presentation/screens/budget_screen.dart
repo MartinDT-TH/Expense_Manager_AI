@@ -370,7 +370,7 @@ class _BudgetScreenContentState extends State<_BudgetScreenContent> {
                                     _isEditing = true;
                                   });
                                 },
-                                activeColor: const Color(0xFF6C5CE7),
+                                activeThumbColor: const Color(0xFF6C5CE7),
                               ),
                             ],
                           ),
