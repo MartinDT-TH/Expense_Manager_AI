@@ -4,6 +4,9 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:intl/intl.dart';
 import '../../../../core/di/injection_container.dart';
 import '../../../../core/services/file_service.dart';
+import '../../../../core/utils/top_alert.dart';
+import '../../../auth/presentation/bloc/auth_bloc.dart';
+import '../../../auth/presentation/bloc/auth_state.dart';
 import '../../domain/entities/report_data.dart';
 import '../bloc/report_bloc.dart';
 import '../bloc/report_event.dart';
@@ -122,7 +125,13 @@ class _StatisticsContentState extends State<_StatisticsContent>
         listener: (context, state) async {
           if (state is ReportExported) {
             final result = state.result;
-            if (result.base64Content != null && result.base64Content!.isNotEmpty) {
+            final defaultExt = _defaultExtensionForFormat(result.format);
+            final hasBase64 =
+                result.base64Content != null && result.base64Content!.isNotEmpty;
+            final hasUrl =
+                result.downloadUrl != null && result.downloadUrl!.isNotEmpty;
+
+            if (hasBase64 || hasUrl) {
               try {
                 // Show loading dialog
                 showDialog(
@@ -134,10 +143,17 @@ class _StatisticsContentState extends State<_StatisticsContent>
                 );
 
                 // Save and get file path
-                final filePath = await FileService().saveFileFromBase64(
-                  base64Content: result.base64Content!,
-                  fileName: result.fileName,
-                );
+                final filePath = hasBase64
+                    ? await FileService().saveFileFromBase64(
+                        base64Content: result.base64Content!,
+                        fileName: result.fileName,
+                        defaultExtension: defaultExt,
+                      )
+                    : await FileService().saveFileFromUrl(
+                        url: result.downloadUrl!,
+                        fileName: result.fileName,
+                        defaultExtension: defaultExt,
+                      );
 
                 // Close loading dialog
                 if (context.mounted) {
@@ -219,28 +235,28 @@ class _StatisticsContentState extends State<_StatisticsContent>
                   Navigator.of(context).pop();
                 }
                 if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Lỗi lưu file: $e'),
-                      backgroundColor: Colors.red,
-                    ),
+                  TopAlert.show(
+                    context,
+                    message: 'Lỗi lưu file: $e',
+                    backgroundColor: Colors.red,
+                    icon: Icons.error_outline,
                   );
                 }
               }
             } else {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Không có dữ liệu để xuất'),
-                  backgroundColor: Colors.orange,
-                ),
+              TopAlert.show(
+                context,
+                message: 'Không có dữ liệu để xuất',
+                backgroundColor: Colors.orange,
+                icon: Icons.warning_amber_rounded,
               );
             }
           } else if (state is ReportExportError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text('Export failed: ${state.message}'),
-                backgroundColor: Colors.red,
-              ),
+            TopAlert.show(
+              context,
+              message: 'Export failed: ${state.message}',
+              backgroundColor: Colors.red,
+              icon: Icons.error_outline,
             );
           }
         },
@@ -1045,12 +1061,15 @@ class _StatisticsContentState extends State<_StatisticsContent>
 
   void _showExportDialog(BuildContext context, ReportLoaded state) {
     final reportBloc = context.read<ReportBloc>();
+    final authState = context.read<AuthBloc>().state;
+    final userIsPremium = authState is Authenticated && authState.user.isPremium;
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
       builder: (bottomSheetContext) => _ExportBottomSheet(
         startDate: state.startDate,
         endDate: state.endDate,
+        userIsPremium: userIsPremium,
         onExport: (format) {
           reportBloc.add(ExportReport(
                 startDate: state.startDate,
@@ -1083,6 +1102,13 @@ class _StatisticsContentState extends State<_StatisticsContent>
 
   String _formatDateLabel(DateTime date) {
     return DateFormat('dd/MM').format(date);
+  }
+
+  String? _defaultExtensionForFormat(String format) {
+    final lower = format.toLowerCase();
+    if (lower.contains('pdf')) return 'pdf';
+    if (lower.contains('excel') || lower.contains('xls')) return 'xlsx';
+    return null;
   }
 }
 
@@ -1170,11 +1196,13 @@ class _SummaryCard extends StatelessWidget {
 class _ExportBottomSheet extends StatelessWidget {
   final DateTime startDate;
   final DateTime endDate;
+  final bool userIsPremium;
   final Function(String) onExport;
 
   const _ExportBottomSheet({
     required this.startDate,
     required this.endDate,
+    required this.userIsPremium,
     required this.onExport,
   });
 
@@ -1253,7 +1281,8 @@ class _ExportBottomSheet extends StatelessWidget {
                     format: 'excel',
                     onTap: () => onExport('excel'),
                     color: const Color(0xFF217346),
-                    isPremium: true,
+                    requiresPremium: true,
+                    userIsPremium: userIsPremium,
                   ),
                 ),
                 SizedBox(width: 12 * scale),
@@ -1264,7 +1293,8 @@ class _ExportBottomSheet extends StatelessWidget {
                     format: 'pdf',
                     onTap: () => onExport('pdf'),
                     color: const Color(0xFFE53935),
-                    isPremium: true,
+                    requiresPremium: true,
+                    userIsPremium: userIsPremium,
                   ),
                 ),
               ],
@@ -1283,7 +1313,8 @@ class _ExportOptionButton extends StatelessWidget {
   final String format;
   final VoidCallback onTap;
   final Color color;
-  final bool isPremium;
+  final bool requiresPremium;
+  final bool userIsPremium;
 
   const _ExportOptionButton({
     required this.icon,
@@ -1291,14 +1322,17 @@ class _ExportOptionButton extends StatelessWidget {
     required this.format,
     required this.onTap,
     required this.color,
-    required this.isPremium,
+    required this.requiresPremium,
+    required this.userIsPremium,
   });
 
   @override
   Widget build(BuildContext context) {
     final scale = (MediaQuery.of(context).size.width / 390).clamp(0.85, 1.0);
     return InkWell(
-      onTap: isPremium ? () => _showPremiumRequiredDialog(context) : onTap,
+      onTap: requiresPremium && !userIsPremium
+          ? () => _showPremiumRequiredDialog(context)
+          : onTap,
       borderRadius: BorderRadius.circular(16),
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 18 * scale),
@@ -1319,7 +1353,7 @@ class _ExportOptionButton extends StatelessWidget {
                 color: color,
               ),
             ),
-            if (isPremium) ...[
+            if (requiresPremium) ...[
               SizedBox(height: 6 * scale),
               Container(
                 padding: EdgeInsets.symmetric(
@@ -1418,11 +1452,11 @@ class _ExportOptionButton extends StatelessWidget {
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Premium upgrade coming soon!'),
-                  backgroundColor: Color(0xFF6C5CE7),
-                ),
+              TopAlert.show(
+                context,
+                message: 'Premium upgrade coming soon!',
+                backgroundColor: const Color(0xFF6C5CE7),
+                icon: Icons.workspace_premium,
               );
             },
             style: ElevatedButton.styleFrom(

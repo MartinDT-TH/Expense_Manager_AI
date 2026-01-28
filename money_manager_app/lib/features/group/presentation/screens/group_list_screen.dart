@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/utils/top_alert.dart';
+import '../../../auth/presentation/bloc/auth_bloc.dart';
+import '../../../auth/presentation/bloc/auth_state.dart';
 import '../../domain/entities/group.dart';
 import '../bloc/group_bloc.dart';
 import '../bloc/group_event.dart';
@@ -47,37 +49,37 @@ class _GroupListScreenState extends State<GroupListScreen> {
       body: BlocConsumer<GroupBloc, GroupState>(
         listener: (context, state) {
           if (state is GroupError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.message),
-                backgroundColor: AppColors.error,
-              ),
+            TopAlert.show(
+              context,
+              message: state.message,
+              backgroundColor: AppColors.error,
+              icon: Icons.error_outline,
             );
           }
           if (state is GroupJoined) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text('Joined group "${state.group.name}"'),
-                backgroundColor: AppColors.success,
-              ),
+            TopAlert.show(
+              context,
+              message: 'Joined group "${state.group.name}"',
+              backgroundColor: AppColors.success,
+              icon: Icons.check_circle_outline,
             );
             context.read<GroupBloc>().add(const RefreshGroups());
           }
           if (state is GroupCreated) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text('Created group "${state.group.name}"'),
-                backgroundColor: AppColors.success,
-              ),
+            TopAlert.show(
+              context,
+              message: 'Created group "${state.group.name}"',
+              backgroundColor: AppColors.success,
+              icon: Icons.check_circle_outline,
             );
             context.read<GroupBloc>().add(const RefreshGroups());
           }
           if (state is GroupLeft) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Left the group'),
-                backgroundColor: AppColors.success,
-              ),
+            TopAlert.show(
+              context,
+              message: 'Left the group',
+              backgroundColor: AppColors.success,
+              icon: Icons.check_circle_outline,
             );
           }
         },
@@ -136,7 +138,7 @@ class _GroupListScreenState extends State<GroupListScreen> {
             subtitle: 'Create a group to share expenses',
             color: AppColors.primary,
             badgeText: 'Premium',
-            onTap: () => _navigateToCreateGroup(context),
+            onTap: () => _onCreateGroupTap(context),
           ),
           SizedBox(height: 12 * scale),
 
@@ -438,6 +440,98 @@ class _GroupListScreenState extends State<GroupListScreen> {
         groupBloc.add(const RefreshGroups());
       }
     });
+  }
+
+  void _onCreateGroupTap(BuildContext context) {
+    final authState = context.read<AuthBloc>().state;
+    final isPremiumUser = authState is Authenticated && authState.user.isPremium;
+    if (!isPremiumUser) {
+      _showPremiumRequiredDialog(context);
+      return;
+    }
+    _navigateToCreateGroup(context);
+  }
+
+  void _showPremiumRequiredDialog(BuildContext context) {
+    final scale = (MediaQuery.of(context).size.width / 390).clamp(0.85, 1.0);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: isDark ? const Color(0xFF1E1E1E) : Colors.white,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: const Color(0xFFE17055).withOpacity(0.1),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: const Icon(
+                Icons.workspace_premium,
+                color: Color(0xFFE17055),
+                size: 24,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Text(
+              'Premium Feature',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: isDark ? Colors.white : const Color(0xFF2D3436),
+              ),
+            ),
+          ],
+        ),
+        content: Text(
+          'Create a group to share expenses with friends and family.',
+          style: TextStyle(
+            color: isDark ? Colors.grey[400] : Colors.grey[700],
+            height: 1.5,
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(
+              'Maybe Later',
+              style: TextStyle(color: Colors.grey[600]),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+              TopAlert.show(
+                context,
+                message: 'Premium upgrade coming soon!',
+                backgroundColor: const Color(0xFF6C5CE7),
+                icon: Icons.workspace_premium,
+              );
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFFE17055),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(Icons.workspace_premium,
+                    color: Colors.white, size: 16),
+                SizedBox(width: 6 * scale),
+                const Text(
+                  'Upgrade Now',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   void _navigateToJoinGroup(BuildContext context) {

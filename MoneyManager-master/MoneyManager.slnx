@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="MoneyManager.API/MoneyManager.API.csproj" />
+  <Project Path="MoneyManager.Application/MoneyManager.Application.csproj" />
+  <Project Path="MoneyManager.Domain/MoneyManager.Domain.csproj" />
+  <Project Path="MoneyManager.Infrastructure/MoneyManager.Infrastructure.csproj" />
+</Solution>

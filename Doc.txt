@@ -1,0 +1,109 @@
+tổng quan yêu cầu:
+(vừa tạo acc là Premium luôn để test full chức năng)
+-💡 Đặt mục tiêu tài chính – thiết lập và theo dõi tiến độ tiết kiệm.
+💬 AI đọc hóa đơn – chụp ảnh, tự nhận diện và phân loại chi tiêu.
+📊 Thống kê chi tiêu – biểu đồ trực quan theo ngày, tuần, tháng, doanh mục.
+🤝 Quỹ nhóm – chia sẻ ngân sách minh bạch giữa bạn bè, đồng nghiệp.
+💰 Quản lý nhiều nguồn tiền – tích hợp tiền mặt, ngân hàng, ví điện tử.
+
+TÀI LIỆU YÊU CẦU PHẦN MỀM (SRS) - MONEY MANAGER APP
+I. Tổng quan & Phân quyền (Freemium Model)(lưu ý, lúc này chỉ cần phân quyền demo, là 1 phân quyền khác có thể dùng full chứ năng app )
+1. Người dùng Miễn phí (Free User)
+• Ví tiền: Tối đa 2 ví (Ví dụ: Tiền mặt + 1 Ngân hàng).
+• Dữ liệu: Đồng bộ cơ bản, xem báo cáo tháng hiện tại.
+• Quảng cáo: Hiển thị Banner Ads ở màn hình Dashboard (nếu có).
+• Tính năng bị khóa: Scan hóa đơn AI, Xuất Excel/PDF, Quỹ nhóm (chỉ được tham gia, không được tạo).
+2. Người dùng Trả phí (Premium User)
+• Gói cước: Mua theo Tháng hoặc Năm (Auto-renewable Subscription). [New]
+• Ví tiền: Không giới hạn.
+• Dữ liệu: Báo cáo toàn thời gian, biểu đồ xu hướng (Trend).
+• Tính năng VIP:
+* AI Scan hóa đơn (OCR).
+* Tạo và quản lý Quỹ nhóm (Family/Group Sharing).
+* Xuất báo cáo tài chính (Excel/PDF).
+* Tắt quảng cáo.
+II. Yêu cầu Chức năng (Functional Requirements)
+1. Phân hệ Xác thực (Authentication)
+• Màn hình: Login, Register, Forgot Password.
+• Logic:
+* Đăng ký/Đăng nhập bằng Email/Password (Sử dụng .NET core Identity).
+* (Nice to have) Đăng nhập Google (Social Login).
+* Sau khi đăng nhập thành công: Lưu Access Token và Refresh Token vào Secure Storage của thiết bị.
+   * Cơ chế Token: Sử dụng JWT (Access Token + Refresh Token). Access Token hết hạn sẽ dùng Refresh Token để lấy lại mà không cần login lại.
+* Tự động tải dữ liệu (Sync Pull) ngay sau khi login.
+* [MỚI] Phân quyền Role: User thường chỉ login được Mobile App. Admin login được Web Portal.
+2. Phân hệ Ví tiền (Wallet Management)
+• Màn hình: Danh sách ví, Thêm/Sửa ví.
+• Logic:
+* Mỗi ví gồm: Tên, Loại (Tiền mặt, Bank, E-wallet), Số dư ban đầu, Đơn vị tiền tệ.
+* Hiển thị tổng tài sản = Tổng số dư các ví cộng lại.
+* Check Premium: Nếu User Free đang có 2 ví -> Ẩn/Disable nút "Thêm ví".
+3. Phân hệ Giao dịch (Transaction Core) - Quan trọng nhất
+• Màn hình: Nhập giao dịch (Add Transaction).
+• Các trường dữ liệu:
+* Id (GUID - Gen tại Client).
+* Số tiền (Amount).
+* Danh mục (Category - Chọn từ list icon).
+* Ghi chú (Note).
+* Ngày tháng (Date - Mặc định là Today).
+* Ví thanh toán (Wallet).
+* (Premium Only) Ảnh hóa đơn (Attachment).
+* GroupId (Nullable - Nếu chọn chia sẻ nhóm).
+• Tính năng AI Scan (Premium):
+* Nút Camera bên cạnh ô nhập tiền.
+* Flow: Chụp -> Upload -> .NET xử lý OCR -> Trả về JSON -> Tự điền vào ô Số tiền, Ngày, Note,...(form) -> User bấm Lưu.
+• Logic Offline (Quan trọng): 
+* Lưu vào SQLite ngay lập tức với trạng thái IsSynced = false.
+* Background Service sẽ quét các record này để đẩy lên Server sau.
+4. Phân hệ Báo cáo (Reports & Analysis)
+• Màn hình: Tab Thống kê.
+• Giao diện:
+* Biểu đồ tròn (Pie Chart): Cơ cấu chi tiêu theo danh mục.
+* Biểu đồ cột (Bar Chart): So sánh Thu - Chi theo ngày/tháng.
+• Logic:
+* Cho phép lọc theo thời gian (Tuần này, Tháng này, Tùy chỉnh).
+* Dữ liệu được tính toán (Group By) từ SQLite để hiển thị tức thì.
+5. Phân hệ Quỹ nhóm (Community/Group Fund)
+Màn hình: Danh sách nhóm, Chi tiết nhóm.
+Luồng hoạt động:
+1. Tạo nhóm (Premium): Nhập tên nhóm -> Server trả về InviteCode (Ví dụ: FAMILY88).
+2. Tham gia nhóm (Free/Premium): Nhập InviteCode -> Join thành công.
+3. Nhập chi tiêu nhóm: Khi tạo giao dịch, có thêm tùy chọn "Chia sẻ với nhóm".
+4. Real-time (SignalR): Sử dụng SignalR Hub trên .NET. Khi một thành viên thêm giao dịch, Server bắn tín hiệu xuống các Client khác trong nhóm để reload lại SQLite và cập nhật UI.
+6. Phân hệ Cài đặt & Tiện ích
+* Thiết lập Ngân sách (Budget): Cảnh báo khi chi tiêu vượt quá 80% hạn mức danh mục.
+* Xuất dữ liệu (Premium): Gọi API .NET để generate file Excel -> Server xuất file Excel  -> Trả về link download.
+* Nâng cấp Premium: Màn hình giới thiệu gói cước -> Nút thanh toán (Fake Payment cho bản Dev, Google IAP cho bản Product).
+   * Tích hợp SDK RevenueCat để xử lý Google Play Billing.
+   * Client không tự set lên Premium. Client chờ Webhook từ RevenueCat bắn về Server .NET -> Server cập nhật DB -> Client đồng bộ lại mới thấy trạng thái Premium.
+7. Phân hệ Quản trị (Admin Portal) [MỚI]-cái này team mình tự code
+* Dashboard: Hiển thị tổng doanh thu tháng, số lượng User mới, User Premium.
+* User Management: Tìm kiếm User theo Email, xem chi tiết, thực hiện khóa tài khoản (Ban) nếu vi phạm.
+* Audit Logs: Xem nhật ký hệ thống (Ai vừa làm gì, Lỗi Sync ở đâu).
+III. Yêu cầu Phi chức năng (Non-Functional)
+1. Offline-first: App phải hoạt động bình thường 100% các tính năng cơ bản (Ghi chép, xem báo cáo) khi không có Internet.
+2. Đồng bộ (Sync Strategy): Cơ chế Sync chạy ngầm (Background Fetch) mỗi 15 phút hoặc khi mở app.
+* Sử dụng chiến thuật Pull - Merge - Push.
+* Dựa trên cột LastUpdatedAt để chỉ lấy dữ liệu thay đổi (Incremental Sync).
+3. Hiệu năng:
+• Mở app dưới 2 giây.
+• Thao tác nhập liệu không được lag.
+4. Bảo mật:
+• API bắt buộc có Authorize Bearer Token.
+• Password hash bằng Identity (mặc định an toàn).
+IV. Cấu trúc Dữ liệu & Quy tắc Đồng bộ (Technical Rules)
+Đây là phần "xương sống" để dev không bị loạn:
+1. Quy tắc ID:
+* Tất cả Primary Key (Id) phải dùng GUID (để gen được ở dưới Client mà không trùng).
+* Tuyệt đối không dùng Auto Increment Int.
+2. Quy tắc Xóa (Soft Delete)
+* Sử dụng cột IsDeleted (bit/boolean). 
+* Không bao giờ dùng lệnh DELETE FROM ....
+3. Quy tắc Sync (Các cột bắt buộc) (Bắt buộc có ở mọi bảng SQLite):
+* last_updated_at: DateTime.
+* is_synced: Boolean (True = Đã lên Server, False = Chưa).
+4. Bảng Hệ thống (Server Only) [MỚI]
+Các bảng này chỉ nằm trên Server SQL, không có trong SQLite của Client:
+* SubscriptionLogs: Lưu lịch sử webhook từ RevenueCat/Google.
+* SystemAuditLogs: Lưu nhật ký hành động Admin.
+* AspNetUsers (Full): Client chỉ lưu bản copy rút gọn (Profile).

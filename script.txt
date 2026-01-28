@@ -1,0 +1,24 @@
+📋 Lệnh Reset và Seed Database:
+1. Xóa database và tạo lại từ đầu (Full reset):
+
+cd MoneyManager-master/MoneyManager.API
+dotnet ef database drop -f --project ../MoneyManager.Infrastructure
+dotnet ef database update --project ../MoneyManager.Infrastructure
+dotnet run
+
+2. Chỉ reset data (giữ schema):
+
+-- Trong SQL Server Management Studio hoặc Azure Data Studio:
+USE MoneyManagerDb;
+DELETE FROM Transactions;
+DELETE FROM GroupMembers;
+DELETE FROM Groups;
+DELETE FROM Budgets;
+DELETE FROM Wallets;
+DELETE FROM Categories;
+DELETE FROM AspNetUserRoles;
+DELETE FROM AspNetUsers;
+DELETE FROM AspNetRoles;
+
+
+Rồi chạy lại dotnet run để seed.

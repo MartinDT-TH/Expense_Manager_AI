@@ -65,11 +65,20 @@ class ReportRepositoryImpl implements ReportRepository {
     String? walletId,
     String format = 'EXCEL',
   }) async {
+    final normalized = _normalizeExportFormat(format);
     return await remoteDataSource.exportReport(
       startDate: startDate,
       endDate: endDate,
       walletId: walletId,
-      format: format,
+      format: normalized,
     );
+  }
+
+  String _normalizeExportFormat(String format) {
+    final raw = format.trim();
+    final lower = raw.toLowerCase();
+    if (lower == 'excel' || lower == 'xlsx' || lower == 'xls') return 'EXCEL';
+    if (lower == 'pdf') return 'PDF';
+    return raw.toUpperCase();
   }
 }

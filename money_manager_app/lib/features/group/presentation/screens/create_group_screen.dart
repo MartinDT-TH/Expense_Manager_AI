@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/utils/top_alert.dart';
+import '../../../auth/presentation/bloc/auth_bloc.dart';
+import '../../../auth/presentation/bloc/auth_state.dart';
 import '../bloc/group_bloc.dart';
 import '../bloc/group_event.dart';
 import '../bloc/group_state.dart';
@@ -29,6 +32,9 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
   @override
   Widget build(BuildContext context) {
     final scale = (MediaQuery.of(context).size.width / 390).clamp(0.85, 1.0);
+    final authState = context.watch<AuthBloc>().state;
+    final isPremiumUser = authState is Authenticated && authState.user.isPremium;
+
     return BlocListener<GroupBloc, GroupState>(
       listener: (context, state) {
         if (state is GroupCreated) {
@@ -37,11 +43,11 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
         }
         if (state is GroupError) {
           setState(() => _isLoading = false);
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.message),
-              backgroundColor: AppColors.error,
-            ),
+          TopAlert.show(
+            context,
+            message: state.message,
+            backgroundColor: AppColors.error,
+            icon: Icons.error_outline,
           );
         }
         if (state is GroupLoading) {
@@ -214,7 +220,9 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                   width: double.infinity,
                   height: 48 * scale,
                   child: ElevatedButton(
-                    onPressed: _isLoading ? null : _showPremiumRequiredDialog,
+                    onPressed: _isLoading
+                        ? null
+                        : (isPremiumUser ? _createGroup : _showPremiumRequiredDialog),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.primary,
                       foregroundColor: Colors.white,
@@ -343,11 +351,11 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Premium upgrade coming soon!'),
-                  backgroundColor: Color(0xFF6C5CE7),
-                ),
+              TopAlert.show(
+                context,
+                message: 'Premium upgrade coming soon!',
+                backgroundColor: const Color(0xFF6C5CE7),
+                icon: Icons.workspace_premium,
               );
             },
             style: ElevatedButton.styleFrom(
