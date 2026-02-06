@@ -17,6 +17,7 @@ class AuthResult {
   final String? refreshToken;
   final int? expiresIn;
   final User? user;
+  final bool requiresEmailVerification;
 
   AuthResult({
     required this.success,
@@ -25,5 +26,6 @@ class AuthResult {
     this.refreshToken,
     this.expiresIn,
     this.user,
+    this.requiresEmailVerification = false,
   });
 }

@@ -1,4 +1,5 @@
 import '../../../../core/network/network_info.dart';
+import '../../../../core/auth/token_storage.dart';
 import '../../domain/entities/user.dart';
 import '../../domain/repositories/auth_repository.dart';
 import '../datasources/auth_local_datasource.dart';
@@ -9,12 +10,14 @@ class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteDataSource remoteDataSource;
   final AuthLocalDataSource localDataSource;
   final NetworkInfo networkInfo;
+  final TokenStorage tokenStorage;
 
   AuthRepositoryImpl({
     required this.remoteDataSource,
     required this.localDataSource,
     required this.networkInfo,
-  });
+    TokenStorage? tokenStorage,
+  }) : tokenStorage = tokenStorage ?? const TokenStorage();
 
   @override
   Future<AuthResult> login(String email, String password) async {
@@ -38,6 +41,7 @@ class AuthRepositoryImpl implements AuthRepository {
         refreshToken: response.refreshToken,
         expiresIn: response.expiresIn,
         user: user,
+        requiresEmailVerification: response.requiresEmailVerification,
       );
     } catch (e) {
       return AuthResult(success: false, message: e.toString());
@@ -66,6 +70,7 @@ class AuthRepositoryImpl implements AuthRepository {
         refreshToken: response.refreshToken,
         expiresIn: response.expiresIn,
         user: user,
+        requiresEmailVerification: response.requiresEmailVerification,
       );
     } catch (e) {
       return AuthResult(success: false, message: e.toString());
@@ -74,31 +79,48 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<void> logout() async {
-    await remoteDataSource.logout();
+    try {
+      await remoteDataSource.logout();
+    } catch (_) {
+      // Ignore errors - still clear local data
+    }
+    await tokenStorage.clearTokens();
     await localDataSource.deleteUser();
   }
 
   @override
   Future<User?> getCurrentUser() async {
-    // Try local first
-    final localUser = await localDataSource.getUser();
-    if (localUser != null) {
-      return localUser;
+    // FIRST: Check if we have a valid token
+    final hasToken = await tokenStorage.hasValidToken();
+    if (!hasToken) {
+      // No valid token - clear local data and return null
+      await localDataSource.deleteUser();
+      return null;
     }
 
-    // If connected, try remote
+    // If connected, verify with server first
     if (await networkInfo.checkConnection()) {
       try {
         final remoteUser = await remoteDataSource.getCurrentUser();
         if (remoteUser != null) {
           await localDataSource.saveUser(remoteUser);
+          return remoteUser;
+        } else {
+          // Token invalid on server - clear everything
+          await tokenStorage.clearTokens();
+          await localDataSource.deleteUser();
+          return null;
         }
-        return remoteUser;
       } catch (e) {
-        return null;
+        // Network error but we have token - try local
+        final localUser = await localDataSource.getUser();
+        return localUser;
       }
     }
-    return null;
+
+    // Offline mode - use local user if available
+    final localUser = await localDataSource.getUser();
+    return localUser;
   }
 
   @override
