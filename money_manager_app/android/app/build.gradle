@@ -5,6 +5,16 @@ plugins {
     id "dev.flutter.flutter-gradle-plugin"
 }
 
+
+def keystoreProperties = new java.util.Properties()
+def keystoreFile = rootProject.file("key.properties")
+if (keystoreFile.exists()) {
+    keystoreFile.withInputStream { stream ->
+        keystoreProperties.load(stream)
+    }
+}
+
+
 android {
     namespace = "com.moneymanager.money_manager"
     compileSdk = 36
@@ -13,6 +23,8 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
+        // Needed for flutter_local_notifications (uses java.time APIs)
+        coreLibraryDesugaringEnabled = true
     }
 
     kotlinOptions {
@@ -30,15 +42,34 @@ android {
         versionName = flutter.versionName
     }
 
-    buildTypes {
+    signingConfigs {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig = signingConfigs.debug
+            if (keystoreFile.exists()) {
+                keyAlias keystoreProperties['keyAlias']
+                keyPassword keystoreProperties['keyPassword']
+                storeFile file(keystoreProperties['storeFile'])
+                storePassword keystoreProperties['storePassword']
+            }
         }
     }
+
+    buildTypes {
+        release {
+            signingConfig signingConfigs.release
+            // (tuỳ chọn) nếu bạn muốn proguard sau này thì thêm
+            // minifyEnabled true
+            // shrinkResources true
+            // proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
 }
 
 flutter {
     source = "../.."
+}
+
+dependencies {
+    // Provides java.time and other desugared APIs on older Android versions
+    coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:2.0.4"
 }
