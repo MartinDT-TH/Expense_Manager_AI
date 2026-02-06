@@ -61,8 +61,8 @@ class _BudgetScreenContentState extends State<_BudgetScreenContent> with SingleT
 
   String _getMonthName(int month) {
     const months = [
-      'January', 'February', 'March', 'April', 'May', 'June',
-      'July', 'August', 'September', 'October', 'November', 'December'
+      'Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6',
+      'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'
     ];
     return months[month - 1];
   }
@@ -92,7 +92,7 @@ class _BudgetScreenContentState extends State<_BudgetScreenContent> with SingleT
                   context,
                   MaterialPageRoute(builder: (_) => const BudgetAnalyticsScreen()),
                 ),
-                tooltip: 'View Analytics',
+                tooltip: 'Xem phân tích',
               ),
             ],
             flexibleSpace: FlexibleSpaceBar(
@@ -123,7 +123,7 @@ class _BudgetScreenContentState extends State<_BudgetScreenContent> with SingleT
                       ),
                       const SizedBox(height: 12),
                       Text(
-                        'Budget ${_getMonthName(now.month)} ${now.year}',
+                        'Ngân sách ${_getMonthName(now.month)} ${now.year}',
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 24,
@@ -142,8 +142,8 @@ class _BudgetScreenContentState extends State<_BudgetScreenContent> with SingleT
               labelColor: Colors.white,
               unselectedLabelColor: Colors.white70,
               tabs: const [
-                Tab(text: 'Overview', icon: Icon(Icons.pie_chart_rounded, size: 20)),
-                Tab(text: 'By Category', icon: Icon(Icons.category_rounded, size: 20)),
+                Tab(text: 'Tổng quan', icon: Icon(Icons.pie_chart_rounded, size: 20)),
+                Tab(text: 'Theo danh mục', icon: Icon(Icons.category_rounded, size: 20)),
               ],
             ),
           ),
@@ -200,8 +200,8 @@ class _BudgetScreenContentState extends State<_BudgetScreenContent> with SingleT
             children: [
               // Total Budget Input Card
               _buildBudgetInputCard(
-                title: 'Total Monthly Budget',
-                subtitle: 'Set your overall spending limit',
+                title: 'Tổng ngân sách tháng',
+                subtitle: 'Đặt hạn mức chi tiêu tổng thể',
                 isLoading: isLoading,
               ),
               
@@ -245,7 +245,7 @@ class _BudgetScreenContentState extends State<_BudgetScreenContent> with SingleT
                   
                   // Category Budgets List
                   const Text(
-                    'Category Budgets',
+                    'Ngân sách theo danh mục',
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -411,7 +411,7 @@ class _BudgetScreenContentState extends State<_BudgetScreenContent> with SingleT
                       child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
                     )
                   : Text(
-                      _currentBudget != null ? 'Update Budget' : 'Set Budget',
+                      _currentBudget != null ? 'Cập nhật ngân sách' : 'Thiết lập ngân sách',
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 16,
@@ -473,7 +473,7 @@ class _BudgetScreenContentState extends State<_BudgetScreenContent> with SingleT
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  _isRecurring ? 'Apply to every month' : 'This month only',
+                  _isRecurring ? 'Áp dụng cho mọi tháng' : 'Chỉ tháng này',
                   style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w600,
@@ -481,7 +481,7 @@ class _BudgetScreenContentState extends State<_BudgetScreenContent> with SingleT
                   ),
                 ),
                 Text(
-                  _isRecurring ? 'Default monthly budget' : 'Only for ${_getMonthName(now.month)} ${now.year}',
+                  _isRecurring ? 'Ngân sách mặc định hàng tháng' : 'Chỉ cho ${_getMonthName(now.month)} ${now.year}',
                   style: TextStyle(fontSize: 12, color: Colors.grey[600]),
                 ),
               ],
@@ -540,7 +540,7 @@ class _BudgetScreenContentState extends State<_BudgetScreenContent> with SingleT
               const SizedBox(width: 12),
               const Expanded(
                 child: Text(
-                  'Spending Status',
+                  'Tình trạng chi tiêu',
                   style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
                 ),
               ),
@@ -561,7 +561,7 @@ class _BudgetScreenContentState extends State<_BudgetScreenContent> with SingleT
                 style: TextStyle(color: statusColor, fontWeight: FontWeight.bold, fontSize: 15),
               ),
               Text(
-                'Remaining ₫${_formatNumber(budget.amountRemaining)}',
+                'Còn lại ₫${_formatNumber(budget.amountRemaining)}',
                 style: const TextStyle(color: Color(0xFF636E72), fontSize: 14, fontWeight: FontWeight.w500),
               ),
             ],
@@ -572,7 +572,7 @@ class _BudgetScreenContentState extends State<_BudgetScreenContent> with SingleT
   }
 
   Widget _buildStatusBadge(bool isExceeded, bool isWarning, Color color) {
-    String text = isExceeded ? 'Over Budget!' : isWarning ? 'Near Limit!' : 'On Track';
+    String text = isExceeded ? 'Vượt ngân sách!' : isWarning ? 'Gần chạm mức!' : 'Đúng kế hoạch';
     IconData icon = isExceeded 
         ? Icons.warning_amber_rounded 
         : isWarning 
@@ -652,7 +652,7 @@ class _BudgetScreenContentState extends State<_BudgetScreenContent> with SingleT
               ),
               Expanded(
                 child: _buildStatItem(
-                  'Daily Budget',
+                  'Ngân sách ngày',
                   '₫${_formatNumber(dailyBudget > 0 ? dailyBudget : 0)}',
                   const Color(0xFF6C5CE7),
                   Icons.today_rounded,
@@ -712,7 +712,7 @@ class _BudgetScreenContentState extends State<_BudgetScreenContent> with SingleT
             ),
             const SizedBox(width: 12),
             const Text(
-              'Add Category Budget',
+              'Thêm ngân sách danh mục',
               style: TextStyle(
                 color: Color(0xFF6C5CE7),
                 fontSize: 16,
@@ -742,7 +742,7 @@ class _BudgetScreenContentState extends State<_BudgetScreenContent> with SingleT
           ),
           const SizedBox(height: 8),
           Text(
-            'Set spending limits for specific categories',
+            'Đặt hạn mức chi tiêu cho từng danh mục',
             style: TextStyle(fontSize: 14, color: Colors.grey[500]),
             textAlign: TextAlign.center,
           ),
@@ -853,7 +853,7 @@ class _BudgetScreenContentState extends State<_BudgetScreenContent> with SingleT
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  'Add Category Budget',
+                  'Thêm ngân sách danh mục',
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 20),
@@ -888,7 +888,7 @@ class _BudgetScreenContentState extends State<_BudgetScreenContent> with SingleT
                     _ThousandsSeparatorFormatter(),
                   ],
                   decoration: InputDecoration(
-                    labelText: 'Budget Amount',
+                    labelText: 'Số tiền ngân sách',
                     prefixText: '₫ ',
                     border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                   ),
@@ -929,7 +929,7 @@ class _BudgetScreenContentState extends State<_BudgetScreenContent> with SingleT
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                     ),
                     child: const Text(
-                      'Add Budget',
+                      'Thêm ngân sách',
                       style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                   ),

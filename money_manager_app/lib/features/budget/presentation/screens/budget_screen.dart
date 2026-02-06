@@ -41,8 +41,8 @@ class _BudgetScreenContentState extends State<_BudgetScreenContent> {
 
   String _getMonthName(int month) {
     const months = [
-      'January', 'February', 'March', 'April', 'May', 'June',
-      'July', 'August', 'September', 'October', 'November', 'December'
+      'Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6',
+      'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'
     ];
     return months[month - 1];
   }
@@ -67,7 +67,7 @@ class _BudgetScreenContentState extends State<_BudgetScreenContent> {
           onPressed: () => Navigator.pop(context),
         ),
         title: const Text(
-          'Monthly Budget',
+          'Ngân sách tháng',
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
@@ -151,7 +151,7 @@ class _BudgetScreenContentState extends State<_BudgetScreenContent> {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        'Set your spending limit for this month',
+                        'Đặt hạn mức chi tiêu cho tháng này',
                         style: TextStyle(
                           color: Colors.white.withValues(alpha: 0.9),
                           fontSize: 15,
@@ -203,7 +203,7 @@ class _BudgetScreenContentState extends State<_BudgetScreenContent> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'Budget Amount',
+                                  'Số tiền ngân sách',
                                   style: TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.bold,
@@ -211,7 +211,7 @@ class _BudgetScreenContentState extends State<_BudgetScreenContent> {
                                   ),
                                 ),
                                 Text(
-                                  'Monthly spending limit',
+                                  'Hạn mức chi tiêu hàng tháng',
                                   style: TextStyle(
                                     fontSize: 12,
                                     color: Color(0xFF636E72),
@@ -286,7 +286,7 @@ class _BudgetScreenContentState extends State<_BudgetScreenContent> {
 
                         // Quick Amount Buttons
                         const Text(
-                          'Quick Select',
+                          'Chọn nhanh',
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
@@ -339,8 +339,8 @@ class _BudgetScreenContentState extends State<_BudgetScreenContent> {
                                   children: [
                                     Text(
                                       _isRecurring 
-                                        ? 'Apply to every month' 
-                                        : 'This month only',
+                                        ? 'Áp dụng cho mọi tháng' 
+                                        : 'Chỉ tháng này',
                                       style: TextStyle(
                                         fontSize: 15,
                                         fontWeight: FontWeight.w600,
@@ -352,8 +352,8 @@ class _BudgetScreenContentState extends State<_BudgetScreenContent> {
                                     const SizedBox(height: 2),
                                     Text(
                                       _isRecurring 
-                                        ? 'Default monthly budget' 
-                                        : 'Only for $monthName ${now.year}',
+                                        ? 'Ngân sách mặc định hàng tháng' 
+                                        : 'Chỉ cho $monthName ${now.year}',
                                       style: TextStyle(
                                         fontSize: 12,
                                         color: Colors.grey[600],
@@ -411,7 +411,7 @@ class _BudgetScreenContentState extends State<_BudgetScreenContent> {
                                       ),
                                       const SizedBox(width: 10),
                                       Text(
-                                        _currentBudget != null ? 'Update Budget' : 'Set Budget',
+                                        _currentBudget != null ? 'Cập nhật ngân sách' : 'Thiết lập ngân sách',
                                         style: const TextStyle(
                                           color: Colors.white,
                                           fontSize: 17,
@@ -494,15 +494,15 @@ class _BudgetScreenContentState extends State<_BudgetScreenContent> {
 
     if (isExceeded) {
       statusColor = const Color(0xFFE74C3C);
-      statusText = 'Over Budget!';
+      statusText = 'Vượt ngân sách!';
       statusIcon = Icons.warning_amber_rounded;
     } else if (isWarning) {
       statusColor = const Color(0xFFF39C12);
-      statusText = 'Near Limit!';
+      statusText = 'Gần chạm mức!';
       statusIcon = Icons.info_outline_rounded;
     } else {
       statusColor = const Color(0xFF00B894);
-      statusText = 'On Track';
+      statusText = 'Đúng kế hoạch';
       statusIcon = Icons.check_circle_outline_rounded;
     }
 
@@ -539,7 +539,7 @@ class _BudgetScreenContentState extends State<_BudgetScreenContent> {
               const SizedBox(width: 12),
               const Expanded(
                 child: Text(
-                  'Spending Status',
+                  'Tình trạng chi tiêu',
                   style: TextStyle(
                     fontSize: 17,
                     fontWeight: FontWeight.bold,
@@ -620,7 +620,7 @@ class _BudgetScreenContentState extends State<_BudgetScreenContent> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                '${percentage.toInt()}% used',
+                'Đã dùng ${percentage.toInt()}%',
                 style: TextStyle(
                   color: statusColor,
                   fontWeight: FontWeight.bold,
@@ -628,7 +628,7 @@ class _BudgetScreenContentState extends State<_BudgetScreenContent> {
                 ),
               ),
               Text(
-                'Remaining ₫${_formatNumber(budget.amountRemaining)}',
+                'Còn lại ₫${_formatNumber(budget.amountRemaining)}',
                 style: const TextStyle(
                   color: Color(0xFF636E72),
                   fontSize: 14,
@@ -650,7 +650,7 @@ class _BudgetScreenContentState extends State<_BudgetScreenContent> {
               children: [
                 Expanded(
                   child: _buildStatItem(
-                    'Spent',
+                    'Đã chi',
                     '₫${_formatNumber(budget.amountSpent)}',
                     statusColor,
                     Icons.arrow_upward_rounded,
@@ -663,7 +663,7 @@ class _BudgetScreenContentState extends State<_BudgetScreenContent> {
                 ),
                 Expanded(
                   child: _buildStatItem(
-                    'Budget',
+                    'Ngân sách',
                     '₫${_formatNumber(budget.amountLimit)}',
                     const Color(0xFF6C5CE7),
                     Icons.account_balance_wallet_rounded,
@@ -726,7 +726,7 @@ class _BudgetScreenContentState extends State<_BudgetScreenContent> {
             children: [
               Icon(Icons.info_outline, color: Colors.white),
               SizedBox(width: 10),
-              Text('Please enter a budget amount'),
+              Text('Vui lòng nhập số tiền ngân sách'),
             ],
           ),
           backgroundColor: Colors.orange,
@@ -745,7 +745,7 @@ class _BudgetScreenContentState extends State<_BudgetScreenContent> {
             children: [
               Icon(Icons.warning_rounded, color: Colors.white),
               SizedBox(width: 10),
-              Text('Invalid amount'),
+              Text('Số tiền không hợp lệ'),
             ],
           ),
           backgroundColor: Colors.red,

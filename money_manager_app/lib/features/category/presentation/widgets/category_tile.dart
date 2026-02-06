@@ -135,8 +135,8 @@ class CategoryTile extends StatelessWidget {
                     const SizedBox(height: 4),
                     Text(
                       category.type == CategoryType.expense
-                          ? 'Expense category'
-                          : 'Income category',
+                          ? 'Danh mục chi tiêu'
+                          : 'Danh mục thu nhập',
                       style: TextStyle(
                         fontSize: 12,
                         color: Colors.grey[500],

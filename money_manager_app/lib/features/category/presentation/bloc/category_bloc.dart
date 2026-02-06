@@ -104,7 +104,7 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
       (failure) => emit(CategoryError(failure.message)),
       (createdCategory) {
         emit(CategoryOperationSuccess(
-          message: 'Created category "${createdCategory.name}"',
+          message: 'Đã tạo danh mục "${createdCategory.name}"',
           category: createdCategory,
         ));
         // Reload categories
@@ -125,7 +125,7 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
       (failure) => emit(CategoryError(failure.message)),
       (updatedCategory) {
         emit(CategoryOperationSuccess(
-          message: 'Updated category "${updatedCategory.name}"',
+          message: 'Đã cập nhật danh mục "${updatedCategory.name}"',
           category: updatedCategory,
         ));
         // Reload categories
@@ -146,7 +146,7 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
       (failure) => emit(CategoryError(failure.message)),
       (_) {
         emit(const CategoryOperationSuccess(
-          message: 'Category deleted',
+          message: 'Đã xóa danh mục',
         ));
         // Reload categories
         add(const LoadCategories());

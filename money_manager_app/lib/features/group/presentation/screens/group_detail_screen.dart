@@ -201,7 +201,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen>
                       indicatorColor: AppColors.primary,
                       tabs: const [
                         Tab(text: 'Members'),
-                        Tab(text: 'Transactions'),
+                        Tab(text: 'Giao dịch'),
                       ],
                     ),
                   ),
@@ -330,7 +330,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen>
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       _buildSummaryItem(
-                        'Total Income',
+                        'Tổng thu',
                         _currencyFormat.format(group.totalIncome),
                         AppColors.income,
                       ),
@@ -516,7 +516,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen>
               ],
             ),
             subtitle: Text(
-              'Spent: ${_currencyFormat.format(member.totalContribution)}',
+              'Đã chi: ${_currencyFormat.format(member.totalContribution)}',
               style: TextStyle(fontSize: 12, color: Colors.grey[600]),
             ),
             trailing: Column(
@@ -561,7 +561,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen>
                 size: 64, color: Colors.grey[300]),
             const SizedBox(height: 16),
             Text(
-              'No transactions yet',
+              'Chưa có giao dịch',
               style: TextStyle(fontSize: 16, color: Colors.grey[500]),
             ),
           ],
@@ -727,7 +727,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          transaction.categoryName ?? 'Transaction',
+                          transaction.categoryName ?? 'Giao dịch',
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
@@ -736,7 +736,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen>
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          isExpense ? 'Expense' : 'Income',
+                          isExpense ? 'Chi tiêu' : 'Thu nhập',
                           style: TextStyle(
                             fontSize: 14,
                             color: isExpense ? AppColors.expense : AppColors.income,
@@ -987,7 +987,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen>
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('Cancel'),
+            child: const Text('Hủy'),
           ),
           TextButton(
             onPressed: () {
@@ -1014,7 +1014,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen>
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('Cancel'),
+            child: const Text('Hủy'),
           ),
           TextButton(
             onPressed: () {
@@ -1042,7 +1042,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen>
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('Cancel'),
+            child: const Text('Hủy'),
           ),
           TextButton(
             onPressed: () {
@@ -1104,7 +1104,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen>
   }
 
   void _shareInviteCode(Group group) {
-    final message = 'Join group "${group.name}" on Money Manager!\n'
+    final message = 'Join group "${group.name}" on Smart Money!\n'
         'Invite code: ${group.inviteCode}';
     Clipboard.setData(ClipboardData(text: message));
     ScaffoldMessenger.of(context).showSnackBar(
@@ -1151,3 +1151,4 @@ class _StickyTabBarDelegate extends SliverPersistentHeaderDelegate {
     return tabBar != oldDelegate.tabBar;
   }
 }
+

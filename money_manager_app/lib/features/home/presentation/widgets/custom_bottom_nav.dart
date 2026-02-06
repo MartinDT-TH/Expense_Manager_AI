@@ -39,14 +39,14 @@ class CustomBottomNav extends StatelessWidget {
             children: [
               _buildNavItem(
                 icon: Icons.home,
-                label: 'Home',
+                label: 'Trang chủ',
                 isActive: currentIndex == 0,
                 onTap: () => onTap(0),
                 isDark: isDark,
               ),
               _buildNavItem(
                 icon: Icons.swap_horiz,
-                label: 'Transactions',
+                label: 'Giao dịch',
                 isActive: currentIndex == 1,
                 onTap: () => onTap(1),
                 isDark: isDark,
@@ -54,14 +54,14 @@ class CustomBottomNav extends StatelessWidget {
               const SizedBox(width: 60), // Space for FAB
               _buildNavItem(
                 icon: Icons.access_time,
-                label: 'Statistics',
+                label: 'Thống kê',
                 isActive: currentIndex == 3,
                 onTap: () => onTap(3),
                 isDark: isDark,
               ),
               _buildNavItem(
                 icon: Icons.person,
-                label: 'Profile',
+                label: 'Hồ sơ',
                 isActive: currentIndex == 4,
                 onTap: () => onTap(4),
                 isDark: isDark,

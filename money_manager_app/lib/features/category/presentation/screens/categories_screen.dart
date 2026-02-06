@@ -70,7 +70,7 @@ class _CategoriesScreenState extends State<CategoriesScreen>
                 children: [
                   Icon(Icons.arrow_upward, size: 18),
                   SizedBox(width: 4),
-                  Text('Expense'),
+                  Text('Chi tiêu'),
                 ],
               ),
             ),
@@ -80,7 +80,7 @@ class _CategoriesScreenState extends State<CategoriesScreen>
                 children: [
                   Icon(Icons.arrow_downward, size: 18),
                   SizedBox(width: 4),
-                  Text('Income'),
+                  Text('Thu nhập'),
                 ],
               ),
             ),
@@ -90,7 +90,7 @@ class _CategoriesScreenState extends State<CategoriesScreen>
           IconButton(
             icon: const Icon(Icons.add_circle_outline, color: Colors.white),
             onPressed: () => _showAddCategoryDialog(context),
-            tooltip: 'Add Category',
+            tooltip: 'Thêm danh mục',
           ),
         ],
       ),
@@ -154,7 +154,7 @@ class _CategoriesScreenState extends State<CategoriesScreen>
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _showAddCategoryDialog(context),
         icon: const Icon(Icons.add),
-        label: const Text('Add Category'),
+        label: const Text('Thêm danh mục'),
         backgroundColor: const Color(0xFF6C5CE7),
       ),
     );
@@ -422,7 +422,7 @@ class _CategoriesScreenState extends State<CategoriesScreen>
             ),
             ListTile(
               leading: const Icon(Icons.delete, color: AppColors.error),
-              title: const Text('Delete', style: TextStyle(color: AppColors.error)),
+              title: const Text('Xóa', style: TextStyle(color: AppColors.error)),
               onTap: () {
                 Navigator.pop(bottomSheetContext);
                 _confirmDeleteCategory(context, category);
@@ -456,12 +456,12 @@ class _CategoriesScreenState extends State<CategoriesScreen>
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('Delete Category'),
+        title: const Text('Xóa danh mục'),
         content: Text('Are you sure you want to delete "${category.name}"?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext),
-            child: const Text('Cancel'),
+            child: const Text('Hủy'),
           ),
           TextButton(
             onPressed: () {
@@ -469,7 +469,7 @@ class _CategoriesScreenState extends State<CategoriesScreen>
               context.read<CategoryBloc>().add(DeleteCategory(category.id));
             },
             style: TextButton.styleFrom(foregroundColor: AppColors.error),
-            child: const Text('Delete'),
+            child: const Text('Xóa'),
           ),
         ],
       ),

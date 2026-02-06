@@ -68,7 +68,7 @@ class _AddCategoryDialogState extends State<AddCategoryDialog> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        isEditing ? 'Edit Category' : 'Add New Category',
+                        isEditing ? 'Sửa danh mục' : 'Thêm danh mục mới',
                         style: Theme.of(context).textTheme.titleLarge,
                       ),
                       const SizedBox(height: 24),
@@ -77,7 +77,7 @@ class _AddCategoryDialogState extends State<AddCategoryDialog> {
                       TextFormField(
                         controller: _nameController,
                         decoration: const InputDecoration(
-                          labelText: 'Category Name',
+                          labelText: 'Tên danh mục',
                           hintText: 'e.g. Food & Drinks',
                           border: OutlineInputBorder(),
                         ),
@@ -101,7 +101,7 @@ class _AddCategoryDialogState extends State<AddCategoryDialog> {
                           children: [
                             Expanded(
                               child: _TypeChip(
-                                label: 'Expense',
+                                label: 'Chi tiêu',
                                 isSelected: _selectedType == CategoryType.expense,
                                 color: AppColors.expense,
                                 onTap: () => setState(() => _selectedType = CategoryType.expense),
@@ -110,7 +110,7 @@ class _AddCategoryDialogState extends State<AddCategoryDialog> {
                             const SizedBox(width: 12),
                             Expanded(
                               child: _TypeChip(
-                                label: 'Income',
+                                label: 'Thu nhập',
                                 isSelected: _selectedType == CategoryType.income,
                                 color: AppColors.income,
                                 onTap: () => setState(() => _selectedType = CategoryType.income),
@@ -150,7 +150,7 @@ class _AddCategoryDialogState extends State<AddCategoryDialog> {
                 children: [
                   TextButton(
                     onPressed: () => Navigator.pop(context),
-                    child: const Text('Cancel'),
+                    child: const Text('Hủy'),
                   ),
                   const SizedBox(width: 12),
                   ElevatedButton(
@@ -159,7 +159,7 @@ class _AddCategoryDialogState extends State<AddCategoryDialog> {
                       backgroundColor: const Color(0xFF6C5CE7),
                       foregroundColor: Colors.white,
                     ),
-                    child: Text(isEditing ? 'Save' : 'Add'),
+                    child: Text(isEditing ? 'Lưu' : 'Thêm'),
                   ),
                 ],
               ),

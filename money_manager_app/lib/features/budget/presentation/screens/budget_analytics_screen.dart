@@ -51,7 +51,7 @@ class _BudgetAnalyticsScreenState extends State<BudgetAnalyticsScreen> {
     } catch (e) {
       setState(() {
         _isLoading = false;
-        _error = 'Failed to load analytics: $e';
+        _error = 'Không thể tải phân tích: $e';
       });
     }
   }
@@ -72,7 +72,7 @@ class _BudgetAnalyticsScreenState extends State<BudgetAnalyticsScreen> {
           onPressed: () => Navigator.pop(context),
         ),
         title: const Text(
-          'Budget Analytics',
+          'Phân tích ngân sách',
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
@@ -90,7 +90,7 @@ class _BudgetAnalyticsScreenState extends State<BudgetAnalyticsScreen> {
                       const SizedBox(height: 16),
                       ElevatedButton(
                         onPressed: _loadData,
-                        child: const Text('Retry'),
+                        child: const Text('Thử lại'),
                       ),
                     ],
                   ),
@@ -169,7 +169,7 @@ class _BudgetAnalyticsScreenState extends State<BudgetAnalyticsScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  isWarning ? 'Budget Alert' : 'Budget Status',
+                  isWarning ? 'Cảnh báo ngân sách' : 'Tình trạng ngân sách',
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
@@ -201,7 +201,7 @@ class _BudgetAnalyticsScreenState extends State<BudgetAnalyticsScreen> {
           children: [
             Expanded(
               child: _buildSummaryCard(
-                title: 'Budget',
+                title: 'Ngân sách',
                 value: '₫${_formatNumber(analytics.totalBudgetThisMonth)}',
                 icon: Icons.account_balance_wallet,
                 color: const Color(0xFF6C5CE7),
@@ -210,7 +210,7 @@ class _BudgetAnalyticsScreenState extends State<BudgetAnalyticsScreen> {
             const SizedBox(width: 12),
             Expanded(
               child: _buildSummaryCard(
-                title: 'Spent',
+                title: 'Đã chi',
                 value: '₫${_formatNumber(analytics.totalSpentThisMonth)}',
                 icon: Icons.arrow_upward,
                 color: const Color(0xFFE74C3C),
@@ -223,7 +223,7 @@ class _BudgetAnalyticsScreenState extends State<BudgetAnalyticsScreen> {
           children: [
             Expanded(
               child: _buildSummaryCard(
-                title: 'Daily Avg',
+                title: 'TB/ngày',
                 value: '₫${_formatNumber(analytics.averageDailySpending)}',
                 icon: Icons.today,
                 color: const Color(0xFFF39C12),
@@ -321,7 +321,7 @@ class _BudgetAnalyticsScreenState extends State<BudgetAnalyticsScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            'Monthly Trend',
+            'Xu hướng theo tháng',
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
@@ -329,7 +329,7 @@ class _BudgetAnalyticsScreenState extends State<BudgetAnalyticsScreen> {
           ),
           const SizedBox(height: 8),
           Text(
-            'Budget vs Spending over time',
+            'So sánh ngân sách và chi tiêu theo thời gian',
             style: TextStyle(fontSize: 12, color: Colors.grey[600]),
           ),
           const SizedBox(height: 20),
@@ -344,7 +344,7 @@ class _BudgetAnalyticsScreenState extends State<BudgetAnalyticsScreen> {
                   touchTooltipData: BarTouchTooltipData(
                     getTooltipItem: (group, groupIndex, rod, rodIndex) {
                       final item = trend[group.x.toInt()];
-                      final label = rodIndex == 0 ? 'Budget' : 'Spent';
+                      final label = rodIndex == 0 ? 'Ngân sách' : 'Đã chi';
                       final value = rodIndex == 0 ? item.budgetLimit : item.amountSpent;
                       return BarTooltipItem(
                         '$label\n₫${_formatNumber(value)}',
@@ -407,9 +407,9 @@ class _BudgetAnalyticsScreenState extends State<BudgetAnalyticsScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              _buildLegendItem('Budget', const Color(0xFF6C5CE7).withOpacity(0.5)),
+              _buildLegendItem('Ngân sách', const Color(0xFF6C5CE7).withOpacity(0.5)),
               const SizedBox(width: 24),
-              _buildLegendItem('Spent', const Color(0xFF00B894)),
+              _buildLegendItem('Đã chi', const Color(0xFF00B894)),
             ],
           ),
         ],
@@ -457,7 +457,7 @@ class _BudgetAnalyticsScreenState extends State<BudgetAnalyticsScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            'Spending by Category',
+            'Chi tiêu theo danh mục',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 20),
@@ -644,7 +644,7 @@ class _BudgetAnalyticsScreenState extends State<BudgetAnalyticsScreen> {
           const SizedBox(height: 8),
           Row(
             children: [
-              _buildMiniStat('Avg', '₫${_formatNumber(suggestion.averageSpent)}'),
+              _buildMiniStat('TB', '₫${_formatNumber(suggestion.averageSpent)}'),
               const SizedBox(width: 16),
               _buildMiniStat('Min', '₫${_formatNumber(suggestion.minSpent)}'),
               const SizedBox(width: 16),

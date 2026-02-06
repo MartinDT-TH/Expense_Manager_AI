@@ -338,7 +338,7 @@ class _GroupListScreenState extends State<GroupListScreen> {
                 children: [
                   Expanded(
                     child: _buildStatItem(
-                      'Total Expense',
+                      'Tổng chi',
                       _formatCurrency(group.totalExpense),
                       AppColors.expense,
                     ),
@@ -350,7 +350,7 @@ class _GroupListScreenState extends State<GroupListScreen> {
                   ),
                   Expanded(
                     child: _buildStatItem(
-                      'Total Income',
+                      'Tổng thu',
                       _formatCurrency(group.totalIncome),
                       AppColors.income,
                     ),
