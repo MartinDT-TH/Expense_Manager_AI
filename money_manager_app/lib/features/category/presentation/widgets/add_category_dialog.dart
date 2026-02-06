@@ -78,12 +78,12 @@ class _AddCategoryDialogState extends State<AddCategoryDialog> {
                         controller: _nameController,
                         decoration: const InputDecoration(
                           labelText: 'Tên danh mục',
-                          hintText: 'e.g. Food & Drinks',
+                          hintText: 'vd. Ăn uống',
                           border: OutlineInputBorder(),
                         ),
                         validator: (value) {
                           if (value == null || value.trim().isEmpty) {
-                            return 'Please enter category name';
+                            return 'Vui lòng nhập tên danh mục';
                           }
                           return null;
                         },
@@ -93,7 +93,7 @@ class _AddCategoryDialogState extends State<AddCategoryDialog> {
                       // Category type selector (only for new categories)
                       if (!isEditing) ...[  
                         Text(
-                          'Type',
+                          'Loại',
                           style: Theme.of(context).textTheme.titleSmall,
                         ),
                         const SizedBox(height: 8),
@@ -123,7 +123,7 @@ class _AddCategoryDialogState extends State<AddCategoryDialog> {
 
                       // Icon selector
                       Text(
-                        'Icon',
+                        'Biểu tượng',
                         style: Theme.of(context).textTheme.titleSmall,
                       ),
                       const SizedBox(height: 8),

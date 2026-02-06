@@ -593,7 +593,7 @@ class _StatisticsContentState extends State<_StatisticsContent>
             Icon(Icons.pie_chart_outline, size: 64, color: Colors.grey),
             SizedBox(height: 16),
             Text(
-              'No data for this period',
+              'Không có dữ liệu cho khoảng thời gian này',
               style: TextStyle(color: Colors.grey),
             ),
           ],
@@ -698,7 +698,7 @@ class _StatisticsContentState extends State<_StatisticsContent>
             Icon(Icons.bar_chart_outlined, size: 64, color: Colors.grey),
             SizedBox(height: 16),
             Text(
-              'No data for this period',
+              'Không có dữ liệu cho khoảng thời gian này',
               style: TextStyle(color: Colors.grey),
             ),
           ],

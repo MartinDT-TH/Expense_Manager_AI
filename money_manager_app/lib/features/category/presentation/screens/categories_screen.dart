@@ -50,7 +50,7 @@ class _CategoriesScreenState extends State<CategoriesScreen>
         ),
         elevation: 0,
         title: const Text(
-          'Categories',
+          'Danh mục',
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
@@ -140,7 +140,7 @@ class _CategoriesScreenState extends State<CategoriesScreen>
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  'No categories available',
+                  'Chưa có danh mục',
                   style: TextStyle(
                     color: Colors.grey[600],
                     fontSize: 16,
@@ -188,15 +188,15 @@ class _CategoriesScreenState extends State<CategoriesScreen>
             const SizedBox(height: 16),
             Text(
               type == CategoryType.expense
-                  ? 'No expense categories yet'
-                  : 'No income categories yet',
+                  ? 'Chưa có danh mục chi tiêu'
+                  : 'Chưa có danh mục thu nhập',
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                     color: Colors.grey[600],
                   ),
             ),
             const SizedBox(height: 8),
             Text(
-              'Tap + to create one',
+              'Nhấn + để tạo',
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     color: Colors.grey[500],
                   ),
@@ -220,9 +220,9 @@ class _CategoriesScreenState extends State<CategoriesScreen>
           // System Categories Section
           if (systemCategories.isNotEmpty) ...[
             _buildSectionHeader(
-              'Default Categories',
+              'Danh mục mặc định',
               Icons.lock_outline,
-              'System categories cannot be edited',
+              'Không thể chỉnh sửa danh mục hệ thống',
               systemCategories.length,
             ),
             const SizedBox(height: 8),
@@ -238,9 +238,9 @@ class _CategoriesScreenState extends State<CategoriesScreen>
           // Custom Categories Section
           if (customCategories.isNotEmpty) ...[
             _buildSectionHeader(
-              'My Categories',
+              'Danh mục của tôi',
               Icons.person_outline,
-              'Custom categories created by you',
+              'Danh mục tuỳ chỉnh do bạn tạo',
               customCategories.length,
             ),
             const SizedBox(height: 8),
@@ -255,9 +255,9 @@ class _CategoriesScreenState extends State<CategoriesScreen>
           // Empty custom section with hint
           if (customCategories.isEmpty && systemCategories.isNotEmpty) ...[
             _buildSectionHeader(
-              'My Categories',
+              'Danh mục của tôi',
               Icons.person_outline,
-              'Create your own custom categories',
+              'Tạo danh mục tuỳ chỉnh của bạn',
               0,
             ),
             const SizedBox(height: 16),
@@ -280,7 +280,7 @@ class _CategoriesScreenState extends State<CategoriesScreen>
                   ),
                   const SizedBox(height: 12),
                   Text(
-                    'No custom categories yet',
+                    'Chưa có danh mục tuỳ chỉnh',
                     style: TextStyle(
                       color: Colors.grey[600],
                       fontWeight: FontWeight.w500,
@@ -288,7 +288,7 @@ class _CategoriesScreenState extends State<CategoriesScreen>
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    'Tap the + button to create one',
+                    'Nhấn nút + để tạo',
                     style: TextStyle(
                       color: Colors.grey[500],
                       fontSize: 12,
@@ -400,7 +400,7 @@ class _CategoriesScreenState extends State<CategoriesScreen>
       // System categories cannot be edited
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Cannot edit system categories'),
+          content: Text('Không thể chỉnh sửa danh mục hệ thống'),
         ),
       );
       return;
@@ -414,7 +414,7 @@ class _CategoriesScreenState extends State<CategoriesScreen>
           children: [
             ListTile(
               leading: const Icon(Icons.edit),
-              title: const Text('Edit'),
+              title: const Text('Chỉnh sửa'),
               onTap: () {
                 Navigator.pop(bottomSheetContext);
                 _showEditCategoryDialog(context, category);
@@ -457,7 +457,7 @@ class _CategoriesScreenState extends State<CategoriesScreen>
       context: context,
       builder: (dialogContext) => AlertDialog(
         title: const Text('Xóa danh mục'),
-        content: Text('Are you sure you want to delete "${category.name}"?'),
+        content: Text('Bạn có chắc muốn xóa "${category.name}" không?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext),

@@ -88,7 +88,7 @@ class CategoryTile extends StatelessWidget {
                                 ),
                                 const SizedBox(width: 2),
                                 Text(
-                                  'System',
+                                  'Hệ thống',
                                   style: TextStyle(
                                     fontSize: 10,
                                     color: Colors.grey[600],
@@ -119,7 +119,7 @@ class CategoryTile extends StatelessWidget {
                                 ),
                                 const SizedBox(width: 2),
                                 const Text(
-                                  'Custom',
+                                  'Tuỳ chỉnh',
                                   style: TextStyle(
                                     fontSize: 10,
                                     color: Color(0xFF6C5CE7),

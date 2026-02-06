@@ -60,7 +60,7 @@ class GroupBloc extends Bloc<GroupEvent, GroupState> {
     try {
       final group = await repository.getGroupById(event.groupId);
       if (group == null) {
-        emit(const GroupError('Group not found'));
+        emit(const GroupError('Không tìm thấy nhóm'));
         return;
       }
 
@@ -270,20 +270,20 @@ class GroupBloc extends Bloc<GroupEvent, GroupState> {
   /// Helper để lấy error message
   String _getErrorMessage(dynamic error) {
     if (error.toString().contains('premium')) {
-      return 'This feature requires Premium subscription';
+      return 'Tính năng này yêu cầu gói Premium';
     }
     if (error.toString().contains('401')) {
-      return 'Session expired. Please login again';
+      return 'Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại';
     }
     if (error.toString().contains('404')) {
-      return 'Group not found';
+      return 'Không tìm thấy nhóm';
     }
     if (error.toString().contains('403')) {
       return 'You do not have permission for this action';
     }
     if (error.toString().contains('SocketException') || 
         error.toString().contains('Connection')) {
-      return 'No internet connection';
+      return 'Không có kết nối mạng';
     }
     return error.toString();
   }

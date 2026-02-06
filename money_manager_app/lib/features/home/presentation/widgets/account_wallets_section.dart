@@ -33,7 +33,7 @@ class AccountWalletsSection extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'My Accounts',
+                  'Tài khoản của tôi',
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -55,7 +55,7 @@ class AccountWalletsSection extends StatelessWidget {
                     });
                   },
                   child: const Text(
-                    'See All',
+                    'Xem tất cả',
                     style: TextStyle(
                       color: Color(0xFF6C5CE7),
                       fontWeight: FontWeight.w600,
@@ -252,7 +252,7 @@ class AccountWalletsSection extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             Text(
-              'Add your first wallet',
+              'Thêm ví đầu tiên',
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
@@ -261,7 +261,7 @@ class AccountWalletsSection extends StatelessWidget {
             ),
             const SizedBox(height: 4),
             Text(
-              'Tap to create',
+              'Nhấn để tạo',
               style: TextStyle(
                 fontSize: 12,
                 color: isDark ? Colors.grey[500] : Colors.grey[600],
@@ -318,14 +318,14 @@ class AccountWalletsSection extends StatelessWidget {
   String _getWalletTypeName(String type) {
     switch (type.toUpperCase()) {
       case 'BANK':
-        return 'Bank';
+        return 'Ngân hàng';
       case 'E_WALLET':
-        return 'E-Wallet';
+        return 'Ví điện tử';
       case 'CREDIT_CARD':
-        return 'Credit';
+        return 'Thẻ tín dụng';
       case 'CASH':
       default:
-        return 'Cash';
+        return 'Tiền mặt';
     }
   }
 }

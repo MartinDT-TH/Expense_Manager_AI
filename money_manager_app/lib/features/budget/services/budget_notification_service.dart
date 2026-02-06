@@ -49,7 +49,7 @@ class BudgetNotificationService {
     await _createNotificationChannels();
 
     _isInitialized = true;
-    debugPrint('BudgetNotificationService initialized');
+    debugPrint('Đã khởi tạo BudgetNotificationService');
   }
 
   static Future<void> _createNotificationChannels() async {
@@ -218,7 +218,7 @@ class BudgetNotificationService {
       payload: 'daily_summary',
     );
 
-    debugPrint('Daily summary notification scheduled for $hour:$minute');
+    debugPrint('Đã lên lịch tổng kết hằng ngày lúc $hour:$minute');
   }
 
   /// Cancel daily summary notification
@@ -236,10 +236,10 @@ class BudgetNotificationService {
     await _showNotification(
       id: DateTime.now().day + 8000,
       channelId: _budgetWarningChannelId,
-      title: '📈 High Spending Today',
-      body: 'You\'ve spent ₫${_formatNumber(todaySpending)} today, '
-            'which is ${((todaySpending / averageDaily - 1) * 100).round()}% '
-            'more than your daily average.',
+      title: '📈 Chi tiêu cao hôm nay',
+      body: 'Hôm nay bạn đã chi ₫${_formatNumber(todaySpending)}, '
+            'cao hơn ${((todaySpending / averageDaily - 1) * 100).round()}% '
+            'so với mức trung bình hằng ngày.',
       payload: 'high_spending',
       color: const Color(0xFFF39C12),
     );
@@ -257,11 +257,11 @@ class BudgetNotificationService {
     final androidDetails = AndroidNotificationDetails(
       channelId,
       channelId == _budgetExceededChannelId 
-          ? 'Budget Exceeded' 
+          ? 'Vượt ngân sách' 
           : channelId == _budgetWarningChannelId 
-              ? 'Budget Warnings' 
-              : 'Daily Reminders',
-      channelDescription: 'Budget notifications',
+              ? 'Cảnh báo ngân sách' 
+              : 'Nhắc nhở hằng ngày',
+      channelDescription: 'Thông báo ngân sách',
       importance: channelId == _budgetExceededChannelId 
           ? Importance.max 
           : Importance.high,
@@ -305,7 +305,7 @@ class BudgetNotificationService {
         'created_at': DateTime.now().toIso8601String(),
       });
     } catch (e) {
-      debugPrint('Failed to save notification to DB: $e');
+      debugPrint('Không thể lưu thông báo vào DB: $e');
     }
   }
 

@@ -23,15 +23,15 @@ class _AddWalletDialogState extends State<AddWalletDialog> {
   String _selectedCurrency = 'VND';
 
   final List<Map<String, dynamic>> _walletTypes = [
-    {'value': 'CASH', 'label': 'Cash', 'icon': Icons.wallet},
-    {'value': 'BANK', 'label': 'Bank Account', 'icon': Icons.account_balance},
-    {'value': 'E_WALLET', 'label': 'E-Wallet', 'icon': Icons.phone_android},
-    {'value': 'CREDIT_CARD', 'label': 'Credit Card', 'icon': Icons.credit_card},
+    {'value': 'CASH', 'label': 'Tiền mặt', 'icon': Icons.wallet},
+    {'value': 'BANK', 'label': 'Tài khoản ngân hàng', 'icon': Icons.account_balance},
+    {'value': 'E_WALLET', 'label': 'Ví điện tử', 'icon': Icons.phone_android},
+    {'value': 'CREDIT_CARD', 'label': 'Thẻ tín dụng', 'icon': Icons.credit_card},
   ];
 
   final List<Map<String, String>> _currencies = [
-    {'value': 'VND', 'label': 'VND - Vietnamese Dong'},
-    {'value': 'USD', 'label': 'USD - US Dollar'},
+    {'value': 'VND', 'label': 'VND - Đồng Việt Nam'},
+    {'value': 'USD', 'label': 'USD - Đô la Mỹ'},
     {'value': 'EUR', 'label': 'EUR - Euro'},
   ];
 
@@ -85,7 +85,7 @@ class _AddWalletDialogState extends State<AddWalletDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(isEditing ? 'Edit Wallet' : 'Create New Wallet'),
+      title: Text(isEditing ? 'Sửa ví' : 'Tạo ví mới'),
       content: SingleChildScrollView(
         child: Form(
           key: _formKey,
@@ -95,13 +95,13 @@ class _AddWalletDialogState extends State<AddWalletDialog> {
               TextFormField(
                 controller: _nameController,
                 decoration: const InputDecoration(
-                  labelText: 'Wallet Name',
-                  hintText: 'e.g. Cash Wallet',
+                  labelText: 'Tên ví',
+                  hintText: 'vd. Ví tiền mặt',
                   prefixIcon: Icon(Icons.wallet),
                 ),
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
-                    return 'Please enter wallet name';
+                    return 'Vui lòng nhập tên ví';
                   }
                   return null;
                 },
@@ -110,7 +110,7 @@ class _AddWalletDialogState extends State<AddWalletDialog> {
               TextFormField(
                 controller: _balanceController,
                 decoration: const InputDecoration(
-                  labelText: 'Initial Balance',
+                  labelText: 'Số dư ban đầu',
                   hintText: '0',
                   prefixIcon: Icon(Icons.attach_money),
                 ),
@@ -123,7 +123,7 @@ class _AddWalletDialogState extends State<AddWalletDialog> {
               DropdownButtonFormField<String>(
                 value: _selectedType,
                 decoration: const InputDecoration(
-                  labelText: 'Wallet Type',
+                  labelText: 'Loại ví',
                   prefixIcon: Icon(Icons.category),
                 ),
                 items: _walletTypes.map((type) {
@@ -148,7 +148,7 @@ class _AddWalletDialogState extends State<AddWalletDialog> {
               DropdownButtonFormField<String>(
                 value: _selectedCurrency,
                 decoration: const InputDecoration(
-                  labelText: 'Currency',
+                  labelText: 'Tiền tệ',
                   prefixIcon: Icon(Icons.currency_exchange),
                 ),
                 items: _currencies.map((currency) {
@@ -174,7 +174,7 @@ class _AddWalletDialogState extends State<AddWalletDialog> {
         ),
         ElevatedButton(
           onPressed: _submit,
-          child: Text(isEditing ? 'Update' : 'Create'),
+          child: Text(isEditing ? 'Cập nhật' : 'Tạo'),
         ),
       ],
     );
