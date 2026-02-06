@@ -58,7 +58,7 @@ public class PurchaseVerificationService : IPurchaseVerificationService
                 return new PurchaseVerificationResult
                 {
                     Success = false,
-                    Message = "User not found"
+                    Message = "Không tìm th?y ngu?i dùng"
                 };
             }
 
@@ -66,11 +66,11 @@ public class PurchaseVerificationService : IPurchaseVerificationService
             var accessToken = await GetGooglePlayAccessTokenAsync();
             if (string.IsNullOrEmpty(accessToken))
             {
-                _logger.LogError("Failed to get Google Play access token");
+                _logger.LogError("Không l?y du?c access token Google Play");
                 return new PurchaseVerificationResult
                 {
                     Success = false,
-                    Message = "Failed to authenticate with Google Play"
+                    Message = "Không th? xác th?c v?i Google Play"
                 };
             }
 
@@ -117,7 +117,7 @@ public class PurchaseVerificationService : IPurchaseVerificationService
             return new PurchaseVerificationResult
             {
                 Success = false,
-                Message = $"Verification failed: {ex.Message}"
+                Message = $"Xác th?c th?t b?i: {ex.Message}"
             };
         }
     }
@@ -142,7 +142,7 @@ public class PurchaseVerificationService : IPurchaseVerificationService
             {
                 Success = false,
                 IsValid = false,
-                Message = "Failed to verify subscription with Google Play"
+                Message = "Không th? xác th?c gói dang ký v?i Google Play"
             };
         }
 
@@ -153,7 +153,7 @@ public class PurchaseVerificationService : IPurchaseVerificationService
             {
                 Success = false,
                 IsValid = false,
-                Message = "Invalid response from Google Play"
+                Message = "Ph?n h?i t? Google Play không h?p l?"
             };
         }
 
@@ -206,7 +206,7 @@ public class PurchaseVerificationService : IPurchaseVerificationService
             {
                 Success = false,
                 IsValid = false,
-                Message = "Failed to verify purchase with Google Play"
+                Message = "Không th? xác th?c giao d?ch v?i Google Play"
             };
         }
 
@@ -217,7 +217,7 @@ public class PurchaseVerificationService : IPurchaseVerificationService
             {
                 Success = false,
                 IsValid = false,
-                Message = "Invalid response from Google Play"
+                Message = "Ph?n h?i t? Google Play không h?p l?"
             };
         }
 
@@ -273,7 +273,7 @@ public class PurchaseVerificationService : IPurchaseVerificationService
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Failed to get Google Play access token");
+            _logger.LogError(ex, "Không l?y du?c access token Google Play");
             return null;
         }
     }
@@ -327,12 +327,12 @@ public class PurchaseVerificationService : IPurchaseVerificationService
     {
         // TODO: Implement App Store receipt verification
         // This requires calling Apple's verifyReceipt endpoint
-        _logger.LogWarning("App Store verification not implemented yet");
+        _logger.LogWarning("Chua h? tr? xác th?c App Store");
         
         return new PurchaseVerificationResult
         {
             Success = false,
-            Message = "App Store verification not implemented yet"
+            Message = "Chua h? tr? xác th?c App Store"
         };
     }
 
@@ -417,7 +417,7 @@ public class PurchaseVerificationService : IPurchaseVerificationService
     public Task<bool> HandleAppStoreWebhookAsync(string notificationData)
     {
         // TODO: Implement App Store Server Notifications handling
-        _logger.LogWarning("App Store webhook handling not implemented yet");
+        _logger.LogWarning("Chua h? tr? webhook App Store");
         return Task.FromResult(false);
     }
 }
@@ -472,3 +472,4 @@ internal class OneTimeProductNotification
 }
 
 #endregion
+

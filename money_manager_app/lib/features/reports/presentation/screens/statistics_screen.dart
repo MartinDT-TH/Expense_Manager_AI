@@ -74,7 +74,7 @@ class _StatisticsContentState extends State<_StatisticsContent>
         ),
         elevation: 0,
         title: const Text(
-          'Statistics',
+          'Thống kê',
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
         ),
         centerTitle: true,
@@ -101,7 +101,7 @@ class _StatisticsContentState extends State<_StatisticsContent>
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Text(
-                            'Premium',
+                            'Cao cấp',
                             style: TextStyle(
                               fontSize: 8 * scale,
                               fontWeight: FontWeight.w700,
@@ -113,7 +113,7 @@ class _StatisticsContentState extends State<_StatisticsContent>
                     ],
                   ),
                   onPressed: () => _showExportDialog(context, state),
-                  tooltip: 'Export Report',
+                  tooltip: 'Xuất báo cáo',
                 );
               }
               return const SizedBox();
@@ -207,7 +207,7 @@ class _StatisticsContentState extends State<_StatisticsContent>
                             Navigator.of(dialogContext).pop();
                             FileService().shareFile(
                               filePath: filePath,
-                              subject: 'MoneyManager Report - ${result.fileName}',
+                              subject: 'Báo cáo Smart Money - ${result.fileName}',
                             );
                           },
                           icon: const Icon(Icons.share),
@@ -254,7 +254,7 @@ class _StatisticsContentState extends State<_StatisticsContent>
           } else if (state is ReportExportError) {
             TopAlert.show(
               context,
-              message: 'Export failed: ${state.message}',
+                message: 'Xuất báo cáo thất bại: ${state.message}',
               backgroundColor: Colors.red,
               icon: Icons.error_outline,
             );
@@ -268,7 +268,7 @@ class _StatisticsContentState extends State<_StatisticsContent>
                 children: [
                   CircularProgressIndicator(color: Color(0xFF6C5CE7)),
                   SizedBox(height: 16),
-                  Text('Loading statistics...'),
+                  Text('Đang tải thống kê...'),
                 ],
               ),
             );
@@ -286,7 +286,7 @@ class _StatisticsContentState extends State<_StatisticsContent>
                   ElevatedButton(
                     onPressed: () =>
                         context.read<ReportBloc>().add(LoadQuickSummary()),
-                    child: const Text('Retry'),
+                    child: const Text('Thử lại'),
                   ),
                 ],
               ),
@@ -346,8 +346,8 @@ class _StatisticsContentState extends State<_StatisticsContent>
                     labelColor: const Color(0xFF6C5CE7),
                     unselectedLabelColor: Colors.grey,
                     tabs: const [
-                      Tab(text: 'By Category'),
-                      Tab(text: 'Over Time'),
+                      Tab(text: 'Theo danh mục'),
+                      Tab(text: 'Theo thời gian'),
                     ],
                   ),
                   SizedBox(
@@ -392,9 +392,9 @@ class _StatisticsContentState extends State<_StatisticsContent>
       ),
       child: Row(
         children: [
-          _buildFilterChip('Week', 'week', context),
-          _buildFilterChip('Month', 'month', context),
-          _buildFilterChip('Custom', 'custom', context),
+          _buildFilterChip('Tuần', 'week', context),
+          _buildFilterChip('Tháng', 'month', context),
+          _buildFilterChip('Tùy chỉnh', 'custom', context),
         ],
       ),
     );
@@ -505,7 +505,7 @@ class _StatisticsContentState extends State<_StatisticsContent>
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Text(
-                    'Net Balance',
+                    'Số dư ròng',
                     style: TextStyle(
                       color: Colors.white70,
                       fontSize: 13,
@@ -518,7 +518,7 @@ class _StatisticsContentState extends State<_StatisticsContent>
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
-                      '${summary.transactionCount} transactions',
+                      '${summary.transactionCount} giao dịch',
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 12,
@@ -546,7 +546,7 @@ class _StatisticsContentState extends State<_StatisticsContent>
                   ),
                   const SizedBox(width: 4),
                   Text(
-                    netBalance >= 0 ? 'You\'re in good shape!' : 'Spending exceeds income',
+                    netBalance >= 0 ? 'Tình hình chi tiêu ổn định!' : 'Chi tiêu vượt quá thu nhập',
                     style: const TextStyle(
                       color: Colors.white70,
                       fontSize: 12,
@@ -563,7 +563,7 @@ class _StatisticsContentState extends State<_StatisticsContent>
           children: [
             Expanded(
               child: _SummaryCard(
-                title: 'Income',
+                title: 'Thu nhập',
                 amount: summary.totalIncome,
                 icon: Icons.arrow_downward,
                 color: const Color(0xFF00B894),
@@ -572,7 +572,7 @@ class _StatisticsContentState extends State<_StatisticsContent>
             SizedBox(width: 12 * scale),
             Expanded(
               child: _SummaryCard(
-                title: 'Expense',
+                title: 'Chi tiêu',
                 amount: summary.totalExpense,
                 icon: Icons.arrow_upward,
                 color: const Color(0xFFE17055),
@@ -929,7 +929,7 @@ class _StatisticsContentState extends State<_StatisticsContent>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            'Top Categories',
+            'Danh mục hàng đầu',
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
@@ -988,7 +988,7 @@ class _StatisticsContentState extends State<_StatisticsContent>
                             overflow: TextOverflow.ellipsis,
                           ),
                           Text(
-                            '${item.transactionCount} transactions',
+                            '${item.transactionCount} giao dịch',
                             style: TextStyle(
                               fontSize: 12,
                               color: Colors.grey[600],
@@ -1234,7 +1234,7 @@ class _ExportBottomSheet extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'Export Report',
+                'Xuất báo cáo',
                 style: TextStyle(
                   fontSize: 18 * scale,
                   fontWeight: FontWeight.bold,
@@ -1251,7 +1251,7 @@ class _ExportBottomSheet extends StatelessWidget {
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Text(
-                  'Premium',
+                  'Cao cấp',
                   style: TextStyle(
                     fontSize: 10 * scale,
                     fontWeight: FontWeight.w700,
@@ -1365,7 +1365,7 @@ class _ExportOptionButton extends StatelessWidget {
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Text(
-                  'Premium',
+                  'Cao cấp',
                   style: TextStyle(
                     fontSize: 9 * scale,
                     fontWeight: FontWeight.w700,
@@ -1404,7 +1404,7 @@ class _ExportOptionButton extends StatelessWidget {
             ),
             const SizedBox(width: 12),
             Text(
-              'Premium Feature',
+              'Tính năng cao cấp',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -1418,7 +1418,7 @@ class _ExportOptionButton extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Export your reports in ${label.toUpperCase()} format to easily share and analyze your financial data.',
+              'Xuất báo cáo ở định dạng ${label.toUpperCase()} để dễ dàng chia sẻ và phân tích dữ liệu tài chính.',
               style: TextStyle(
                 color: isDark ? Colors.grey[400] : Colors.grey[700],
                 height: 1.5,
@@ -1433,9 +1433,9 @@ class _ExportOptionButton extends StatelessWidget {
               ),
               child: Column(
                 children: [
-                  _buildPremiumFeatureRow(Icons.download_rounded, 'Export in ${label} format', isDark),
-                  _buildPremiumFeatureRow(Icons.share_rounded, 'Share with others', isDark),
-                  _buildPremiumFeatureRow(Icons.cloud_download_rounded, 'Save to cloud', isDark),
+                  _buildPremiumFeatureRow(Icons.download_rounded, 'Xuất theo định dạng ${label}', isDark),
+                  _buildPremiumFeatureRow(Icons.share_rounded, 'Chia sẻ với người khác', isDark),
+                  _buildPremiumFeatureRow(Icons.cloud_download_rounded, 'Lưu lên đám mây', isDark),
                 ],
               ),
             ),
@@ -1445,7 +1445,7 @@ class _ExportOptionButton extends StatelessWidget {
           TextButton(
             onPressed: () => Navigator.pop(context),
             child: Text(
-              'Maybe Later',
+              'Để sau',
               style: TextStyle(color: Colors.grey[600]),
             ),
           ),
@@ -1454,7 +1454,7 @@ class _ExportOptionButton extends StatelessWidget {
               Navigator.pop(context);
               TopAlert.show(
                 context,
-                message: 'Premium upgrade coming soon!',
+                message: 'Nâng cấp Premium sắp có!',
                 backgroundColor: const Color(0xFF6C5CE7),
                 icon: Icons.workspace_premium,
               );
@@ -1471,7 +1471,7 @@ class _ExportOptionButton extends StatelessWidget {
                 const Icon(Icons.workspace_premium, color: Colors.white, size: 16),
                 SizedBox(width: 6 * scale),
                 const Text(
-                  'Upgrade Now',
+                  'Nâng cấp ngay',
                   style: TextStyle(color: Colors.white),
                 ),
               ],

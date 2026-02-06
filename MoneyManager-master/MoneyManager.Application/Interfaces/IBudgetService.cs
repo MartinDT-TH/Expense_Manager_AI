@@ -44,4 +44,19 @@ public interface IBudgetService
     /// Ưu tiên: Budget cụ thể cho tháng > Budget recurring (mặc định)
     /// </summary>
     Task<BudgetResponse?> GetCurrentMonthBudgetAsync(Guid userId);
+    
+    /// <summary>
+    /// Lấy lịch sử ngân sách theo tháng
+    /// </summary>
+    Task<BudgetHistoryResponse> GetBudgetHistoryAsync(Guid userId, int months = 6);
+    
+    /// <summary>
+    /// Lấy phân tích ngân sách
+    /// </summary>
+    Task<BudgetAnalyticsResponse> GetBudgetAnalyticsAsync(Guid userId);
+    
+    /// <summary>
+    /// Lấy đề xuất ngân sách thông minh dựa trên chi tiêu
+    /// </summary>
+    Task<List<BudgetSuggestion>> GetBudgetSuggestionsAsync(Guid userId);
 }

@@ -117,3 +117,88 @@ public class BudgetWarningResponse
     public int TotalWarnings { get; set; }
     public int TotalExceeded { get; set; }
 }
+
+// ===== ANALYTICS DTOs =====
+
+/// <summary>
+/// Budget history for a specific month
+/// </summary>
+public class BudgetHistoryItem
+{
+    public int Year { get; set; }
+    public int Month { get; set; }
+    public string MonthName { get; set; } = string.Empty;
+    public decimal BudgetLimit { get; set; }
+    public decimal AmountSpent { get; set; }
+    public decimal AmountRemaining { get; set; }
+    public double PercentUsed { get; set; }
+    public bool WasExceeded { get; set; }
+}
+
+/// <summary>
+/// Budget history response
+/// </summary>
+public class BudgetHistoryResponse
+{
+    public List<BudgetHistoryItem> History { get; set; } = new();
+    public decimal AverageMonthlySpending { get; set; }
+    public decimal AverageMonthlyBudget { get; set; }
+    public int MonthsExceeded { get; set; }
+    public int TotalMonths { get; set; }
+}
+
+/// <summary>
+/// Budget analytics by category
+/// </summary>
+public class CategoryBudgetAnalytics
+{
+    public Guid? CategoryId { get; set; }
+    public string CategoryName { get; set; } = string.Empty;
+    public string? CategoryIcon { get; set; }
+    public decimal TotalBudget { get; set; }
+    public decimal TotalSpent { get; set; }
+    public double PercentUsed { get; set; }
+    public decimal AverageMonthlySpent { get; set; }
+}
+
+/// <summary>
+/// Budget analytics response
+/// </summary>
+public class BudgetAnalyticsResponse
+{
+    // Summary
+    public decimal TotalBudgetThisMonth { get; set; }
+    public decimal TotalSpentThisMonth { get; set; }
+    public decimal RemainingThisMonth { get; set; }
+    public double PercentUsedThisMonth { get; set; }
+    
+    // Trends
+    public List<BudgetHistoryItem> MonthlyTrend { get; set; } = new();
+    
+    // Category breakdown
+    public List<CategoryBudgetAnalytics> CategoryBreakdown { get; set; } = new();
+    
+    // Insights
+    public decimal AverageDailySpending { get; set; }
+    public decimal ProjectedMonthlySpending { get; set; }
+    public bool WillExceedBudget { get; set; }
+    public int DaysUntilBudgetExceeded { get; set; }
+    
+    // Recommendations
+    public decimal SuggestedDailyLimit { get; set; }
+    public string? InsightMessage { get; set; }
+}
+
+/// <summary>
+/// Smart budget suggestion based on spending history
+/// </summary>
+public class BudgetSuggestion
+{
+    public Guid? CategoryId { get; set; }
+    public string CategoryName { get; set; } = string.Empty;
+    public decimal SuggestedAmount { get; set; }
+    public decimal AverageSpent { get; set; }
+    public decimal MinSpent { get; set; }
+    public decimal MaxSpent { get; set; }
+    public string Reason { get; set; } = string.Empty;
+}

@@ -58,7 +58,7 @@ class _JoinGroupScreenState extends State<JoinGroupScreen> {
             onPressed: () => Navigator.pop(context),
           ),
           title: const Text(
-            'Join Group',
+            'Tham gia nhóm',
             style: TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.w600,
@@ -92,7 +92,7 @@ class _JoinGroupScreenState extends State<JoinGroupScreen> {
 
                 // Title
                 const Text(
-                  'Enter Invite Code',
+                  'Nhập mã mời',
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
@@ -100,7 +100,7 @@ class _JoinGroupScreenState extends State<JoinGroupScreen> {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Ask the group admin for the invite code',
+                  'Hỏi quản trị viên nhóm để lấy mã mời',
                   style: TextStyle(
                     fontSize: 14,
                     color: Colors.grey[600],
@@ -112,7 +112,7 @@ class _JoinGroupScreenState extends State<JoinGroupScreen> {
                 TextFormField(
                   controller: _codeController,
                   decoration: InputDecoration(
-                    hintText: 'E.g. FAMILY88',
+                    hintText: 'Ví dụ: FAMILY88',
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(16),
                     ),
@@ -120,7 +120,7 @@ class _JoinGroupScreenState extends State<JoinGroupScreen> {
                     suffixIcon: IconButton(
                       icon: const Icon(Icons.paste),
                       onPressed: _pasteFromClipboard,
-                      tooltip: 'Paste from clipboard',
+                      tooltip: 'Dán từ clipboard',
                     ),
                   ),
                   textAlign: TextAlign.center,
@@ -137,10 +137,10 @@ class _JoinGroupScreenState extends State<JoinGroupScreen> {
                   ],
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
-                      return 'Please enter invite code';
+                      return 'Vui lòng nhập mã mời';
                     }
                     if (value.trim().length < 4) {
-                      return 'Invite code must be at least 4 characters';
+                      return 'Mã mời phải có ít nhất 4 ký tự';
                     }
                     return null;
                   },
@@ -170,7 +170,7 @@ class _JoinGroupScreenState extends State<JoinGroupScreen> {
                             ),
                           )
                         : const Text(
-                            'Join Group',
+                            'Tham gia nhóm',
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
@@ -196,10 +196,10 @@ class _JoinGroupScreenState extends State<JoinGroupScreen> {
                       const SizedBox(width: 12),
                       Expanded(
                         child: Text(
-                          'After joining, you can:\n'
-                          '• View shared group expenses\n'
-                          '• Add expenses to the group\n'
-                          '• See who spent how much and who owes',
+                          'Sau khi tham gia, bạn có thể:\n'
+                          '• Xem chi tiêu chung của nhóm\n'
+                          '• Thêm chi tiêu vào nhóm\n'
+                          '• Xem ai đã chi bao nhiêu và ai đang nợ',
                           style: TextStyle(
                             fontSize: 13,
                             color: Colors.blue[700],

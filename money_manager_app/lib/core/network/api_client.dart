@@ -9,6 +9,8 @@ class ApiClient {
   final TokenStorage _tokenStorage = const TokenStorage();
   Completer<String?>? _refreshCompleter;
 
+  Dio get dio => _dio;
+
   ApiClient() {
     _dio = Dio(
       BaseOptions(

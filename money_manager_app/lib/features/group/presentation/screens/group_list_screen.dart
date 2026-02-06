@@ -37,7 +37,7 @@ class _GroupListScreenState extends State<GroupListScreen> {
         backgroundColor: const Color(0xFF6C5CE7),
         elevation: 0,
         title: Text(
-          'Group Fund',
+          'Quỹ nhóm',
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.w600,
@@ -59,7 +59,7 @@ class _GroupListScreenState extends State<GroupListScreen> {
           if (state is GroupJoined) {
             TopAlert.show(
               context,
-              message: 'Joined group "${state.group.name}"',
+              message: 'Đã tham gia nhóm "${state.group.name}"',
               backgroundColor: AppColors.success,
               icon: Icons.check_circle_outline,
             );
@@ -68,7 +68,7 @@ class _GroupListScreenState extends State<GroupListScreen> {
           if (state is GroupCreated) {
             TopAlert.show(
               context,
-              message: 'Created group "${state.group.name}"',
+              message: 'Đã tạo nhóm "${state.group.name}"',
               backgroundColor: AppColors.success,
               icon: Icons.check_circle_outline,
             );
@@ -77,7 +77,7 @@ class _GroupListScreenState extends State<GroupListScreen> {
           if (state is GroupLeft) {
             TopAlert.show(
               context,
-              message: 'Left the group',
+              message: 'Đã rời nhóm',
               backgroundColor: AppColors.success,
               icon: Icons.check_circle_outline,
             );
@@ -134,10 +134,10 @@ class _GroupListScreenState extends State<GroupListScreen> {
           _buildActionCard(
             context,
             icon: Icons.add_circle_outline,
-            title: 'Create New Group',
-            subtitle: 'Create a group to share expenses',
+            title: 'Tạo nhóm mới',
+            subtitle: 'Tạo nhóm để chia sẻ chi tiêu',
             color: AppColors.primary,
-            badgeText: 'Premium',
+            badgeText: 'Cao cấp',
             onTap: () => _onCreateGroupTap(context),
           ),
           SizedBox(height: 12 * scale),
@@ -146,8 +146,8 @@ class _GroupListScreenState extends State<GroupListScreen> {
           _buildActionCard(
             context,
             icon: Icons.group_add,
-            title: 'Join Group',
-            subtitle: 'Enter invite code to join a group',
+            title: 'Tham gia nhóm',
+            subtitle: 'Nhập mã mời để tham gia nhóm',
             color: AppColors.accent,
             onTap: () => _navigateToJoinGroup(context),
           ),
@@ -304,7 +304,7 @@ class _GroupListScreenState extends State<GroupListScreen> {
                                   borderRadius: BorderRadius.circular(4),
                                 ),
                                 child: const Text(
-                                  'Admin',
+                                  'Quản trị viên',
                                   style: TextStyle(
                                     fontSize: 11,
                                     color: AppColors.primary,
@@ -317,7 +317,7 @@ class _GroupListScreenState extends State<GroupListScreen> {
                         ),
                         SizedBox(height: 4 * scale),
                         Text(
-                          '${group.memberCount} members',
+                          '${group.memberCount} thành viên',
                           style: TextStyle(
                             fontSize: 12 * scale,
                             color: Colors.grey[600],
@@ -403,7 +403,7 @@ class _GroupListScreenState extends State<GroupListScreen> {
             ),
             SizedBox(height: 12 * scale),
             Text(
-              'No groups yet',
+              'Chưa có nhóm nào',
               style: TextStyle(
                 fontSize: 16 * scale,
                 fontWeight: FontWeight.bold,
@@ -412,7 +412,7 @@ class _GroupListScreenState extends State<GroupListScreen> {
             ),
             SizedBox(height: 8 * scale),
             Text(
-              'Create a new group or join with invite code\nto share expenses with friends and family',
+              'Tạo nhóm mới hoặc tham gia bằng mã mời\nđể chia sẻ chi tiêu với bạn bè và gia đình',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 12 * scale,
@@ -476,7 +476,7 @@ class _GroupListScreenState extends State<GroupListScreen> {
             ),
             const SizedBox(width: 12),
             Text(
-              'Premium Feature',
+              'Tính năng cao cấp',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -486,7 +486,7 @@ class _GroupListScreenState extends State<GroupListScreen> {
           ],
         ),
         content: Text(
-          'Create a group to share expenses with friends and family.',
+          'Tạo nhóm để chia sẻ chi tiêu với bạn bè và gia đình.',
           style: TextStyle(
             color: isDark ? Colors.grey[400] : Colors.grey[700],
             height: 1.5,
@@ -496,7 +496,7 @@ class _GroupListScreenState extends State<GroupListScreen> {
           TextButton(
             onPressed: () => Navigator.pop(context),
             child: Text(
-              'Maybe Later',
+              'Để sau',
               style: TextStyle(color: Colors.grey[600]),
             ),
           ),
@@ -505,7 +505,7 @@ class _GroupListScreenState extends State<GroupListScreen> {
               Navigator.pop(context);
               TopAlert.show(
                 context,
-                message: 'Premium upgrade coming soon!',
+                message: 'Nâng cấp Premium sắp có!',
                 backgroundColor: const Color(0xFF6C5CE7),
                 icon: Icons.workspace_premium,
               );
@@ -523,7 +523,7 @@ class _GroupListScreenState extends State<GroupListScreen> {
                     color: Colors.white, size: 16),
                 SizedBox(width: 6 * scale),
                 const Text(
-                  'Upgrade Now',
+                  'Nâng cấp ngay',
                   style: TextStyle(color: Colors.white),
                 ),
               ],
