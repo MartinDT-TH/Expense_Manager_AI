@@ -31,7 +31,7 @@ class TopExpensesSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Top Expenses',
+          'Chi tiêu nhiều nhất',
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,

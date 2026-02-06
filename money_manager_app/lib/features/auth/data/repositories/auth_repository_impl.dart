@@ -1,3 +1,4 @@
+import '../../../../core/database/local_database.dart';
 import '../../../../core/network/network_info.dart';
 import '../../../../core/auth/token_storage.dart';
 import '../../domain/entities/user.dart';
@@ -11,11 +12,13 @@ class AuthRepositoryImpl implements AuthRepository {
   final AuthLocalDataSource localDataSource;
   final NetworkInfo networkInfo;
   final TokenStorage tokenStorage;
+  final LocalDatabase localDatabase;
 
   AuthRepositoryImpl({
     required this.remoteDataSource,
     required this.localDataSource,
     required this.networkInfo,
+    required this.localDatabase,
     TokenStorage? tokenStorage,
   }) : tokenStorage = tokenStorage ?? const TokenStorage();
 
@@ -86,6 +89,8 @@ class AuthRepositoryImpl implements AuthRepository {
     }
     await tokenStorage.clearTokens();
     await localDataSource.deleteUser();
+    // Clear all local data to prevent data leak between accounts
+    await localDatabase.clearAllData();
   }
 
   @override

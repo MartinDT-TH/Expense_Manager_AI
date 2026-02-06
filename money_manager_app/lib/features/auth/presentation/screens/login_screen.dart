@@ -10,7 +10,9 @@ import 'otp_verification_screen.dart';
 import 'email_verification_screen.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+  final String? sessionExpiredMessage;
+  
+  const LoginScreen({super.key, this.sessionExpiredMessage});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -21,6 +23,45 @@ class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _obscurePassword = true;
+  bool _showedSessionExpiredMessage = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Show session expired message after build
+    if (widget.sessionExpiredMessage != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!_showedSessionExpiredMessage && mounted) {
+          _showedSessionExpiredMessage = true;
+          _showSessionExpiredSnackbar();
+        }
+      });
+    }
+  }
+
+  void _showSessionExpiredSnackbar() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            const Icon(Icons.timer_off_rounded, color: Colors.white, size: 20),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                widget.sessionExpiredMessage!,
+                style: const TextStyle(color: Colors.white),
+              ),
+            ),
+          ],
+        ),
+        backgroundColor: Colors.orange.shade700,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        margin: const EdgeInsets.all(16),
+        duration: const Duration(seconds: 5),
+      ),
+    );
+  }
 
   @override
   void dispose() {

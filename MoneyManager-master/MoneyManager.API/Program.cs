@@ -48,7 +48,7 @@ builder.Services.AddAuthentication(options => {
         ValidateAudience = false
     };
     
-    // Configure JWT for SignalR
+    // Configure JWT events for proper error handling and SignalR
     options.Events = new JwtBearerEvents
     {
         OnMessageReceived = context =>
@@ -62,6 +62,80 @@ builder.Services.AddAuthentication(options => {
                 context.Token = accessToken;
             }
             return Task.CompletedTask;
+        },
+        
+        // Return proper JSON error for invalid/expired tokens
+        OnAuthenticationFailed = context =>
+        {
+            var response = context.HttpContext.Response;
+            
+            // Determine error type
+            string errorCode;
+            string message;
+            
+            if (context.Exception is SecurityTokenExpiredException)
+            {
+                errorCode = "TOKEN_EXPIRED";
+                message = "Token đã hết hạn. Vui lòng đăng nhập lại.";
+                response.Headers.Append("Token-Expired", "true");
+            }
+            else if (context.Exception is SecurityTokenInvalidSignatureException)
+            {
+                errorCode = "TOKEN_INVALID";
+                message = "Token không hợp lệ.";
+            }
+            else
+            {
+                errorCode = "AUTH_FAILED";
+                message = "Xác thực thất bại.";
+            }
+            
+            // Store error info for OnChallenge
+            context.HttpContext.Items["AuthErrorCode"] = errorCode;
+            context.HttpContext.Items["AuthErrorMessage"] = message;
+            
+            return Task.CompletedTask;
+        },
+        
+        // Handle 401 challenge - return JSON instead of default response
+        OnChallenge = async context =>
+        {
+            // Skip default challenge behavior
+            context.HandleResponse();
+            
+            var response = context.HttpContext.Response;
+            response.StatusCode = 401;
+            response.ContentType = "application/json";
+            
+            // Get error info from OnAuthenticationFailed if available
+            var errorCode = context.HttpContext.Items["AuthErrorCode"] as string ?? "UNAUTHORIZED";
+            var message = context.HttpContext.Items["AuthErrorMessage"] as string ?? "Bạn cần đăng nhập để truy cập.";
+            
+            var errorResponse = new
+            {
+                success = false,
+                errorCode = errorCode,
+                message = message
+            };
+            
+            await response.WriteAsJsonAsync(errorResponse);
+        },
+        
+        // Handle 403 forbidden
+        OnForbidden = async context =>
+        {
+            var response = context.HttpContext.Response;
+            response.StatusCode = 403;
+            response.ContentType = "application/json";
+            
+            var errorResponse = new
+            {
+                success = false,
+                errorCode = "FORBIDDEN",
+                message = "Bạn không có quyền truy cập tài nguyên này."
+            };
+            
+            await response.WriteAsJsonAsync(errorResponse);
         }
     };
 });
