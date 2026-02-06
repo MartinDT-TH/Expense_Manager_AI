@@ -1,0 +1,41 @@
+@page "/EmailConfirmed"
+@model MoneyManager.API.Pages.EmailConfirmedModel
+@{
+    var title = Model.Success ? "Email xác thực thành công" : "Xác thực thất bại";
+    var accent = Model.Success ? "#00B894" : "#E74C3C";
+}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@title - Smart Money</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: linear-gradient(135deg, #6C5CE7, #8E7CF3); margin:0; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:16px; }
+        .card { background:#fff; max-width:480px; width:100%; border-radius:20px; padding:32px; box-shadow:0 10px 40px rgba(0,0,0,0.18); text-align:center; }
+        .icon { font-size:64px; margin-bottom:16px; color:@accent; }
+        h1 { margin:0 0 10px; color:@accent; }
+        p { color:#555; line-height:1.6; }
+        .btn { display:inline-block; margin-top:20px; padding:14px 22px; border-radius:10px; text-decoration:none; font-weight:700; background:@accent; color:#fff; }
+        .secondary { background:#f1f3f5; color:#333; margin-left:8px; }
+        .small { font-size:13px; color:#777; margin-top:12px; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="icon">@Model.Icon</div>
+        <h1>@title</h1>
+        <p>@Model.Message</p>
+        @if (Model.Success)
+        {
+            <a class="btn" href="@Model.DeepLink">Mở ứng dụng</a>
+            <a class="btn secondary" href="@Model.FallbackUrl" target="_blank" rel="noopener">Mở trang chủ</a>
+            <div class="small">Nếu bạn mở bằng thiết bị khác, hãy đăng nhập trong ứng dụng để tiếp tục.</div>
+        }
+        else
+        {
+            <a class="btn" href="@Model.FallbackUrl" target="_blank" rel="noopener">Thử lại / Liên hệ hỗ trợ</a>
+        }
+    </div>
+</body>
+</html>
