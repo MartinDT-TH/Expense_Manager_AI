@@ -66,7 +66,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
             onPressed: () => Navigator.pop(context),
           ),
           title: Text(
-            'Create New Group',
+            'Tạo nhóm mới',
             style: TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.w600,
@@ -117,7 +117,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Premium Feature',
+                              'Tính năng cao cấp',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 13 * scale,
@@ -125,7 +125,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                             ),
                             SizedBox(height: 2 * scale),
                             Text(
-                              'Create a group to share expenses with friends and family',
+                              'Tạo nhóm để chia sẻ chi tiêu với bạn bè và gia đình',
                               style: TextStyle(fontSize: 11 * scale, color: Colors.grey),
                             ),
                           ],
@@ -138,7 +138,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
 
                 // Group name
                 Text(
-                  'Group Name',
+                  'Tên nhóm',
                   style: Theme.of(context).textTheme.titleSmall?.copyWith(
                         fontWeight: FontWeight.w600,
                         fontSize: 13 * scale,
@@ -148,7 +148,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                 TextFormField(
                   controller: _nameController,
                   decoration: InputDecoration(
-                    hintText: 'E.g. Family Fund, Trip to Paris',
+                    hintText: 'Ví dụ: Quỹ gia đình, Du lịch Đà Nẵng',
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
@@ -158,10 +158,10 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                   textCapitalization: TextCapitalization.words,
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
-                      return 'Please enter group name';
+                      return 'Vui lòng nhập tên nhóm';
                     }
                     if (value.trim().length < 2) {
-                      return 'Group name must be at least 2 characters';
+                      return 'Tên nhóm phải có ít nhất 2 ký tự';
                     }
                     return null;
                   },
@@ -170,7 +170,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
 
                 // Description
                 Text(
-                  'Description (optional)',
+                  'Mô tả (không bắt buộc)',
                   style: Theme.of(context).textTheme.titleSmall?.copyWith(
                         fontWeight: FontWeight.w600,
                         fontSize: 13 * scale,
@@ -180,7 +180,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                 TextFormField(
                   controller: _descriptionController,
                   decoration: InputDecoration(
-                    hintText: 'Brief description of this group',
+                    hintText: 'Mô tả ngắn về nhóm này',
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
@@ -194,7 +194,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
 
                 // Suggestions
                 Text(
-                  'Group Name Suggestions',
+                  'Gợi ý tên nhóm',
                   style: Theme.of(context).textTheme.titleSmall?.copyWith(
                         fontWeight: FontWeight.w600,
                         fontSize: 13 * scale,
@@ -205,12 +205,12 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                   spacing: 8,
                   runSpacing: 8,
                   children: [
-                    _buildSuggestionChip('🏠 Family Fund'),
-                    _buildSuggestionChip('🏖️ Travel'),
-                    _buildSuggestionChip('👔 Office Team'),
-                    _buildSuggestionChip('🎉 Party'),
-                    _buildSuggestionChip('🏠 Rent'),
-                    _buildSuggestionChip('🎓 Classroom'),
+                    _buildSuggestionChip('🏠 Quỹ gia đình'),
+                    _buildSuggestionChip('🏖️ Du lịch'),
+                    _buildSuggestionChip('👔 Nhóm công ty'),
+                    _buildSuggestionChip('🎉 Tiệc tùng'),
+                    _buildSuggestionChip('🏠 Tiền nhà'),
+                    _buildSuggestionChip('🎓 Lớp học'),
                   ],
                 ),
                 SizedBox(height: 28 * scale),
@@ -240,7 +240,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                             ),
                           )
                         : const Text(
-                            'Create Group',
+                            'Tạo nhóm',
                             style: TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.bold,
@@ -303,7 +303,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
             ),
             const SizedBox(width: 12),
             Text(
-              'Premium Feature',
+              'Tính năng cao cấp',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -317,7 +317,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Create a group to share expenses with friends and family.',
+              'Tạo nhóm để chia sẻ chi tiêu với bạn bè và gia đình.',
               style: TextStyle(
                 color: isDark ? Colors.grey[400] : Colors.grey[700],
                 height: 1.5,
@@ -332,9 +332,9 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
               ),
               child: Column(
                 children: [
-                  _buildPremiumFeatureRow(Icons.people_rounded, 'Share expenses with group members', isDark),
-                  _buildPremiumFeatureRow(Icons.receipt_long_rounded, 'Track group transactions', isDark),
-                  _buildPremiumFeatureRow(Icons.calculate_rounded, 'Automatic settlement', isDark),
+                  _buildPremiumFeatureRow(Icons.people_rounded, 'Chia sẻ chi tiêu với thành viên nhóm', isDark),
+                  _buildPremiumFeatureRow(Icons.receipt_long_rounded, 'Theo dõi giao dịch nhóm', isDark),
+                  _buildPremiumFeatureRow(Icons.calculate_rounded, 'Tự động quyết toán', isDark),
                 ],
               ),
             ),
@@ -344,7 +344,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
           TextButton(
             onPressed: () => Navigator.pop(context),
             child: Text(
-              'Maybe Later',
+              'Để sau',
               style: TextStyle(color: Colors.grey[600]),
             ),
           ),
@@ -353,7 +353,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
               Navigator.pop(context);
               TopAlert.show(
                 context,
-                message: 'Premium upgrade coming soon!',
+                message: 'Nâng cấp Premium sắp có!',
                 backgroundColor: const Color(0xFF6C5CE7),
                 icon: Icons.workspace_premium,
               );
@@ -370,7 +370,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                 const Icon(Icons.workspace_premium, color: Colors.white, size: 16),
                 SizedBox(width: 6 * scale),
                 const Text(
-                  'Upgrade Now',
+                  'Nâng cấp ngay',
                   style: TextStyle(color: Colors.white),
                 ),
               ],

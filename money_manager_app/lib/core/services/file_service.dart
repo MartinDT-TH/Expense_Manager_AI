@@ -30,7 +30,7 @@ class FileService {
       await file.writeAsBytes(bytes, flush: true);
       return filePath;
     } catch (e) {
-      throw Exception('Failed to save file: $e');
+      throw Exception('Lưu file thất bại: $e');
     }
   }
 
@@ -60,14 +60,14 @@ class FileService {
 
       final data = response.data;
       if (data == null || data.isEmpty) {
-        throw Exception('Empty response');
+        throw Exception('Phản hồi rỗng');
       }
 
       final file = File(filePath);
       await file.writeAsBytes(data, flush: true);
       return filePath;
     } catch (e) {
-      throw Exception('Failed to download file: $e');
+      throw Exception('Tải file thất bại: $e');
     }
   }
 
@@ -76,10 +76,10 @@ class FileService {
     try {
       final result = await OpenFilex.open(filePath);
       if (result.type != ResultType.done) {
-        throw Exception('Failed to open file: ${result.message}');
+        throw Exception('Mở file thất bại: ${result.message}');
       }
     } catch (e) {
-      throw Exception('Failed to open file: $e');
+      throw Exception('Mở file thất bại: $e');
     }
   }
 
@@ -91,10 +91,10 @@ class FileService {
     try {
       await Share.shareXFiles(
         [XFile(filePath)],
-        subject: subject ?? 'MoneyManager Report',
+        subject: subject ?? 'Báo cáo Smart Money',
       );
     } catch (e) {
-      throw Exception('Failed to share file: $e');
+      throw Exception('Chia sẻ file thất bại: $e');
     }
   }
 
@@ -192,6 +192,6 @@ class FileService {
       }
     }
 
-    throw Exception('No writable directory found: $lastError');
+    throw Exception('Không tìm thấy thư mục có thể ghi: $lastError');
   }
 }

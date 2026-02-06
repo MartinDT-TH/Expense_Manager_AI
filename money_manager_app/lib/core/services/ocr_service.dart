@@ -68,17 +68,17 @@ class OcrService {
         // Check if it's premium required error
         final data = response.data;
         if (data is Map && data['code'] == 'PREMIUM_REQUIRED') {
-          throw OcrPremiumRequiredException(data['message'] ?? 'Premium required');
+          throw OcrPremiumRequiredException(data['message'] ?? 'Cần tài khoản Premium');
         }
-        throw OcrException(data['message'] ?? 'OCR scan failed');
+        throw OcrException(data['message'] ?? 'Quét OCR thất bại');
       } else {
-        throw OcrException('OCR scan failed with status: ${response.statusCode}');
+        throw OcrException('Quét OCR thất bại (mã lỗi: ${response.statusCode})');
       }
     } catch (e) {
       if (e is OcrException || e is OcrPremiumRequiredException) {
         rethrow;
       }
-      throw OcrException('Network error during OCR scan: $e');
+      throw OcrException('Lỗi mạng khi quét OCR: $e');
     }
   }
 }

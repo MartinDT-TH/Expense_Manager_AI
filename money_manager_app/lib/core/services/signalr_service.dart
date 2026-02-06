@@ -52,14 +52,14 @@ class SignalRService {
   /// Khởi tạo kết nối SignalR
   Future<void> initialize() async {
     if (_hubConnection != null) {
-      debugPrint('[SignalR] Already initialized');
+      debugPrint('[SignalR] Đã khởi tạo');
       return;
     }
 
     try {
       final token = await _storage.read(key: 'access_token');
       if (token == null) {
-        debugPrint('[SignalR] No token found, skipping connection');
+        debugPrint('[SignalR] Không có token, bỏ qua kết nối');
         return;
       }
 
@@ -78,11 +78,11 @@ class SignalRService {
 
       // Connect
       await _hubConnection!.start();
-      debugPrint('[SignalR] Connected successfully');
+      debugPrint('[SignalR] Kết nối thành công');
       _connectionStateController.add(HubConnectionState.Connected);
 
     } catch (e) {
-      debugPrint('[SignalR] Connection error: $e');
+      debugPrint('[SignalR] Lỗi kết nối: $e');
       _connectionStateController.add(HubConnectionState.Disconnected);
     }
   }
@@ -93,7 +93,7 @@ class SignalRService {
 
     // NewTransaction event
     _hubConnection!.on('NewTransaction', (arguments) {
-      debugPrint('[SignalR] NewTransaction received: $arguments');
+      debugPrint('[SignalR] Nhận NewTransaction: $arguments');
       if (arguments != null && arguments.isNotEmpty) {
         final data = arguments[0] as Map<String, dynamic>;
         _newTransactionController.add(data);
@@ -102,7 +102,7 @@ class SignalRService {
 
     // GroupUpdated event
     _hubConnection!.on('GroupUpdated', (arguments) {
-      debugPrint('[SignalR] GroupUpdated received: $arguments');
+      debugPrint('[SignalR] Nhận GroupUpdated: $arguments');
       if (arguments != null && arguments.isNotEmpty) {
         final data = arguments[0] as Map<String, dynamic>;
         _groupUpdatedController.add(data);
@@ -111,7 +111,7 @@ class SignalRService {
 
     // MemberJoined event
     _hubConnection!.on('MemberJoined', (arguments) {
-      debugPrint('[SignalR] MemberJoined received: $arguments');
+      debugPrint('[SignalR] Nhận MemberJoined: $arguments');
       if (arguments != null && arguments.isNotEmpty) {
         final data = arguments[0] as Map<String, dynamic>;
         _memberJoinedController.add(data);
@@ -120,7 +120,7 @@ class SignalRService {
 
     // MemberLeft event
     _hubConnection!.on('MemberLeft', (arguments) {
-      debugPrint('[SignalR] MemberLeft received: $arguments');
+      debugPrint('[SignalR] Nhận MemberLeft: $arguments');
       if (arguments != null && arguments.isNotEmpty) {
         final data = arguments[0] as Map<String, dynamic>;
         _memberLeftController.add(data);
@@ -129,7 +129,7 @@ class SignalRService {
 
     // MemberKicked event
     _hubConnection!.on('MemberKicked', (arguments) {
-      debugPrint('[SignalR] MemberKicked received: $arguments');
+      debugPrint('[SignalR] Nhận MemberKicked: $arguments');
       if (arguments != null && arguments.isNotEmpty) {
         final data = arguments[0] as Map<String, dynamic>;
         _memberKickedController.add(data);
@@ -138,17 +138,17 @@ class SignalRService {
 
     // Connection state changes
     _hubConnection!.onclose(({error}) {
-      debugPrint('[SignalR] Connection closed: $error');
+      debugPrint('[SignalR] Kết nối đã đóng: $error');
       _connectionStateController.add(HubConnectionState.Disconnected);
     });
 
     _hubConnection!.onreconnecting(({error}) {
-      debugPrint('[SignalR] Reconnecting: $error');
+      debugPrint('[SignalR] Đang kết nối lại: $error');
       _connectionStateController.add(HubConnectionState.Reconnecting);
     });
 
     _hubConnection!.onreconnected(({connectionId}) {
-      debugPrint('[SignalR] Reconnected with id: $connectionId');
+      debugPrint('[SignalR] Đã kết nối lại, id: $connectionId');
       _connectionStateController.add(HubConnectionState.Connected);
     });
   }
@@ -156,15 +156,15 @@ class SignalRService {
   /// Join vào group room để nhận notifications
   Future<void> joinGroup(String groupId) async {
     if (_hubConnection?.state != HubConnectionState.Connected) {
-      debugPrint('[SignalR] Not connected, cannot join group');
+      debugPrint('[SignalR] Chưa kết nối, không thể vào nhóm');
       return;
     }
 
     try {
       await _hubConnection!.invoke('JoinGroup', args: [groupId]);
-      debugPrint('[SignalR] Joined group: $groupId');
+      debugPrint('[SignalR] Đã vào nhóm: $groupId');
     } catch (e) {
-      debugPrint('[SignalR] Error joining group: $e');
+      debugPrint('[SignalR] Lỗi khi vào nhóm: $e');
     }
   }
 
@@ -176,9 +176,9 @@ class SignalRService {
 
     try {
       await _hubConnection!.invoke('LeaveGroup', args: [groupId]);
-      debugPrint('[SignalR] Left group: $groupId');
+      debugPrint('[SignalR] Đã rời nhóm: $groupId');
     } catch (e) {
-      debugPrint('[SignalR] Error leaving group: $e');
+      debugPrint('[SignalR] Lỗi khi rời nhóm: $e');
     }
   }
 
@@ -187,7 +187,7 @@ class SignalRService {
     if (_hubConnection != null) {
       await _hubConnection!.stop();
       _hubConnection = null;
-      debugPrint('[SignalR] Disconnected');
+      debugPrint('[SignalR] Đã ngắt kết nối');
     }
   }
 

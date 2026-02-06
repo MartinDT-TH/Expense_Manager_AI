@@ -49,11 +49,11 @@ class ThemeService extends ChangeNotifier {
   String get themeModeString {
     switch (_themeMode) {
       case ThemeMode.light:
-        return 'Light';
+        return 'Sáng';
       case ThemeMode.dark:
-        return 'Dark';
+        return 'Tối';
       default:
-        return 'System';
+        return 'Hệ thống';
     }
   }
 }

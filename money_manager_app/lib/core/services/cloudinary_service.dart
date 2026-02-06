@@ -90,13 +90,13 @@ class CloudinaryService {
       } else {
         return CloudinaryUploadResult(
           success: false,
-          error: 'Upload failed with status: ${response.statusCode}',
+          error: 'Tải lên thất bại (mã lỗi: ${response.statusCode})',
         );
       }
     } on DioException catch (e) {
       return CloudinaryUploadResult(
         success: false,
-        error: e.response?.data?.toString() ?? e.message ?? 'Network error during upload',
+        error: e.response?.data?.toString() ?? e.message ?? 'Lỗi mạng khi tải lên',
       );
     } catch (e) {
       return CloudinaryUploadResult(
@@ -127,7 +127,7 @@ class CloudinaryService {
     // TODO: Implement via backend API for security
     // Direct deletion requires API secret which shouldn't be in client
     throw UnimplementedError(
-      'Image deletion should be handled by backend for security',
+      'Việc xóa ảnh nên được xử lý ở backend để đảm bảo an toàn',
     );
   }
   
