@@ -5,6 +5,7 @@ import '../bloc/auth_bloc.dart';
 import '../bloc/auth_event.dart';
 import '../bloc/auth_state.dart';
 import '../widgets/auth_text_field.dart';
+import 'email_verification_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -64,6 +65,26 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 backgroundColor: AppColors.error,
               ),
             );
+          } else if (state is EmailVerificationRequired) {
+            // Navigate to email verification screen
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (_) => BlocProvider.value(
+                  value: context.read<AuthBloc>(),
+                  child: EmailVerificationScreen(email: state.email),
+                ),
+              ),
+            );
+          } else if (state is RegistrationSuccess) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.message),
+                backgroundColor: Colors.green,
+              ),
+            );
+            // Quay về màn hình đăng nhập
+            Navigator.of(context).popUntil((route) => route.isFirst);
           } else if (state is Authenticated) {
             Navigator.of(context).popUntil((route) => route.isFirst);
           }

@@ -92,7 +92,7 @@ class GoogleAuthDataSourceImpl implements GoogleAuthDataSource {
       if (googleUser == null) {
         return AuthResult(
           success: false,
-          message: 'Google sign-in cancelled',
+          message: 'Đăng nhập Google đã bị hủy',
         );
       }
 
@@ -102,7 +102,7 @@ class GoogleAuthDataSourceImpl implements GoogleAuthDataSource {
       if (googleAuth.idToken == null) {
         return AuthResult(
           success: false,
-          message: 'Failed to get Google ID token',
+          message: 'Không thể lấy Google ID token',
         );
       }
 
@@ -119,7 +119,7 @@ class GoogleAuthDataSourceImpl implements GoogleAuthDataSource {
       if (data is! Map<String, dynamic>) {
         return AuthResult(
           success: false,
-          message: data?.toString() ?? 'Google login failed',
+          message: data?.toString() ?? 'Đăng nhập Google thất bại',
         );
       }
       final result = AuthResult.fromJson(data);
@@ -138,7 +138,7 @@ class GoogleAuthDataSourceImpl implements GoogleAuthDataSource {
       return result;
     } on DioException catch (e) {
       // Handle DioException to get error message from response
-      final message = e.response?.data?['message'] ?? e.message ?? 'Google login failed';
+      final message = e.response?.data?['message'] ?? e.message ?? 'Đăng nhập Google thất bại';
       return AuthResult(
         success: false,
         message: message,
@@ -166,7 +166,7 @@ class GoogleAuthDataSourceImpl implements GoogleAuthDataSource {
       if (googleUser == null) {
         return AuthResult(
           success: false,
-          message: 'Google sign-in cancelled',
+          message: 'Đăng nhập Google đã bị hủy',
         );
       }
 
@@ -199,12 +199,12 @@ class GoogleAuthDataSourceImpl implements GoogleAuthDataSource {
         await _safeDisconnect();
         return AuthResult(
           success: true,
-          message: response.data['message'] ?? 'Google account unlinked',
+          message: response.data['message'] ?? 'Đã hủy liên kết tài khoản Google',
         );
       }
       return AuthResult(
         success: false,
-        message: response.data['message'] ?? 'Failed to unlink Google account',
+        message: response.data['message'] ?? 'Hủy liên kết tài khoản Google thất bại',
       );
     } catch (e) {
       return AuthResult(

@@ -59,7 +59,7 @@ class TwoFactorDataSourceImpl implements TwoFactorDataSource {
       
       return TwoFactorSetupResult(
         success: false,
-        errorMessage: 'Failed to setup 2FA',
+        errorMessage: 'Thiết lập 2FA thất bại',
       );
     } catch (e) {
       return TwoFactorSetupResult(

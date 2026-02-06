@@ -6,6 +6,8 @@ import '../bloc/auth_event.dart';
 import '../bloc/auth_state.dart';
 import '../widgets/auth_text_field.dart';
 import 'register_screen.dart';
+import 'otp_verification_screen.dart';
+import 'email_verification_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -47,6 +49,10 @@ class _LoginScreenState extends State<LoginScreen> {
     context.read<AuthBloc>().add(ForgotPasswordSubmitted(email: email));
   }
 
+  void _googleSignIn() {
+    context.read<AuthBloc>().add(GoogleSignInRequested());
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,6 +63,31 @@ class _LoginScreenState extends State<LoginScreen> {
               SnackBar(
                 content: Text(state.message),
                 backgroundColor: AppColors.error,
+              ),
+            );
+          } else if (state is EmailVerificationRequired) {
+            // Navigate to email verification screen
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => BlocProvider.value(
+                  value: context.read<AuthBloc>(),
+                  child: EmailVerificationScreen(email: state.email),
+                ),
+              ),
+            );
+          } else if (state is TwoFactorRequired) {
+            // Navigate to OTP verification screen
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => BlocProvider.value(
+                  value: context.read<AuthBloc>(),
+                  child: OtpVerificationScreen(
+                    twoFactorToken: state.twoFactorToken,
+                    email: state.email,
+                  ),
+                ),
               ),
             );
           }
@@ -79,7 +110,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     const SizedBox(height: 16),
                     Text(
-                      'Money Manager',
+                      'Smart Money',
                       style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                             fontWeight: FontWeight.bold,
                             color: AppColors.primary,
@@ -174,6 +205,60 @@ class _LoginScreenState extends State<LoginScreen> {
                                   'Đăng nhập',
                                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                                 ),
+                        );
+                      },
+                    ),
+                    const SizedBox(height: 16),
+                    
+                    // Divider
+                    Row(
+                      children: [
+                        const Expanded(child: Divider()),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: Text(
+                            'hoặc',
+                            style: TextStyle(
+                              color: Theme.of(context).brightness == Brightness.dark 
+                                  ? Colors.white60 
+                                  : AppColors.textSecondary,
+                            ),
+                          ),
+                        ),
+                        const Expanded(child: Divider()),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    
+                    // Google Sign-In Button
+                    BlocBuilder<AuthBloc, AuthState>(
+                      builder: (context, state) {
+                        return OutlinedButton.icon(
+                          onPressed: state is AuthLoading ? null : _googleSignIn,
+                          style: OutlinedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+                            side: BorderSide(
+                              color: Theme.of(context).brightness == Brightness.dark
+                                  ? Colors.white30
+                                  : Colors.grey.shade300,
+                            ),
+                          ),
+                          icon: Image.network(
+                            'https://www.google.com/favicon.ico',
+                            height: 24,
+                            width: 24,
+                            errorBuilder: (_, __, ___) => const Icon(Icons.g_mobiledata, size: 24),
+                          ),
+                          label: Text(
+                            'Đăng nhập với Google',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                              color: Theme.of(context).brightness == Brightness.dark
+                                  ? Colors.white
+                                  : Colors.black87,
+                            ),
+                          ),
                         );
                       },
                     ),
