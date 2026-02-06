@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -14,9 +14,18 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 1. DB Context
+// 1. DB Context - SQL Server with transient-failure resiliency
 builder.Services.AddDbContext<MoneyManagerDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectionString")));
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("DefaultConnectionString"),
+        sqlOptions =>
+        {
+            // Retry on transient errors (e.g., dropped connections on cloud DB)
+            sqlOptions.EnableRetryOnFailure(
+                maxRetryCount: 5,
+                maxRetryDelay: TimeSpan.FromSeconds(10),
+                errorNumbersToAdd: null);
+        }));
 
 // 2. Identity
 builder.Services.AddIdentity<AppUser, AppRole>()
@@ -61,8 +70,13 @@ builder.Services.AddAuthentication(options => {
 builder.Services.AddSignalR();
 builder.Services.AddScoped<IGroupHubNotifier, GroupHubNotifier>();
 
+// 3.2 Memory Cache for OTP storage
+builder.Services.AddMemoryCache();
+
 // 4. Đăng ký Service (QUAN TRỌNG)
+builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IWalletService, WalletService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<ITransactionService>(sp =>
@@ -82,6 +96,13 @@ builder.Services.AddScoped<IGroupService>(sp =>
 });
 builder.Services.AddScoped<ISyncService, SyncService>();
 builder.Services.AddScoped<IReportService, ReportService>();
+
+// 4.2 Subscription/Purchase Verification Service
+builder.Services.AddHttpClient("GooglePlayApi", client =>
+{
+    client.Timeout = TimeSpan.FromSeconds(30);
+});
+builder.Services.AddScoped<IPurchaseVerificationService, PurchaseVerificationService>();
 
 // 4.1 OCR Service Configuration - HYBRID MODE
 // Primary: Google Gemini (FREE - 60 req/min, 1500/day)
@@ -118,6 +139,7 @@ builder.Services.AddScoped<IOcrService>(serviceProvider =>
 });
 
 builder.Services.AddControllers(); 
+builder.Services.AddRazorPages();
 builder.Services.AddEndpointsApiExplorer();
 
 // 5. Swagger Config with Auth Button
@@ -184,5 +206,6 @@ app.UseAuthorization();  // Bật phân quyền
 app.MapHub<GroupHub>("/hubs/group");
 
 app.MapControllers();
+app.MapRazorPages();
 
 app.Run();

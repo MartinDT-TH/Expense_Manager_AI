@@ -825,7 +825,7 @@ class _BudgetScreenContentState extends State<_BudgetScreenContent> with SingleT
 
     if (availableCategories.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('All categories already have budgets')),
+        const SnackBar(content: Text('Tất cả danh mục đã có ngân sách')),
       );
       return;
     }
@@ -862,7 +862,7 @@ class _BudgetScreenContentState extends State<_BudgetScreenContent> with SingleT
                 DropdownButtonFormField<Category>(
                   value: selectedCategory,
                   decoration: InputDecoration(
-                    labelText: 'Select Category',
+                    labelText: 'Chọn danh mục',
                     border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                   ),
                   items: availableCategories.map((cat) => DropdownMenuItem(
@@ -902,14 +902,14 @@ class _BudgetScreenContentState extends State<_BudgetScreenContent> with SingleT
                     onPressed: () {
                       if (selectedCategory == null) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Please select a category')),
+                          const SnackBar(content: Text('Vui lòng chọn danh mục')),
                         );
                         return;
                       }
                       final amount = double.tryParse(amountController.text.replaceAll('.', ''));
                       if (amount == null || amount <= 0) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Please enter a valid amount')),
+                          const SnackBar(content: Text('Vui lòng nhập số tiền hợp lệ')),
                         );
                         return;
                       }
@@ -972,7 +972,7 @@ class _BudgetScreenContentState extends State<_BudgetScreenContent> with SingleT
     final amountText = _amountController.text.replaceAll('.', '').trim();
     if (amountText.isEmpty || amountText == '0') {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter a budget amount')),
+        const SnackBar(content: Text('Vui lòng nhập số tiền ngân sách')),
       );
       return;
     }
@@ -980,7 +980,7 @@ class _BudgetScreenContentState extends State<_BudgetScreenContent> with SingleT
     final amount = double.tryParse(amountText);
     if (amount == null || amount <= 0) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Invalid amount')),
+        const SnackBar(content: Text('Số tiền không hợp lệ')),
       );
       return;
     }

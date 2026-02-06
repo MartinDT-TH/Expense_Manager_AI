@@ -444,3 +444,12 @@ namespace MoneyManager.Infrastructure.Data
         }
     }
 }
+
+
+// MoneyManager-master
+
+// dotnet ef migrations add InitSchema -p .\MoneyManager.Infrastructure -s .\MoneyManager.API --context MoneyManagerDbContext -o Data\Migrations
+
+/* MoneyManager-master\MoneyManager.API
+ dotnet ef database update -p .\MoneyManager.Infrastructure -s .\MoneyManager.API --context MoneyManagerDbContext
+*/
