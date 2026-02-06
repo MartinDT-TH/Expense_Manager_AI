@@ -217,21 +217,21 @@ class _OcrResultBottomSheetState extends State<OcrResultBottomSheet> {
     
     if (amount == null || amount <= 0) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter a valid amount')),
+        const SnackBar(content: Text('Vui lòng nhập số tiền hợp lệ')),
       );
       return;
     }
 
     if (_selectedCategory == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please select a category')),
+        const SnackBar(content: Text('Vui lòng chọn danh mục')),
       );
       return;
     }
 
     if (_selectedWallet == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please select a wallet')),
+        const SnackBar(content: Text('Vui lòng chọn ví')),
       );
       return;
     }
@@ -328,7 +328,7 @@ class _OcrResultBottomSheetState extends State<OcrResultBottomSheet> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Scan Result',
+                        'Kết quả quét',
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
@@ -338,8 +338,8 @@ class _OcrResultBottomSheetState extends State<OcrResultBottomSheet> {
                       const SizedBox(height: 4),
                       Text(
                         widget.scanResult.hasData 
-                            ? 'Review and confirm the details' 
-                            : 'Enter transaction details manually',
+                            ? 'Xem lại và xác nhận thông tin' 
+                            : 'Nhập thông tin giao dịch thủ công',
                         style: TextStyle(
                           fontSize: 13,
                           color: isDark ? Colors.grey[500] : Colors.grey[600],
@@ -442,7 +442,7 @@ class _OcrResultBottomSheetState extends State<OcrResultBottomSheet> {
                     Icon(Icons.check_circle_outline, size: 20),
                     SizedBox(width: 8),
                     Text(
-                      'Confirm & Save',
+                      'Xác nhận & Lưu',
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
@@ -570,8 +570,8 @@ class _OcrResultBottomSheetState extends State<OcrResultBottomSheet> {
                       const SizedBox(width: 6),
                       Text(
                         widget.scanResult.hasData 
-                            ? 'Data extracted' 
-                            : 'Manual entry needed',
+                            ? 'Đã trích xuất dữ liệu' 
+                            : 'Cần nhập thủ công',
                         style: TextStyle(
                           fontSize: 12,
                           color: widget.scanResult.hasData 
@@ -621,7 +621,7 @@ class _OcrResultBottomSheetState extends State<OcrResultBottomSheet> {
                     ),
                     const SizedBox(width: 6),
                     Text(
-                      'Expense',
+                      'Chi tiêu',
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
@@ -657,7 +657,7 @@ class _OcrResultBottomSheetState extends State<OcrResultBottomSheet> {
                     ),
                     const SizedBox(width: 6),
                     Text(
-                      'Income',
+                      'Thu nhập',
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
@@ -680,7 +680,7 @@ class _OcrResultBottomSheetState extends State<OcrResultBottomSheet> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildFieldLabel('Amount', isDark),
+        _buildFieldLabel('Số tiền', isDark),
         const SizedBox(height: 8),
         Container(
           decoration: BoxDecoration(
@@ -728,7 +728,7 @@ class _OcrResultBottomSheetState extends State<OcrResultBottomSheet> {
                 const Icon(Icons.auto_awesome, size: 14, color: Color(0xFF6C5CE7)),
                 const SizedBox(width: 4),
                 Text(
-                  'Auto-detected from receipt',
+                  'Tự động nhận từ hóa đơn',
                   style: TextStyle(
                     fontSize: 12,
                     color: isDark ? Colors.grey[500] : Colors.grey[600],
@@ -745,7 +745,7 @@ class _OcrResultBottomSheetState extends State<OcrResultBottomSheet> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildFieldLabel('Category', isDark),
+        _buildFieldLabel('Danh mục', isDark),
         const SizedBox(height: 8),
         GestureDetector(
           onTap: _showCategoryPicker,
@@ -779,7 +779,7 @@ class _OcrResultBottomSheetState extends State<OcrResultBottomSheet> {
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(
-                    _selectedCategory?.name ?? 'Select category',
+                    _selectedCategory?.name ?? 'Chọn danh mục',
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
@@ -805,7 +805,7 @@ class _OcrResultBottomSheetState extends State<OcrResultBottomSheet> {
                 const Icon(Icons.auto_awesome, size: 14, color: Color(0xFF6C5CE7)),
                 const SizedBox(width: 4),
                 Text(
-                  'Suggested: ${widget.scanResult.suggestedCategoryName}',
+                  'Gợi ý: ${widget.scanResult.suggestedCategoryName}',
                   style: TextStyle(
                     fontSize: 12,
                     color: isDark ? Colors.grey[500] : Colors.grey[600],
@@ -822,7 +822,7 @@ class _OcrResultBottomSheetState extends State<OcrResultBottomSheet> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildFieldLabel('Wallet', isDark),
+        _buildFieldLabel('Ví', isDark),
         const SizedBox(height: 8),
         GestureDetector(
           onTap: _showWalletPicker,
@@ -853,7 +853,7 @@ class _OcrResultBottomSheetState extends State<OcrResultBottomSheet> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        _selectedWallet?.name ?? 'Select wallet',
+                        _selectedWallet?.name ?? 'Chọn ví',
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
@@ -891,7 +891,7 @@ class _OcrResultBottomSheetState extends State<OcrResultBottomSheet> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildFieldLabel('Date', isDark),
+        _buildFieldLabel('Ngày', isDark),
         const SizedBox(height: 8),
         GestureDetector(
           onTap: _selectDate,
@@ -949,7 +949,7 @@ class _OcrResultBottomSheetState extends State<OcrResultBottomSheet> {
                 const Icon(Icons.auto_awesome, size: 14, color: Color(0xFF6C5CE7)),
                 const SizedBox(width: 4),
                 Text(
-                  'Auto-detected from receipt',
+                  'Tự động nhận từ hóa đơn',
                   style: TextStyle(
                     fontSize: 12,
                     color: isDark ? Colors.grey[500] : Colors.grey[600],
@@ -966,7 +966,7 @@ class _OcrResultBottomSheetState extends State<OcrResultBottomSheet> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildFieldLabel('Note', isDark),
+        _buildFieldLabel('Ghi chú', isDark),
         const SizedBox(height: 8),
         Container(
           decoration: BoxDecoration(
@@ -981,7 +981,7 @@ class _OcrResultBottomSheetState extends State<OcrResultBottomSheet> {
               color: isDark ? Colors.white : const Color(0xFF2D3436),
             ),
             decoration: InputDecoration(
-              hintText: 'Add a note...',
+              hintText: 'Thêm ghi chú...',
               hintStyle: TextStyle(
                 color: isDark ? Colors.grey[600] : Colors.grey[400],
               ),
@@ -1028,7 +1028,7 @@ class _OcrResultBottomSheetState extends State<OcrResultBottomSheet> {
           Padding(
             padding: const EdgeInsets.all(20),
             child: Text(
-              'Select Category',
+              'Chọn danh mục',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -1130,7 +1130,7 @@ class _OcrResultBottomSheetState extends State<OcrResultBottomSheet> {
           Padding(
             padding: const EdgeInsets.all(20),
             child: Text(
-              'Select Wallet',
+              'Chọn ví',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -1243,15 +1243,15 @@ class _OcrResultBottomSheetState extends State<OcrResultBottomSheet> {
   }
 
   String _formatDate(DateTime date) {
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
-                    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const months = ['Thg 1', 'Thg 2', 'Thg 3', 'Thg 4', 'Thg 5', 'Thg 6', 
+                    'Thg 7', 'Thg 8', 'Thg 9', 'Thg 10', 'Thg 11', 'Thg 12'];
     final today = DateTime.now();
     final yesterday = today.subtract(const Duration(days: 1));
 
     if (date.year == today.year && date.month == today.month && date.day == today.day) {
-      return 'Today, ${date.day} ${months[date.month - 1]}';
+      return 'Hôm nay, ${date.day} ${months[date.month - 1]}';
     } else if (date.year == yesterday.year && date.month == yesterday.month && date.day == yesterday.day) {
-      return 'Yesterday, ${date.day} ${months[date.month - 1]}';
+      return 'Hôm qua, ${date.day} ${months[date.month - 1]}';
     }
     
     return '${date.day} ${months[date.month - 1]} ${date.year}';

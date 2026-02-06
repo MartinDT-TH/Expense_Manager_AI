@@ -79,7 +79,7 @@ class _AddTransactionOptionsSheetState extends State<AddTransactionOptionsSheet>
 
               // Title
               Text(
-                'Add Transaction',
+                'Thêm giao dịch',
                 style: TextStyle(
                   fontSize: 20 * scale,
                   fontWeight: FontWeight.bold,
@@ -88,7 +88,7 @@ class _AddTransactionOptionsSheetState extends State<AddTransactionOptionsSheet>
               ),
               SizedBox(height: 8 * scale),
               Text(
-                'Choose how you want to add your transaction',
+                'Chọn cách bạn muốn thêm giao dịch',
                 style: TextStyle(
                   fontSize: 14 * scale,
                   color: isDark ? Colors.grey[400] : Colors.grey[600],
@@ -106,9 +106,9 @@ class _AddTransactionOptionsSheetState extends State<AddTransactionOptionsSheet>
                   context: context,
                   icon: Icons.document_scanner,
                   iconColor: const Color(0xFFE17055),
-                  title: 'Scan Receipt',
-                  subtitle: 'AI reads your receipt automatically',
-                  badgeText: 'Premium',
+                  title: 'Quét hóa đơn',
+                  subtitle: 'AI đọc hóa đơn tự động',
+                  badgeText: 'Cao cấp',
                   badgeColor: const Color(0xFFE17055),
                   badgeIcon: Icons.workspace_premium,
                   onTap: _showImageSourcePicker,
@@ -121,8 +121,8 @@ class _AddTransactionOptionsSheetState extends State<AddTransactionOptionsSheet>
                   context: context,
                   icon: Icons.edit_note,
                   iconColor: AddTransactionOptionsSheet.purpleAccent,
-                  title: 'Manual Entry',
-                  subtitle: 'Enter transaction details yourself',
+                  title: 'Nhập thủ công',
+                  subtitle: 'Tự nhập chi tiết giao dịch',
                   onTap: () async {
                     Navigator.pop(context);
                     final result = await Navigator.push<bool>(
@@ -177,7 +177,7 @@ class _AddTransactionOptionsSheetState extends State<AddTransactionOptionsSheet>
             ),
             SizedBox(height: 24 * scale),
             Text(
-              'Select Receipt Source',
+              'Chọn nguồn hóa đơn',
               style: TextStyle(
                 fontSize: 18 * scale,
                 fontWeight: FontWeight.bold,
@@ -203,7 +203,7 @@ class _AddTransactionOptionsSheetState extends State<AddTransactionOptionsSheet>
                 Expanded(
                   child: _buildSourceItem(
                     icon: Icons.photo_library_rounded,
-                    label: 'Gallery',
+                    label: 'Thư viện',
                     color: const Color(0xFF6C5CE7),
                     onTap: () {
                       Navigator.pop(context);
@@ -347,7 +347,7 @@ class _AddTransactionOptionsSheetState extends State<AddTransactionOptionsSheet>
               });
             },
             child: Text(
-              'Cancel',
+              'Hủy',
               style: TextStyle(
                 fontSize: 13 * scale,
                 color: isDark ? Colors.grey[400] : Colors.grey[600],
@@ -522,7 +522,7 @@ class _AddTransactionOptionsSheetState extends State<AddTransactionOptionsSheet>
     
     setState(() {
       _isScanning = true;
-      _scanStatus = 'Uploading image...';
+      _scanStatus = 'Đang tải ảnh...';
       _scanProgress = 0;
     });
 
@@ -534,7 +534,7 @@ class _AddTransactionOptionsSheetState extends State<AddTransactionOptionsSheet>
       onProgress: (sent, total) {
         setState(() {
           _scanProgress = (sent / total) * 0.5; // First 50% for upload
-          _scanStatus = 'Uploading image...';
+          _scanStatus = 'Đang tải ảnh...';
         });
       },
     );
@@ -546,7 +546,7 @@ class _AddTransactionOptionsSheetState extends State<AddTransactionOptionsSheet>
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Upload failed: ${uploadResult.error ?? "Unknown error"}'),
+            content: Text('Tải ảnh thất bại: ${uploadResult.error ?? "Lỗi không xác định"}'),
             backgroundColor: Colors.red,
           ),
         );
@@ -556,7 +556,7 @@ class _AddTransactionOptionsSheetState extends State<AddTransactionOptionsSheet>
 
     setState(() {
       _scanProgress = 0.6;
-      _scanStatus = 'AI is reading your receipt...';
+      _scanStatus = 'AI đang đọc hóa đơn...';
     });
 
     // Step 3: Call OCR API
@@ -565,7 +565,7 @@ class _AddTransactionOptionsSheetState extends State<AddTransactionOptionsSheet>
       
       setState(() {
         _scanProgress = 1.0;
-        _scanStatus = 'Done!';
+        _scanStatus = 'Hoàn tất!';
       });
 
       // Small delay to show completion
@@ -617,7 +617,7 @@ class _AddTransactionOptionsSheetState extends State<AddTransactionOptionsSheet>
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('OCR failed: ${e.message}'),
+            content: Text('OCR thất bại: ${e.message}'),
             backgroundColor: Colors.red,
           ),
         );
@@ -629,7 +629,7 @@ class _AddTransactionOptionsSheetState extends State<AddTransactionOptionsSheet>
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Scan failed: $e'),
+            content: Text('Quét thất bại: $e'),
             backgroundColor: Colors.red,
           ),
         );
@@ -672,7 +672,7 @@ class _AddTransactionOptionsSheetState extends State<AddTransactionOptionsSheet>
             ),
             const SizedBox(width: 12),
             Text(
-              'Premium Feature',
+              'Tính năng cao cấp',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -686,7 +686,7 @@ class _AddTransactionOptionsSheetState extends State<AddTransactionOptionsSheet>
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Smart Bill Scanning uses AI to automatically extract transaction details from your receipts.',
+              'Quét hóa đơn thông minh dùng AI để tự động trích xuất chi tiết giao dịch từ hóa đơn.',
               style: TextStyle(
                 color: isDark ? Colors.grey[400] : Colors.grey[700],
                 height: 1.5,
@@ -701,10 +701,10 @@ class _AddTransactionOptionsSheetState extends State<AddTransactionOptionsSheet>
               ),
               child: Column(
                 children: [
-                  _buildPremiumFeatureRow(Icons.auto_awesome, 'Auto-extract amount', isDark),
-                  _buildPremiumFeatureRow(Icons.calendar_today, 'Detect transaction date', isDark),
-                  _buildPremiumFeatureRow(Icons.store, 'Identify merchant', isDark),
-                  _buildPremiumFeatureRow(Icons.category, 'Suggest category', isDark),
+                  _buildPremiumFeatureRow(Icons.auto_awesome, 'Tự động lấy số tiền', isDark),
+                  _buildPremiumFeatureRow(Icons.calendar_today, 'Nhận diện ngày giao dịch', isDark),
+                  _buildPremiumFeatureRow(Icons.store, 'Nhận diện cửa hàng', isDark),
+                  _buildPremiumFeatureRow(Icons.category, 'Gợi ý danh mục', isDark),
                 ],
               ),
             ),
@@ -714,7 +714,7 @@ class _AddTransactionOptionsSheetState extends State<AddTransactionOptionsSheet>
           TextButton(
             onPressed: () => Navigator.pop(context),
             child: Text(
-              'Maybe Later',
+              'Để sau',
               style: TextStyle(color: Colors.grey[600]),
             ),
           ),
@@ -723,7 +723,7 @@ class _AddTransactionOptionsSheetState extends State<AddTransactionOptionsSheet>
               Navigator.pop(context);
               ScaffoldMessenger.of(widget.parentContext).showSnackBar(
                 const SnackBar(
-                  content: Text('Premium upgrade coming soon!'),
+                  content: Text('Nâng cấp Premium sắp có!'),
                   backgroundColor: Color(0xFF6C5CE7),
                 ),
               );
@@ -740,7 +740,7 @@ class _AddTransactionOptionsSheetState extends State<AddTransactionOptionsSheet>
                 const Icon(Icons.workspace_premium, color: Colors.white, size: 16),
                 SizedBox(width: 6 * scale),
                 const Text(
-                  'Upgrade Now',
+                  'Nâng cấp ngay',
                   style: TextStyle(color: Colors.white),
                 ),
               ],

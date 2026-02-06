@@ -137,7 +137,7 @@ class AccountWalletsSection extends StatelessWidget {
                 );
               },
               child: Text(
-                'Add your first wallet',
+                'Thêm ví đầu tiên của bạn',
                 style: TextStyle(
                   color: Theme.of(context).primaryColor,
                   fontWeight: FontWeight.w600,

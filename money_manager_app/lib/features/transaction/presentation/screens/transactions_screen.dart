@@ -46,7 +46,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
           elevation: 0,
           automaticallyImplyLeading: false,
           title: const Text(
-            'Transactions',
+            'Giao dịch',
             style: TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.w600,
@@ -83,7 +83,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                       TransactionsLoadRequested(filter: TransactionFilter(pageSize: 50)),
                     );
                   },
-                  child: const Text('Retry'),
+                  child: const Text('Thử lại'),
                 ),
               ],
             ),
@@ -122,13 +122,13 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
 
                   // Expenses Section
                   _buildSectionHeader(
-                    'All My Expenses (${state.expenses.length})',
+                    'Tất cả chi tiêu (${state.expenses.length})',
                     () => setState(() => showAllExpenses = !showAllExpenses),
                     showAllExpenses,
                   ),
                   const SizedBox(height: 12),
                   if (state.expenses.isEmpty)
-                    _buildEmptyState('No expenses yet')
+                    _buildEmptyState('Chưa có chi tiêu')
                   else
                     ..._getDisplayedTransactions(state.expenses, showAllExpenses)
                         .map((t) => _buildTransactionCard(t, isExpense: true)),
@@ -137,13 +137,13 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
 
                   // Income Section
                   _buildSectionHeader(
-                    'All My Income (${state.incomes.length})',
+                    'Tất cả thu nhập (${state.incomes.length})',
                     () => setState(() => showAllIncomes = !showAllIncomes),
                     showAllIncomes,
                   ),
                   const SizedBox(height: 12),
                   if (state.incomes.isEmpty)
-                    _buildEmptyState('No income yet')
+                    _buildEmptyState('Chưa có thu nhập')
                   else
                     ..._getDisplayedTransactions(state.incomes, showAllIncomes)
                         .map((t) => _buildTransactionCard(t, isExpense: false)),
@@ -206,7 +206,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        selectedDate != null ? 'Selected Date' : 'Select Date',
+                        selectedDate != null ? 'Ngày đã chọn' : 'Chọn ngày',
                         style: TextStyle(
                           color: Colors.white.withOpacity(0.8),
                           fontSize: 12,
@@ -216,7 +216,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                       Text(
                         selectedDate != null
                             ? _formatDateVN(selectedDate!)
-                            : 'All Dates',
+                            : 'Tất cả ngày',
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 16,
@@ -295,7 +295,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
         child: DropdownButton<String?>(
           isExpanded: true,
           value: currentWalletId,
-          hint: const Text('All Wallets'),
+          hint: const Text('Tất cả ví'),
           items: [
             const DropdownMenuItem(
               value: null,
@@ -303,7 +303,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                 children: [
                   Icon(Icons.account_balance_wallet, size: 20),
                   SizedBox(width: 8),
-                  Text('All Wallets'),
+                  Text('Tất cả ví'),
                 ],
               ),
             ),
@@ -374,7 +374,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                       child: const Icon(Icons.arrow_downward_rounded, color: Colors.white, size: 16),
                     ),
                     const SizedBox(width: 8),
-                    const Text('Income', style: TextStyle(color: Colors.white, fontSize: 12)),
+                    const Text('Thu nhập', style: TextStyle(color: Colors.white, fontSize: 12)),
                   ],
                 ),
                 const SizedBox(height: 12),
@@ -424,7 +424,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                       child: const Icon(Icons.arrow_upward_rounded, color: Colors.white, size: 16),
                     ),
                     const SizedBox(width: 8),
-                    const Text('Expense', style: TextStyle(color: Colors.white, fontSize: 12)),
+                    const Text('Chi tiêu', style: TextStyle(color: Colors.white, fontSize: 12)),
                   ],
                 ),
                 const SizedBox(height: 12),
@@ -494,7 +494,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
       firstDate: DateTime(2000),
       lastDate: DateTime(2030),
       currentDate: now,
-      weekdayLabels: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+      weekdayLabels: ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'],
       firstDayOfWeek: 1,
       controlsHeight: 56,
       lastMonthIcon: const Icon(Icons.chevron_left, color: Color(0xFF6C5CE7)),
@@ -534,7 +534,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Select Date',
+                      'Chọn ngày',
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -548,7 +548,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                         _applyFilters(context);
                       },
                       child: const Text(
-                        'Clear Filter',
+                        'Xóa bộ lọc',
                         style: TextStyle(color: Color(0xFF6C5CE7)),
                       ),
                     ),
@@ -560,11 +560,11 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Row(
                   children: [
-                    _buildQuickDateOption('Today', now, ctx, context, isDark),
+                    _buildQuickDateOption('Hôm nay', now, ctx, context, isDark),
                     const SizedBox(width: 8),
-                    _buildQuickDateOption('Yesterday', now.subtract(const Duration(days: 1)), ctx, context, isDark),
+                    _buildQuickDateOption('Hôm qua', now.subtract(const Duration(days: 1)), ctx, context, isDark),
                     const SizedBox(width: 8),
-                    _buildQuickDateOption('This Week', now.subtract(Duration(days: now.weekday - 1)), ctx, context, isDark),
+                    _buildQuickDateOption('Tuần này', now.subtract(Duration(days: now.weekday - 1)), ctx, context, isDark),
                   ],
                 ),
               ),
@@ -695,7 +695,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
               borderRadius: BorderRadius.circular(20),
             ),
             child: Text(
-              isExpanded ? 'Collapse' : 'See All',
+              isExpanded ? 'Thu gọn' : 'Xem tất cả',
               style: const TextStyle(
                 fontSize: 12,
                 color: Color(0xFF6C5CE7),
@@ -780,7 +780,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                     children: [
                       Expanded(
                         child: Text(
-                          transaction.note ?? transaction.categoryName ?? 'Transaction',
+                          transaction.note ?? transaction.categoryName ?? 'Giao dịch',
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
@@ -799,7 +799,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                             borderRadius: BorderRadius.circular(4),
                           ),
                           child: const Text(
-                            'Bill',
+                            'Hóa đơn',
                             style: TextStyle(
                               fontSize: 10,
                               fontWeight: FontWeight.w600,
@@ -946,8 +946,8 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
 
   String _formatDate(DateTime date) {
     const months = [
-      'January', 'February', 'March', 'April', 'May', 'June',
-      'July', 'August', 'September', 'October', 'November', 'December'
+      'Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6',
+      'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'
     ];
     return '${date.day} ${months[date.month - 1]} ${date.year}';
   }
@@ -959,17 +959,17 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
     final dateOnly = DateTime(date.year, date.month, date.day);
     
     if (dateOnly == today) {
-      return 'Today, ${date.day}/${date.month}';
+      return 'Hôm nay, ${date.day}/${date.month}';
     } else if (dateOnly == yesterday) {
-      return 'Yesterday, ${date.day}/${date.month}';
+      return 'Hôm qua, ${date.day}/${date.month}';
     }
     
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const months = ['Thg 1', 'Thg 2', 'Thg 3', 'Thg 4', 'Thg 5', 'Thg 6', 'Thg 7', 'Thg 8', 'Thg 9', 'Thg 10', 'Thg 11', 'Thg 12'];
     return '${date.day} ${months[date.month - 1]}, ${date.year}';
   }
 
   String _formatFullDate(DateTime date) {
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const months = ['Thg 1', 'Thg 2', 'Thg 3', 'Thg 4', 'Thg 5', 'Thg 6', 'Thg 7', 'Thg 8', 'Thg 9', 'Thg 10', 'Thg 11', 'Thg 12'];
     return '${date.day} ${months[date.month - 1]} ${date.year}';
   }
 
@@ -1046,7 +1046,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          isExpense ? 'Expense' : 'Income',
+                          isExpense ? 'Chi tiêu' : 'Thu nhập',
                           style: TextStyle(
                             fontSize: 14,
                             color: isExpense ? const Color(0xFFE53935) : const Color(0xFF43A047),
@@ -1079,7 +1079,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                   children: [
                     // Date
                     _buildDetailRow(
-                      'Date',
+                      'Ngày',
                       _formatDetailDate(transaction.transactionDate),
                       Icons.calendar_today_outlined,
                       isDark,
@@ -1090,7 +1090,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                     // Wallet
                     if (transaction.walletName != null)
                       _buildDetailRow(
-                        'Wallet',
+                        'Ví',
                         transaction.walletName!,
                         Icons.account_balance_wallet_outlined,
                         isDark,
@@ -1100,7 +1100,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                     if (transaction.note != null && transaction.note!.isNotEmpty) ...[
                       const SizedBox(height: 16),
                       _buildDetailRow(
-                        'Note',
+                        'Ghi chú',
                         transaction.note!,
                         Icons.note_outlined,
                         isDark,
@@ -1111,7 +1111,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                     if (transaction.createdByUserName != null && transaction.groupId != null) ...[
                       const SizedBox(height: 16),
                       _buildDetailRow(
-                        'Created by',
+                        'Tạo bởi',
                         transaction.createdByUserName!,
                         Icons.person_outline,
                         isDark,
@@ -1123,7 +1123,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                     if (transaction.groupId != null && transaction.groupName != null) ...[
                       const SizedBox(height: 16),
                       _buildDetailRow(
-                        'Group',
+                        'Nhóm',
                         transaction.groupName!,
                         Icons.group_outlined,
                         isDark,
@@ -1143,7 +1143,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                           ),
                           const SizedBox(width: 8),
                           Text(
-                            'Bill / Receipt',
+                            'Hóa đơn / Biên lai',
                             style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w600,
@@ -1196,7 +1196,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                                           ),
                                           const SizedBox(height: 8),
                                           Text(
-                                            'Unable to load image',
+                                            'Không thể tải ảnh',
                                             style: TextStyle(
                                               color: isDark ? Colors.grey[500] : Colors.grey[600],
                                             ),
@@ -1226,7 +1226,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                                         ),
                                         SizedBox(width: 4),
                                         Text(
-                                          'Tap to view',
+                                          'Chạm để xem',
                                           style: TextStyle(
                                             color: Colors.white,
                                             fontSize: 12,
@@ -1248,7 +1248,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                     
                     // Transaction ID (for reference)
                     Text(
-                      'Transaction ID: ${transaction.id.substring(0, 8)}...',
+                      'Mã giao dịch: ${transaction.id.substring(0, 8)}...',
                       style: TextStyle(
                         fontSize: 12,
                         color: isDark ? Colors.grey[600] : Colors.grey[400],
@@ -1302,8 +1302,8 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
   }
 
   String _formatDetailDate(DateTime date) {
-    final months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
-                    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    final months = ['Thg 1', 'Thg 2', 'Thg 3', 'Thg 4', 'Thg 5', 'Thg 6', 
+                    'Thg 7', 'Thg 8', 'Thg 9', 'Thg 10', 'Thg 11', 'Thg 12'];
     return '${date.day} ${months[date.month - 1]} ${date.year}, ${date.hour}:${date.minute.toString().padLeft(2, '0')}';
   }
 
@@ -1360,7 +1360,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                             ),
                             const SizedBox(height: 12),
                             Text(
-                              'Unable to load image',
+                              'Không thể tải ảnh',
                               style: TextStyle(
                                 color: isDark ? Colors.grey[500] : Colors.grey[600],
                                 fontSize: 16,
@@ -1408,7 +1408,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: const Text(
-                    'Pinch to zoom • Drag to pan',
+                    'Chụm để phóng to • Kéo để di chuyển',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 12,

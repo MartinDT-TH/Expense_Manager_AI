@@ -18,7 +18,7 @@ class DatePickerSheet extends StatefulWidget {
 class _DatePickerSheetState extends State<DatePickerSheet> {
   late DateTime _selectedDate;
   late DateTime _displayedMonth;
-  int _selectedQuickOption = 0; // 0 = Today, 1 = Last 8 days, 2 = Last month
+  int _selectedQuickOption = 0; // 0 = Hôm nay, 1 = 8 ngày gần nhất, 2 = Tháng trước
 
   @override
   void initState() {
@@ -56,11 +56,11 @@ class _DatePickerSheetState extends State<DatePickerSheet> {
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Row(
               children: [
-                _buildQuickOption('Today', 0),
+                _buildQuickOption('Hôm nay', 0),
                 const SizedBox(width: 8),
-                _buildQuickOption('Last 8 days', 1),
+                _buildQuickOption('8 ngày gần nhất', 1),
                 const SizedBox(width: 8),
-                _buildQuickOption('Last month', 2),
+                _buildQuickOption('Tháng trước', 2),
               ],
             ),
           ),
@@ -96,7 +96,7 @@ class _DatePickerSheetState extends State<DatePickerSheet> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Row(
-              children: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']
+              children: ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7']
                   .map((day) => Expanded(
                         child: Center(
                           child: Text(
@@ -137,7 +137,7 @@ class _DatePickerSheetState extends State<DatePickerSheet> {
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
-                    child: const Text('Clear'),
+                    child: const Text('Xóa'),
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -155,7 +155,7 @@ class _DatePickerSheetState extends State<DatePickerSheet> {
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
-                    child: const Text('Apply'),
+                    child: const Text('Áp dụng'),
                   ),
                 ),
               ],
@@ -283,8 +283,8 @@ class _DatePickerSheetState extends State<DatePickerSheet> {
 
   String _formatMonth(DateTime date) {
     const months = [
-      'January', 'February', 'March', 'April', 'May', 'June',
-      'July', 'August', 'September', 'October', 'November', 'December'
+      'Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6',
+      'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'
     ];
     return '${months[date.month - 1]} ${date.year}';
   }

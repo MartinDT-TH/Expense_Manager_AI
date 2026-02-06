@@ -103,7 +103,7 @@ class _WalletDetailScreenState extends State<WalletDetailScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Recent Transactions',
+                        'Giao dịch gần đây',
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -419,7 +419,7 @@ class _WalletDetailScreenState extends State<WalletDetailScreen> {
             children: [
               Expanded(
                 child: _buildStatCard(
-                  'Income',
+                  'Thu nhập',
                   monthlyIncome,
                   Icons.arrow_downward_rounded,
                   const Color(0xFF00B894),
@@ -429,7 +429,7 @@ class _WalletDetailScreenState extends State<WalletDetailScreen> {
               const SizedBox(width: 12),
               Expanded(
                 child: _buildStatCard(
-                  'Expense',
+                  'Chi tiêu',
                   monthlyExpense,
                   Icons.arrow_upward_rounded,
                   const Color(0xFFE17055),
@@ -568,7 +568,7 @@ class _WalletDetailScreenState extends State<WalletDetailScreen> {
                     children: [
                       Expanded(
                         child: Text(
-                          transaction.categoryName ?? 'Transaction',
+                          transaction.categoryName ?? 'Giao dịch',
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
@@ -643,7 +643,7 @@ class _WalletDetailScreenState extends State<WalletDetailScreen> {
           ),
           const SizedBox(height: 16),
           Text(
-            'No transactions yet',
+            'Chưa có giao dịch',
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w500,
@@ -739,7 +739,7 @@ class _WalletDetailScreenState extends State<WalletDetailScreen> {
           TextButton(
             onPressed: () => Navigator.pop(dialogContext),
             child: Text(
-              'Cancel',
+              'Hủy',
               style: TextStyle(color: isDark ? Colors.grey[400] : Colors.grey[600]),
             ),
           ),
@@ -807,7 +807,7 @@ class _WalletDetailScreenState extends State<WalletDetailScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          transaction.categoryName ?? 'Transaction',
+                          transaction.categoryName ?? 'Giao dịch',
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
@@ -816,7 +816,7 @@ class _WalletDetailScreenState extends State<WalletDetailScreen> {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          isExpense ? 'Expense' : 'Income',
+                          isExpense ? 'Chi tiêu' : 'Thu nhập',
                           style: TextStyle(
                             fontSize: 14,
                             color: isExpense ? const Color(0xFFE17055) : const Color(0xFF00B894),
@@ -1017,7 +1017,7 @@ class _WalletDetailScreenState extends State<WalletDetailScreen> {
                     
                     // Transaction ID (for reference)
                     Text(
-                      'Transaction ID: ${transaction.id.substring(0, 8)}...',
+                      'Mã giao dịch: ${transaction.id.substring(0, 8)}...',
                       style: TextStyle(
                         fontSize: 12,
                         color: isDark ? Colors.grey[600] : Colors.grey[400],

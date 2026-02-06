@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
+import '../../../../core/ads/ad_service.dart';
 import '../../../../core/di/injection_container.dart';
 import '../../../../core/utils/category_icons.dart';
 import '../../../../core/services/cloudinary_service.dart';
@@ -324,7 +325,7 @@ class _AddTransactionViewState extends State<_AddTransactionView> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              'SELECT CATEGORY',
+              'CHỌN DANH MỤC',
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
@@ -343,7 +344,7 @@ class _AddTransactionViewState extends State<_AddTransactionView> {
                           size: 48, color: Colors.grey[400]),
                       const SizedBox(height: 8),
                       Text(
-                        'No categories',
+                        'Chưa có danh mục',
                         style: TextStyle(color: Colors.grey[600]),
                       ),
                     ],
@@ -390,7 +391,7 @@ class _AddTransactionViewState extends State<_AddTransactionView> {
                             ),
                             const SizedBox(height: 8),
                             Text(
-                              'Add\nCategory',
+                              'Thêm\nDanh mục',
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontSize: 11,
@@ -670,7 +671,7 @@ class _AddTransactionViewState extends State<_AddTransactionView> {
               child: Column(
                 children: [
                   _buildBalanceRow(
-                    'Expense Amount',
+                    'Số tiền chi tiêu',
                     '${formatter.format(amount)} ₫',
                     Colors.red,
                     isDark,
@@ -697,7 +698,7 @@ class _AddTransactionViewState extends State<_AddTransactionView> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            child: const Text('Hủy'),
           ),
           ElevatedButton(
             onPressed: () {
@@ -711,7 +712,7 @@ class _AddTransactionViewState extends State<_AddTransactionView> {
                 borderRadius: BorderRadius.circular(8),
               ),
             ),
-            child: const Text('Save Anyway'),
+            child: const Text('Vẫn lưu'),
           ),
         ],
       ),
@@ -1202,7 +1203,7 @@ class _AddTransactionViewState extends State<_AddTransactionView> {
                     ),
                   ),
                   child:
-                      const Text('Done', style: TextStyle(color: Colors.white)),
+                      const Text('Xong', style: TextStyle(color: Colors.white)),
                 ),
               ],
             ),
@@ -1959,16 +1960,26 @@ class _AddTransactionViewState extends State<_AddTransactionView> {
           setState(() => _isSaving = false);
           // Refresh wallet balance after transaction created
           context.read<WalletBloc>().add(WalletsLoadRequested());
-          Navigator.pop(
-              context, true); // Return true to indicate refresh needed
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                'Added ${isIncome ? 'income' : 'expense'}: $displayValue ₫',
+          final authState = context.read<AuthBloc>().state;
+          final isPremium =
+              authState is Authenticated && authState.user.isPremium;
+          sl<AdService>()
+              .maybeShowInterstitial(context, isPremium: isPremium)
+              .then((_) {
+            if (!mounted) {
+              return;
+            }
+            Navigator.pop(context, true);
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  'Đã thêm ${isIncome ? 'thu nhập' : 'chi tiêu'}: $displayValue ₫',
+                ),
+                backgroundColor:
+                    isIncome ? incomeGreen : const Color(0xFFE17055),
               ),
-              backgroundColor: isIncome ? incomeGreen : const Color(0xFFE17055),
-            ),
-          );
+            );
+          });
         } else if (state is TransactionError) {
           setState(() => _isSaving = false);
           ScaffoldMessenger.of(context).showSnackBar(
@@ -2001,7 +2012,7 @@ class _AddTransactionViewState extends State<_AddTransactionView> {
                 onPressed: () => Navigator.pop(context),
               ),
               title: const Text(
-                'Add Transaction',
+                'Thêm giao dịch',
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.w600,
@@ -2095,7 +2106,7 @@ class _AddTransactionViewState extends State<_AddTransactionView> {
                                           ),
                                           const SizedBox(width: 6),
                                           Text(
-                                            isIncome ? 'Income' : 'Expenses',
+                                            isIncome ? 'Thu nhập' : 'Chi tiêu',
                                             style: const TextStyle(
                                               color: Colors.white,
                                               fontWeight: FontWeight.w600,
@@ -2147,7 +2158,7 @@ class _AddTransactionViewState extends State<_AddTransactionView> {
                                             Expanded(
                                               child: Text(
                                                 selectedCategory?.name ??
-                                                    'Category',
+                                                    'Danh mục',
                                                 style: TextStyle(
                                                   fontSize: 13,
                                                   fontWeight: FontWeight.w500,
@@ -2312,7 +2323,7 @@ class _AddTransactionViewState extends State<_AddTransactionView> {
                                           Text(
                                             _noteController.text.isNotEmpty
                                                 ? 'Has note'
-                                                : 'Note',
+                                                : 'Ghi chú',
                                             style: TextStyle(
                                               fontSize: 13,
                                               fontWeight: FontWeight.w500,
@@ -2350,7 +2361,7 @@ class _AddTransactionViewState extends State<_AddTransactionView> {
                                       const SizedBox(width: 8),
                                       Expanded(
                                         child: Text(
-                                          'Cannot load categories',
+                                          'Không thể tải danh mục',
                                           style: TextStyle(
                                               color: Colors.red[700],
                                               fontSize: 12),
@@ -2417,7 +2428,7 @@ class _AddTransactionViewState extends State<_AddTransactionView> {
                                             Expanded(
                                               child: Text(
                                                 selectedGroup?.name ??
-                                                    'Personal (no group)',
+                                                    'Cá nhân (không nhóm)',
                                                 style: TextStyle(
                                                   fontSize: 13,
                                                   fontWeight: FontWeight.w500,
@@ -2542,12 +2553,12 @@ class _AddTransactionViewState extends State<_AddTransactionView> {
                 ),
                 child: Text(
                   currentOperation == '+'
-                      ? 'Adding'
+                      ? 'Đang thêm'
                       : currentOperation == '-'
-                          ? 'Subtracting'
+                          ? 'Đang trừ'
                           : currentOperation == '*'
-                              ? 'Multiplying'
-                              : 'Dividing',
+                              ? 'Đang nhân'
+                              : 'Đang chia',
                   style: const TextStyle(
                     fontSize: 12,
                     color: Colors.white,

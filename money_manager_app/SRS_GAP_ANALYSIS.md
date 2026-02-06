@@ -1,4 +1,4 @@
-# SRS Gap Analysis (Money Manager App)
+# SRS Gap Analysis (Smart Money App)
 
 Scope: Step 0 audit only (no code changes). Stack target: BLoC + sqflite, auth endpoints `/api/Auth/*`.
 
@@ -103,4 +103,5 @@ Scope: Step 0 audit only (no code changes). Stack target: BLoC + sqflite, auth e
 - [x] Network client and token storage reviewed
 - [x] SQLite schema/migrations reviewed
 - [x] Gaps and priority fixes listed
+
 

@@ -19,7 +19,7 @@ class ThemeSettingsScreen extends StatelessWidget {
           onPressed: () => Navigator.pop(context),
         ),
         title: const Text(
-          'Theme Settings',
+          'Cài đặt giao diện',
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
         ),
         centerTitle: true,
@@ -71,7 +71,7 @@ class ThemeSettingsScreen extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'Current Theme',
+                                'Giao diện hiện tại',
                                 style: TextStyle(
                                   color: Colors.white70,
                                   fontSize: 13,
@@ -79,7 +79,7 @@ class ThemeSettingsScreen extends StatelessWidget {
                               ),
                               SizedBox(height: 4),
                               Text(
-                                'Customize your app appearance',
+                                'Tùy chỉnh giao diện ứng dụng',
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 16,
@@ -126,7 +126,7 @@ class ThemeSettingsScreen extends StatelessWidget {
 
               // Theme Options Section
               const Text(
-                'Choose Theme',
+                'Chọn giao diện',
                 style: TextStyle(
                   fontSize: 17,
                   fontWeight: FontWeight.bold,
@@ -138,8 +138,8 @@ class ThemeSettingsScreen extends StatelessWidget {
               // System Default Option
               _buildThemeOption(
                 context: context,
-                title: 'System Default',
-                subtitle: 'Follows your device settings',
+                title: 'Theo hệ thống',
+                subtitle: 'Theo cài đặt thiết bị',
                 icon: Icons.settings_suggest_rounded,
                 isSelected: themeService.themeMode == ThemeMode.system,
                 onTap: () => themeService.setThemeMode(ThemeMode.system),
@@ -150,8 +150,8 @@ class ThemeSettingsScreen extends StatelessWidget {
               // Light Theme Option
               _buildThemeOption(
                 context: context,
-                title: 'Light',
-                subtitle: 'Always use light theme',
+                title: 'Sáng',
+                subtitle: 'Luôn dùng giao diện sáng',
                 icon: Icons.light_mode_rounded,
                 isSelected: themeService.themeMode == ThemeMode.light,
                 onTap: () => themeService.setThemeMode(ThemeMode.light),
@@ -162,8 +162,8 @@ class ThemeSettingsScreen extends StatelessWidget {
               // Dark Theme Option
               _buildThemeOption(
                 context: context,
-                title: 'Dark',
-                subtitle: 'Always use dark theme',
+                title: 'Tối',
+                subtitle: 'Luôn dùng giao diện tối',
                 icon: Icons.dark_mode_rounded,
                 isSelected: themeService.themeMode == ThemeMode.dark,
                 onTap: () => themeService.setThemeMode(ThemeMode.dark),
@@ -198,7 +198,7 @@ class ThemeSettingsScreen extends StatelessWidget {
                     const SizedBox(width: 12),
                     const Expanded(
                       child: Text(
-                        'Your theme preference is saved automatically and will persist across sessions.',
+                        'Lựa chọn giao diện của bạn sẽ được lưu tự động và giữ lại giữa các phiên.',
                         style: TextStyle(
                           color: Color(0xFF636E72),
                           fontSize: 13,

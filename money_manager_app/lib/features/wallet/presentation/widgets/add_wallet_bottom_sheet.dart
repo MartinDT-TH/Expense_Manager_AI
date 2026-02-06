@@ -381,7 +381,7 @@ class _AddWalletBottomSheetState extends State<AddWalletBottomSheet> {
                           ),
                         ),
                         child: Text(
-                          'Cancel',
+                          'Hủy',
                           style: TextStyle(
                             fontSize: 14 * scale,
                             fontWeight: FontWeight.w600,

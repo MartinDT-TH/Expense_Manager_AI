@@ -170,7 +170,7 @@ class _AddWalletDialogState extends State<AddWalletDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: const Text('Cancel'),
+          child: const Text('Hủy'),
         ),
         ElevatedButton(
           onPressed: _submit,
