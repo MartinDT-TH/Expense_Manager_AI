@@ -737,7 +737,7 @@ class _BudgetScreenContentState extends State<_BudgetScreenContent> with SingleT
           Icon(Icons.category_outlined, size: 64, color: Colors.grey[400]),
           const SizedBox(height: 16),
           Text(
-            'No category budgets yet',
+            'Chưa có ngân sách theo danh mục',
             style: TextStyle(fontSize: 16, color: Colors.grey[600], fontWeight: FontWeight.w500),
           ),
           const SizedBox(height: 8),

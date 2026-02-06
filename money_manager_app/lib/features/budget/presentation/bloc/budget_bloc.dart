@@ -85,7 +85,7 @@ class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
     emit(const BudgetLoading());
     try {
       final budget = await _repository.createBudget(event.request);
-      emit(BudgetOperationSuccess(message: 'Budget created successfully!', budget: budget));
+      emit(BudgetOperationSuccess(message: 'Tạo ngân sách thành công!', budget: budget));
       // Reload budgets
       add(const BudgetsLoadRequested());
     } catch (e) {
@@ -100,7 +100,7 @@ class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
     emit(const BudgetLoading());
     try {
       final budget = await _repository.updateBudget(event.id, event.request);
-      emit(BudgetOperationSuccess(message: 'Budget updated successfully!', budget: budget));
+      emit(BudgetOperationSuccess(message: 'Cập nhật ngân sách thành công!', budget: budget));
       // Reload budgets
       add(const BudgetsLoadRequested());
     } catch (e) {
@@ -115,7 +115,7 @@ class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
     emit(const BudgetLoading());
     try {
       await _repository.deleteBudget(event.id);
-      emit(const BudgetOperationSuccess(message: 'Budget deleted successfully!'));
+      emit(const BudgetOperationSuccess(message: 'Xóa ngân sách thành công!'));
       // Reload budgets
       add(const BudgetsLoadRequested());
     } catch (e) {
