@@ -47,7 +47,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
             onPressed: () => Navigator.pop(context),
           ),
           title: const Text(
-            'Transactions',
+            'Giao dịch',
             style: TextStyle(
               color: Colors.black,
               fontWeight: FontWeight.w600,
@@ -121,7 +121,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
 
                   // Expenses Section
                   _buildSectionHeader(
-                    'All My Expenses (${state.expenses.length})',
+                    'Tất cả chi tiêu (${state.expenses.length})',
                     () => setState(() => showAllExpenses = !showAllExpenses),
                     showAllExpenses,
                   ),
@@ -136,7 +136,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
 
                   // Income Section
                   _buildSectionHeader(
-                    'All My Income (${state.incomes.length})',
+                    'Tất cả thu nhập (${state.incomes.length})',
                     () => setState(() => showAllIncomes = !showAllIncomes),
                     showAllIncomes,
                   ),
@@ -184,7 +184,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                 Text(
                   selectedDate != null
                       ? _formatDate(selectedDate!)
-                      : 'All Dates',
+                      : 'Tất cả ngày',
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 16,
@@ -229,7 +229,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                 child: DropdownButton<String?>(
                   isExpanded: true,
                   value: selectedWalletId,
-                  hint: const Text('All Wallets'),
+                  hint: const Text('Tất cả ví'),
                   items: [
                     const DropdownMenuItem(
                       value: null,
@@ -237,7 +237,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                         children: [
                           Icon(Icons.account_balance_wallet, size: 20),
                           SizedBox(width: 8),
-                          Text('All Wallets'),
+                          Text('Tất cả ví'),
                         ],
                       ),
                     ),
@@ -292,7 +292,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
           Expanded(
             child: Column(
               children: [
-                const Text('Total Income', style: TextStyle(color: Colors.grey)),
+                const Text('Tổng thu nhập', style: TextStyle(color: Colors.grey)),
                 const SizedBox(height: 4),
                 Text(
                   _formatCurrency(state.totalIncome),
@@ -313,7 +313,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
           Expanded(
             child: Column(
               children: [
-                const Text('Total Expense', style: TextStyle(color: Colors.grey)),
+                const Text('Tổng chi tiêu', style: TextStyle(color: Colors.grey)),
                 const SizedBox(height: 4),
                 Text(
                   _formatCurrency(state.totalExpense),
@@ -573,14 +573,14 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
 
   String _formatDate(DateTime date) {
     const months = [
-      'January', 'February', 'March', 'April', 'May', 'June',
-      'July', 'August', 'September', 'October', 'November', 'December'
+      'Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6',
+      'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'
     ];
     return '${date.day} ${months[date.month - 1]} ${date.year}';
   }
 
   String _formatFullDate(DateTime date) {
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const months = ['Thg 1', 'Thg 2', 'Thg 3', 'Thg 4', 'Thg 5', 'Thg 6', 'Thg 7', 'Thg 8', 'Thg 9', 'Thg 10', 'Thg 11', 'Thg 12'];
     return '${date.day} ${months[date.month - 1]} ${date.year}';
   }
 

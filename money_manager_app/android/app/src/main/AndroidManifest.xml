@@ -8,7 +8,7 @@
     <uses-feature android:name="android.hardware.camera" android:required="false"/>
     
     <application
-        android:label="money_manager"
+        android:label="Smart Money"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
         android:largeHeap="true"

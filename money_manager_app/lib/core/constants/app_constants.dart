@@ -1,8 +1,8 @@
 class AppConstants {
   AppConstants._();
 
-  // API   // 10.12.16.73    10.12.16.177  192.168.100.116
-  static const String pcIpAddress = '10.12.16.177'; // Đổi IP này thành IP máy tính của bạn khi chạy trên thiết bị thật
+  // API   // 10.12.16.73    10.12.16.177  192.168.100.116 10.12.16.167  10.12.16.183
+  static const String pcIpAddress = '192.168.100.116'; // Đổi IP này thành IP máy tính của bạn khi chạy trên thiết bị thật
   static const String baseUrl = 'http://$pcIpAddress:5166/api'; // Real device
   static const String baseUrlEmulator = 'http://10.0.2.2:5166/api'; // Android emulator
   static const String baseUrlIOS = 'http://localhost:5166/api';
@@ -12,6 +12,20 @@ class AppConstants {
   static const String signalRHubUrlEmulator = 'http://10.0.2.2:5166/hubs/group'; // Android emulator
   static const String signalRHubUrlIOS = 'http://localhost:5166/hubs/group'; // iOS simulator
   
+
+  // Cloud API host (Elastic Beanstalk)
+  // static const String apiHost = 'moneymanagerapi-dev.eba-cskx5dza.ap-southeast-1.elasticbeanstalk.com';
+  // static const String apiScheme = 'http';
+  // static const String baseUrl = '$apiScheme://$apiHost/api'; // Real device
+  // static const String baseUrlEmulator = baseUrl; // Android emulator now hits cloud host
+  // static const String baseUrlIOS = baseUrl; // iOS simulator
+  //
+  // // SignalR Hub URLs
+  // static const String signalRHubUrl = '$apiScheme://$apiHost/hubs/group'; // Real device
+  // static const String signalRHubUrlEmulator = signalRHubUrl; // Android emulator
+  // static const String signalRHubUrlIOS = signalRHubUrl; // iOS simulator
+ 
+
   static const Duration connectionTimeout = Duration(seconds: 30);
   static const Duration receiveTimeout = Duration(seconds: 30);
 
