@@ -232,7 +232,7 @@ class _BudgetAnalyticsScreenState extends State<BudgetAnalyticsScreen> {
             const SizedBox(width: 12),
             Expanded(
               child: _buildSummaryCard(
-                title: 'Daily Limit',
+                title: 'Hạn mức/ngày',
                 value: '₫${_formatNumber(analytics.suggestedDailyLimit)}',
                 icon: Icons.speed,
                 color: const Color(0xFF00B894),
@@ -306,7 +306,7 @@ class _BudgetAnalyticsScreenState extends State<BudgetAnalyticsScreen> {
           borderRadius: BorderRadius.circular(20),
         ),
         child: const Center(
-          child: Text('No data available for trend chart'),
+          child: Text('Không có dữ liệu cho biểu đồ xu hướng'),
         ),
       );
     }
@@ -581,14 +581,14 @@ class _BudgetAnalyticsScreenState extends State<BudgetAnalyticsScreen> {
               ),
               const SizedBox(width: 12),
               const Text(
-                'Smart Suggestions',
+                'Gợi ý thông minh',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
             ],
           ),
           const SizedBox(height: 8),
           Text(
-            'Based on your spending patterns',
+            'Dựa trên thói quen chi tiêu của bạn',
             style: TextStyle(fontSize: 12, color: Colors.grey[600]),
           ),
           const SizedBox(height: 16),

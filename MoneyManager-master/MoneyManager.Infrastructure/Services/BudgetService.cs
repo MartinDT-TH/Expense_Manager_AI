@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using MoneyManager.Application.DTOs.Budget;
 using MoneyManager.Application.Interfaces;
 using MoneyManager.Domain.Entities;
@@ -10,11 +11,24 @@ namespace MoneyManager.Infrastructure.Services;
 public class BudgetService : IBudgetService
 {
     private readonly MoneyManagerDbContext _context;
+    private readonly IMemoryCache _cache;
     private const double WARNING_THRESHOLD = 80.0;
+    private static readonly TimeSpan CacheDuration = TimeSpan.FromMinutes(5);
 
-    public BudgetService(MoneyManagerDbContext context)
+    public BudgetService(MoneyManagerDbContext context, IMemoryCache cache)
     {
         _context = context;
+        _cache = cache;
+    }
+
+    /// <summary>
+    /// Invalidate cache for a user when budget or transaction changes
+    /// </summary>
+    public void InvalidateBudgetCache(Guid userId)
+    {
+        _cache.Remove($"budget_spent_{userId}");
+        _cache.Remove($"budget_current_{userId}");
+        _cache.Remove($"budget_analytics_{userId}");
     }
 
     public async Task<List<BudgetResponse>> GetBudgetsAsync(Guid userId)
@@ -352,16 +366,23 @@ public class BudgetService : IBudgetService
             // Lấy tổng chi tiêu cho category cụ thể (bao gồm subcategories)
             var categoryIds = new List<Guid> { budget.CategoryId.Value };
 
-            // Lấy thêm các subcategories
-            var subCategories = await _context.Categories
-                .Where(c => c.ParentId == budget.CategoryId.Value && !c.IsDeleted)
-                .Select(c => c.Id)
-                .ToListAsync();
+            // Lấy thêm các subcategories (cached)
+            var subCategoriesCacheKey = $"sub_categories_{budget.CategoryId.Value}";
+            if (!_cache.TryGetValue(subCategoriesCacheKey, out List<Guid>? subCategories) || subCategories == null)
+            {
+                subCategories = await _context.Categories
+                    .AsNoTracking()
+                    .Where(c => c.ParentId == budget.CategoryId.Value && !c.IsDeleted)
+                    .Select(c => c.Id)
+                    .ToListAsync();
+                
+                _cache.Set(subCategoriesCacheKey, subCategories, TimeSpan.FromMinutes(30));
+            }
             
             categoryIds.AddRange(subCategories);
 
             var spent = await _context.Transactions
-                .Include(t => t.Wallet)
+                .AsNoTracking()
                 .Where(t => t.Wallet!.OwnerId == budget.OwnerId
                            && categoryIds.Contains(t.CategoryId)
                            && t.TransactionDate >= budget.StartDate
@@ -374,13 +395,10 @@ public class BudgetService : IBudgetService
         else
         {
             // Tính tổng TẤT CẢ chi tiêu (các category loại Expense)
-            var expenseCategories = await _context.Categories
-                .Where(c => c.Type == CategoryType.Expense && !c.IsDeleted)
-                .Select(c => c.Id)
-                .ToListAsync();
+            var expenseCategories = await GetExpenseCategoryIdsAsync();
 
             var spent = await _context.Transactions
-                .Include(t => t.Wallet)
+                .AsNoTracking()
                 .Where(t => t.Wallet!.OwnerId == budget.OwnerId
                            && expenseCategories.Contains(t.CategoryId)
                            && t.TransactionDate >= budget.StartDate
@@ -452,16 +470,21 @@ public class BudgetService : IBudgetService
     
     /// <summary>
     /// Tính tổng chi tiêu cho một tháng cụ thể (tất cả expense categories)
+    /// Uses caching for better performance
     /// </summary>
     private async Task<decimal> CalculateSpentForMonthAsync(Guid userId, DateTime startDate, DateTime endDate)
     {
-        var expenseCategories = await _context.Categories
-            .Where(c => c.Type == CategoryType.Expense && !c.IsDeleted)
-            .Select(c => c.Id)
-            .ToListAsync();
+        var cacheKey = $"budget_spent_{userId}_{startDate:yyyyMM}";
+        
+        if (_cache.TryGetValue(cacheKey, out decimal cachedSpent))
+        {
+            return cachedSpent;
+        }
+
+        var expenseCategories = await GetExpenseCategoryIdsAsync();
 
         var spent = await _context.Transactions
-            .Include(t => t.Wallet)
+            .AsNoTracking()
             .Where(t => t.Wallet!.OwnerId == userId
                        && expenseCategories.Contains(t.CategoryId)
                        && t.TransactionDate >= startDate
@@ -469,6 +492,351 @@ public class BudgetService : IBudgetService
                        && !t.IsDeleted)
             .SumAsync(t => t.Amount);
 
+        // Cache for 5 minutes
+        _cache.Set(cacheKey, spent, CacheDuration);
+
         return spent;
+    }
+
+    /// <summary>
+    /// Get expense category IDs with caching
+    /// </summary>
+    private async Task<List<Guid>> GetExpenseCategoryIdsAsync()
+    {
+        const string cacheKey = "expense_category_ids";
+        
+        if (_cache.TryGetValue(cacheKey, out List<Guid>? cachedIds) && cachedIds != null)
+        {
+            return cachedIds;
+        }
+
+        var categoryIds = await _context.Categories
+            .AsNoTracking()
+            .Where(c => c.Type == CategoryType.Expense && !c.IsDeleted)
+            .Select(c => c.Id)
+            .ToListAsync();
+
+        // Cache for 30 minutes since categories rarely change
+        _cache.Set(cacheKey, categoryIds, TimeSpan.FromMinutes(30));
+
+        return categoryIds;
+    }
+
+    // ===== ANALYTICS METHODS =====
+
+    public async Task<BudgetHistoryResponse> GetBudgetHistoryAsync(Guid userId, int months = 6)
+    {
+        var history = new List<BudgetHistoryItem>();
+        var now = DateTime.UtcNow;
+        
+        decimal totalSpent = 0;
+        decimal totalBudget = 0;
+        int monthsExceeded = 0;
+
+        for (int i = 0; i < months; i++)
+        {
+            var targetDate = now.AddMonths(-i);
+            var startOfMonth = new DateTime(targetDate.Year, targetDate.Month, 1);
+            var endOfMonth = startOfMonth.AddMonths(1).AddDays(-1);
+
+            // Get budget for this month
+            var budget = await GetBudgetForMonthAsync(userId, startOfMonth, endOfMonth);
+            var budgetLimit = budget?.AmountLimit ?? 0;
+            
+            // Calculate spent for this month
+            var spent = await CalculateSpentForMonthAsync(userId, startOfMonth, endOfMonth);
+            var remaining = budgetLimit - spent;
+            var percentUsed = budgetLimit > 0 ? (double)(spent / budgetLimit) * 100 : 0;
+            var wasExceeded = percentUsed >= 100;
+
+            if (wasExceeded) monthsExceeded++;
+            totalSpent += spent;
+            totalBudget += budgetLimit;
+
+            history.Add(new BudgetHistoryItem
+            {
+                Year = targetDate.Year,
+                Month = targetDate.Month,
+                MonthName = targetDate.ToString("MMMM"),
+                BudgetLimit = budgetLimit,
+                AmountSpent = spent,
+                AmountRemaining = remaining,
+                PercentUsed = Math.Round(percentUsed, 2),
+                WasExceeded = wasExceeded
+            });
+        }
+
+        return new BudgetHistoryResponse
+        {
+            History = history,
+            AverageMonthlySpending = months > 0 ? totalSpent / months : 0,
+            AverageMonthlyBudget = months > 0 ? totalBudget / months : 0,
+            MonthsExceeded = monthsExceeded,
+            TotalMonths = months
+        };
+    }
+
+    public async Task<BudgetAnalyticsResponse> GetBudgetAnalyticsAsync(Guid userId)
+    {
+        var now = DateTime.UtcNow;
+        var startOfMonth = new DateTime(now.Year, now.Month, 1);
+        var endOfMonth = startOfMonth.AddMonths(1).AddDays(-1);
+        var daysInMonth = (endOfMonth - startOfMonth).Days + 1;
+        var daysPassed = (now - startOfMonth).Days + 1;
+        var daysRemaining = daysInMonth - daysPassed + 1;
+
+        // Get current month budget and spending
+        var currentBudget = await GetCurrentMonthBudgetAsync(userId);
+        var totalBudgetThisMonth = currentBudget?.AmountLimit ?? 0;
+        var totalSpentThisMonth = await CalculateSpentForMonthAsync(userId, startOfMonth, endOfMonth);
+        var remainingThisMonth = totalBudgetThisMonth - totalSpentThisMonth;
+        var percentUsedThisMonth = totalBudgetThisMonth > 0 
+            ? (double)(totalSpentThisMonth / totalBudgetThisMonth) * 100 
+            : 0;
+
+        // Calculate daily metrics
+        var averageDailySpending = daysPassed > 0 ? totalSpentThisMonth / daysPassed : 0;
+        var projectedMonthlySpending = averageDailySpending * daysInMonth;
+        var willExceedBudget = projectedMonthlySpending > totalBudgetThisMonth;
+        
+        // Calculate days until budget exceeded
+        var daysUntilExceeded = 0;
+        if (averageDailySpending > 0 && remainingThisMonth > 0)
+        {
+            daysUntilExceeded = (int)(remainingThisMonth / averageDailySpending);
+        }
+
+        // Suggested daily limit
+        var suggestedDailyLimit = daysRemaining > 0 ? remainingThisMonth / daysRemaining : 0;
+
+        // Get monthly trend (last 6 months)
+        var historyResponse = await GetBudgetHistoryAsync(userId, 6);
+
+        // Get category breakdown
+        var categoryBreakdown = await GetCategoryBreakdownAsync(userId, startOfMonth, endOfMonth);
+
+        // Generate insight message
+        string? insightMessage = null;
+        if (percentUsedThisMonth >= 100)
+        {
+            insightMessage = "Bạn đã vượt ngân sách tháng này. Hãy cân nhắc điều chỉnh chi tiêu.";
+        }
+        else if (percentUsedThisMonth >= 80)
+        {
+            insightMessage = $"Bạn đã sử dụng {percentUsedThisMonth:F0}% ngân sách. Còn {daysRemaining} ngày nữa là hết tháng.";
+        }
+        else if (willExceedBudget)
+        {
+            insightMessage = $"Với tốc độ chi tiêu hiện tại, bạn có thể vượt ngân sách trong {daysUntilExceeded} ngày.";
+        }
+        else
+        {
+            insightMessage = $"Bạn đang chi tiêu hợp lý. Mỗi ngày bạn có thể chi tối đa {suggestedDailyLimit:N0} VND.";
+        }
+
+        return new BudgetAnalyticsResponse
+        {
+            TotalBudgetThisMonth = totalBudgetThisMonth,
+            TotalSpentThisMonth = totalSpentThisMonth,
+            RemainingThisMonth = remainingThisMonth,
+            PercentUsedThisMonth = Math.Round(percentUsedThisMonth, 2),
+            MonthlyTrend = historyResponse.History,
+            CategoryBreakdown = categoryBreakdown,
+            AverageDailySpending = averageDailySpending,
+            ProjectedMonthlySpending = projectedMonthlySpending,
+            WillExceedBudget = willExceedBudget,
+            DaysUntilBudgetExceeded = daysUntilExceeded,
+            SuggestedDailyLimit = suggestedDailyLimit > 0 ? suggestedDailyLimit : 0,
+            InsightMessage = insightMessage
+        };
+    }
+
+    public async Task<List<BudgetSuggestion>> GetBudgetSuggestionsAsync(Guid userId)
+    {
+        var suggestions = new List<BudgetSuggestion>();
+        var now = DateTime.UtcNow;
+
+        // Analyze last 3 months spending
+        var threeMonthsAgo = now.AddMonths(-3);
+        
+        // Get expense categories
+        var expenseCategories = await _context.Categories
+            .Where(c => c.Type == CategoryType.Expense && !c.IsDeleted && c.ParentId == null)
+            .ToListAsync();
+
+        foreach (var category in expenseCategories)
+        {
+            // Get spending for this category over last 3 months
+            var categoryIds = new List<Guid> { category.Id };
+            var subCategories = await _context.Categories
+                .Where(c => c.ParentId == category.Id && !c.IsDeleted)
+                .Select(c => c.Id)
+                .ToListAsync();
+            categoryIds.AddRange(subCategories);
+
+            var monthlySpending = new List<decimal>();
+            
+            for (int i = 0; i < 3; i++)
+            {
+                var targetDate = now.AddMonths(-i);
+                var startOfMonth = new DateTime(targetDate.Year, targetDate.Month, 1);
+                var endOfMonth = startOfMonth.AddMonths(1).AddDays(-1);
+
+                var spent = await _context.Transactions
+                    .Include(t => t.Wallet)
+                    .Where(t => t.Wallet!.OwnerId == userId
+                               && categoryIds.Contains(t.CategoryId)
+                               && t.TransactionDate >= startOfMonth
+                               && t.TransactionDate <= endOfMonth
+                               && !t.IsDeleted)
+                    .SumAsync(t => t.Amount);
+                    
+                monthlySpending.Add(spent);
+            }
+
+            if (monthlySpending.Any(s => s > 0))
+            {
+                var average = monthlySpending.Average();
+                var min = monthlySpending.Min();
+                var max = monthlySpending.Max();
+                
+                // Suggest 10% above average for comfort
+                var suggested = average * 1.1m;
+                
+                string reason;
+                if (max > average * 1.5m)
+                {
+                    reason = "Chi tiêu dao động lớn, nên đặt ngân sách cao hơn trung bình.";
+                    suggested = average * 1.2m; // Add more buffer
+                }
+                else if (average < 500000) // Low spending category
+                {
+                    reason = "Đây là danh mục chi tiêu nhỏ, có thể đặt ngân sách vừa phải.";
+                }
+                else
+                {
+                    reason = "Dựa trên chi tiêu trung bình 3 tháng gần nhất.";
+                }
+
+                suggestions.Add(new BudgetSuggestion
+                {
+                    CategoryId = category.Id,
+                    CategoryName = category.Name,
+                    SuggestedAmount = Math.Round(suggested, 0),
+                    AverageSpent = Math.Round(average, 0),
+                    MinSpent = Math.Round(min, 0),
+                    MaxSpent = Math.Round(max, 0),
+                    Reason = reason
+                });
+            }
+        }
+
+        // Also suggest total monthly budget
+        var totalMonthlySpending = new List<decimal>();
+        for (int i = 0; i < 3; i++)
+        {
+            var targetDate = now.AddMonths(-i);
+            var startOfMonth = new DateTime(targetDate.Year, targetDate.Month, 1);
+            var endOfMonth = startOfMonth.AddMonths(1).AddDays(-1);
+            var spent = await CalculateSpentForMonthAsync(userId, startOfMonth, endOfMonth);
+            totalMonthlySpending.Add(spent);
+        }
+
+        if (totalMonthlySpending.Any(s => s > 0))
+        {
+            var avgTotal = totalMonthlySpending.Average();
+            suggestions.Insert(0, new BudgetSuggestion
+            {
+                CategoryId = null,
+                CategoryName = "Tổng ngân sách tháng",
+                SuggestedAmount = Math.Round(avgTotal * 1.05m, 0), // 5% buffer for total
+                AverageSpent = Math.Round(avgTotal, 0),
+                MinSpent = Math.Round(totalMonthlySpending.Min(), 0),
+                MaxSpent = Math.Round(totalMonthlySpending.Max(), 0),
+                Reason = "Tổng chi tiêu trung bình 3 tháng, cộng thêm 5% dự phòng."
+            });
+        }
+
+        return suggestions.OrderByDescending(s => s.AverageSpent).ToList();
+    }
+
+    private async Task<Budget?> GetBudgetForMonthAsync(Guid userId, DateTime startOfMonth, DateTime endOfMonth)
+    {
+        // First try specific budget for this month
+        var specificBudget = await _context.Budgets
+            .FirstOrDefaultAsync(b => b.OwnerId == userId 
+                                     && !b.IsDeleted
+                                     && !b.IsRecurring
+                                     && b.CategoryId == null
+                                     && b.StartDate <= endOfMonth
+                                     && b.EndDate >= startOfMonth);
+
+        if (specificBudget != null) return specificBudget;
+
+        // Fallback to recurring budget
+        return await _context.Budgets
+            .FirstOrDefaultAsync(b => b.OwnerId == userId 
+                                     && !b.IsDeleted
+                                     && b.IsRecurring
+                                     && b.CategoryId == null);
+    }
+
+    private async Task<List<CategoryBudgetAnalytics>> GetCategoryBreakdownAsync(
+        Guid userId, DateTime startOfMonth, DateTime endOfMonth)
+    {
+        var breakdown = new List<CategoryBudgetAnalytics>();
+
+        // Get all expense categories with their spending
+        var expenseCategories = await _context.Categories
+            .Where(c => c.Type == CategoryType.Expense && !c.IsDeleted && c.ParentId == null)
+            .ToListAsync();
+
+        foreach (var category in expenseCategories)
+        {
+            // Get category budgets
+            var categoryBudget = await _context.Budgets
+                .FirstOrDefaultAsync(b => b.OwnerId == userId 
+                                         && !b.IsDeleted
+                                         && b.CategoryId == category.Id
+                                         && (b.IsRecurring 
+                                             || (b.StartDate <= endOfMonth && b.EndDate >= startOfMonth)));
+
+            // Get category IDs including subcategories
+            var categoryIds = new List<Guid> { category.Id };
+            var subCategories = await _context.Categories
+                .Where(c => c.ParentId == category.Id && !c.IsDeleted)
+                .Select(c => c.Id)
+                .ToListAsync();
+            categoryIds.AddRange(subCategories);
+
+            // Calculate spent
+            var spent = await _context.Transactions
+                .Include(t => t.Wallet)
+                .Where(t => t.Wallet!.OwnerId == userId
+                           && categoryIds.Contains(t.CategoryId)
+                           && t.TransactionDate >= startOfMonth
+                           && t.TransactionDate <= endOfMonth
+                           && !t.IsDeleted)
+                .SumAsync(t => t.Amount);
+
+            if (spent > 0 || categoryBudget != null)
+            {
+                var budgetAmount = categoryBudget?.AmountLimit ?? 0;
+                var percentUsed = budgetAmount > 0 ? (double)(spent / budgetAmount) * 100 : 0;
+
+                breakdown.Add(new CategoryBudgetAnalytics
+                {
+                    CategoryId = category.Id,
+                    CategoryName = category.Name,
+                    CategoryIcon = category.IconCode,
+                    TotalBudget = budgetAmount,
+                    TotalSpent = spent,
+                    PercentUsed = Math.Round(percentUsed, 2),
+                    AverageMonthlySpent = spent // This month's spending
+                });
+            }
+        }
+
+        return breakdown.OrderByDescending(b => b.TotalSpent).ToList();
     }
 }

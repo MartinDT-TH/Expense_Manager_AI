@@ -1,4 +1,5 @@
 import '../models/budget_model.dart';
+import '../models/budget_analytics_models.dart';
 
 abstract class BudgetRemoteDataSource {
   Future<List<BudgetModel>> getBudgets();
@@ -9,4 +10,9 @@ abstract class BudgetRemoteDataSource {
   Future<BudgetModel> updateBudget(String id, UpdateBudgetRequest request);
   Future<bool> deleteBudget(String id);
   Future<BudgetWarningResponse> getBudgetWarnings();
+  
+  // Analytics endpoints
+  Future<BudgetHistoryResponse> getBudgetHistory({int months = 6});
+  Future<BudgetAnalyticsResponse> getBudgetAnalytics();
+  Future<List<BudgetSuggestion>> getBudgetSuggestions();
 }

@@ -54,6 +54,54 @@ class BudgetModel extends Budget {
     };
   }
 
+  /// Convert to SQLite map (snake_case columns)
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'category_id': categoryId,
+      'category_name': categoryName,
+      'category_icon': categoryIcon,
+      'amount_limit': amountLimit,
+      'start_date': startDate.toIso8601String(),
+      'end_date': endDate.toIso8601String(),
+      'is_recurring': isRecurring ? 1 : 0,
+      'is_deleted': 0,
+      'last_updated_at': updatedAt.toIso8601String(),
+      'is_synced': 0,
+    };
+  }
+
+  /// Create from SQLite map (snake_case columns)
+  /// Note: amountSpent should be calculated separately from transactions
+  factory BudgetModel.fromMap(Map<String, dynamic> map, {double? calculatedSpent}) {
+    final amountLimit = (map['amount_limit'] as num).toDouble();
+    final spent = calculatedSpent ?? 0;
+    final remaining = amountLimit - spent;
+    final percentUsed = amountLimit > 0 ? (spent / amountLimit) * 100 : 0.0;
+    
+    return BudgetModel(
+      id: map['id'] as String,
+      amountLimit: amountLimit,
+      amountSpent: spent,
+      amountRemaining: remaining,
+      percentUsed: percentUsed,
+      isWarning: percentUsed >= 80 && percentUsed < 100,
+      isExceeded: percentUsed >= 100,
+      isRecurring: (map['is_recurring'] as int?) == 1,
+      categoryId: map['category_id'] as String?,
+      categoryName: map['category_name'] as String? ?? '',
+      categoryIcon: map['category_icon'] as String?,
+      startDate: DateTime.parse(map['start_date'] as String),
+      endDate: DateTime.parse(map['end_date'] as String),
+      createdAt: map['last_updated_at'] != null 
+          ? DateTime.parse(map['last_updated_at'] as String)
+          : DateTime.now(),
+      updatedAt: map['last_updated_at'] != null 
+          ? DateTime.parse(map['last_updated_at'] as String)
+          : DateTime.now(),
+    );
+  }
+
   factory BudgetModel.fromEntity(Budget budget) {
     return BudgetModel(
       id: budget.id,

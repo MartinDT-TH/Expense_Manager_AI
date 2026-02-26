@@ -1,5 +1,6 @@
 import '../../../../core/network/api_client.dart';
 import '../models/budget_model.dart';
+import '../models/budget_analytics_models.dart';
 import 'budget_datasource.dart';
 
 class BudgetRemoteDataSourceImpl implements BudgetRemoteDataSource {
@@ -72,5 +73,24 @@ class BudgetRemoteDataSourceImpl implements BudgetRemoteDataSource {
   Future<BudgetWarningResponse> getBudgetWarnings() async {
     final response = await _apiClient.get('/Budget/warnings');
     return BudgetWarningResponse.fromJson(response.data as Map<String, dynamic>);
+  }
+
+  @override
+  Future<BudgetHistoryResponse> getBudgetHistory({int months = 6}) async {
+    final response = await _apiClient.get('/Budget/history', queryParameters: {'months': months});
+    return BudgetHistoryResponse.fromJson(response.data as Map<String, dynamic>);
+  }
+
+  @override
+  Future<BudgetAnalyticsResponse> getBudgetAnalytics() async {
+    final response = await _apiClient.get('/Budget/analytics');
+    return BudgetAnalyticsResponse.fromJson(response.data as Map<String, dynamic>);
+  }
+
+  @override
+  Future<List<BudgetSuggestion>> getBudgetSuggestions() async {
+    final response = await _apiClient.get('/Budget/suggestions');
+    final List<dynamic> data = response.data as List<dynamic>;
+    return data.map((json) => BudgetSuggestion.fromJson(json as Map<String, dynamic>)).toList();
   }
 }

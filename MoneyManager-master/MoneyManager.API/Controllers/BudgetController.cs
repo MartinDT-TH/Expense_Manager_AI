@@ -185,4 +185,51 @@ public class BudgetController : ControllerBase
 
         return Ok(new { message = "Đã xóa ngân sách thành công." });
     }
+
+    /// <summary>
+    /// GET: api/Budget/history
+    /// Lấy lịch sử ngân sách theo tháng
+    /// </summary>
+    [HttpGet("history")]
+    public async Task<IActionResult> GetBudgetHistory([FromQuery] int months = 6)
+    {
+        var user = await GetCurrentUserAsync();
+        if (user == null) return Unauthorized();
+
+        if (months < 1 || months > 24)
+        {
+            return BadRequest(new { message = "Số tháng phải từ 1 đến 24." });
+        }
+
+        var history = await _budgetService.GetBudgetHistoryAsync(user.Id, months);
+        return Ok(history);
+    }
+
+    /// <summary>
+    /// GET: api/Budget/analytics
+    /// Lấy phân tích ngân sách chi tiết
+    /// </summary>
+    [HttpGet("analytics")]
+    public async Task<IActionResult> GetBudgetAnalytics()
+    {
+        var user = await GetCurrentUserAsync();
+        if (user == null) return Unauthorized();
+
+        var analytics = await _budgetService.GetBudgetAnalyticsAsync(user.Id);
+        return Ok(analytics);
+    }
+
+    /// <summary>
+    /// GET: api/Budget/suggestions
+    /// Lấy đề xuất ngân sách thông minh
+    /// </summary>
+    [HttpGet("suggestions")]
+    public async Task<IActionResult> GetBudgetSuggestions()
+    {
+        var user = await GetCurrentUserAsync();
+        if (user == null) return Unauthorized();
+
+        var suggestions = await _budgetService.GetBudgetSuggestionsAsync(user.Id);
+        return Ok(suggestions);
+    }
 }
