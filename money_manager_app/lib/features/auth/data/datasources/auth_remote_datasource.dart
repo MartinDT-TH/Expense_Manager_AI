@@ -21,7 +21,13 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     final request = LoginRequest(email: email, password: password);
     final response = await apiClient.post('/Auth/login', data: request.toJson());
 
-    final authResponse = AuthResponseModel.fromJson(response.data);
+    if (response.data is! Map<String, dynamic>) {
+      return AuthResponseModel(
+        success: false,
+        message: response.data?.toString() ?? 'Đăng nhập thất bại',
+      );
+    }
+    final authResponse = AuthResponseModel.fromJson(response.data as Map<String, dynamic>);
     if (authResponse.success && authResponse.accessToken != null) {
       final expiry = _resolveExpiry(
         authResponse.expiresIn,
@@ -45,7 +51,13 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     );
     final response = await apiClient.post('/Auth/register', data: request.toJson());
 
-    final authResponse = AuthResponseModel.fromJson(response.data);
+    if (response.data is! Map<String, dynamic>) {
+      return AuthResponseModel(
+        success: false,
+        message: response.data?.toString() ?? 'Đăng ký thất bại',
+      );
+    }
+    final authResponse = AuthResponseModel.fromJson(response.data as Map<String, dynamic>);
     if (authResponse.success && authResponse.accessToken != null) {
       final expiry = _resolveExpiry(
         authResponse.expiresIn,

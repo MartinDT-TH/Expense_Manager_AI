@@ -7,6 +7,8 @@ class TokenStorage {
   const TokenStorage({FlutterSecureStorage? storage})
       : _storage = storage ?? const FlutterSecureStorage();
 
+  // ===== Save Methods =====
+
   Future<void> saveTokens({
     required String accessToken,
     String? refreshToken,
@@ -30,6 +32,17 @@ class TokenStorage {
     }
   }
 
+  Future<void> saveAccessToken(String token) async {
+    await _storage.write(key: AppConstants.accessTokenKey, value: token);
+    await _storage.write(key: AppConstants.tokenKey, value: token);
+  }
+
+  Future<void> saveRefreshToken(String token) async {
+    await _storage.write(key: AppConstants.refreshTokenKey, value: token);
+  }
+
+  // ===== Get Methods =====
+
   Future<String?> getAccessToken() async {
     final token = await _storage.read(key: AppConstants.accessTokenKey);
     if (token != null && token.isNotEmpty) {
@@ -48,11 +61,30 @@ class TokenStorage {
     return DateTime.tryParse(raw);
   }
 
+  Future<bool> hasValidToken() async {
+    final token = await getAccessToken();
+    if (token == null || token.isEmpty) return false;
+    
+    final expiry = await getTokenExpiry();
+    if (expiry != null && expiry.isBefore(DateTime.now())) {
+      return false;
+    }
+    return true;
+  }
+
+  // ===== Clear Methods =====
+
   Future<void> clearTokens() async {
     await _storage.delete(key: AppConstants.accessTokenKey);
     await _storage.delete(key: AppConstants.refreshTokenKey);
     await _storage.delete(key: AppConstants.tokenExpiryKey);
     await _storage.delete(key: AppConstants.tokenKey);
+  }
+
+  Future<void> clearAll() async {
+    await clearTokens();
+    // Clear any other stored data
+    await _storage.deleteAll();
   }
 }
 
