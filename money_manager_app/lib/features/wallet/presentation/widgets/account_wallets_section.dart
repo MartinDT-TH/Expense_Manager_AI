@@ -54,7 +54,7 @@ class AccountWalletsSection extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          'See All',
+                          'Xem tất cả',
                           style: TextStyle(
                             color: Theme.of(context).primaryColor,
                             fontWeight: FontWeight.w600,
@@ -120,7 +120,7 @@ class AccountWalletsSection extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              'No wallets yet',
+              'Chưa có ví',
               style: TextStyle(
                 color: isDark ? Colors.grey[400] : Colors.grey[600],
                 fontSize: 14,

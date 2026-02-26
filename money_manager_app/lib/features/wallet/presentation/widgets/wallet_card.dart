@@ -141,7 +141,7 @@ class WalletCard extends StatelessWidget {
                       children: [
                         Icon(Icons.edit_outlined, size: 20),
                         SizedBox(width: 8),
-                        Text('Edit'),
+                        Text('Sửa'),
                       ],
                     ),
                   ),
@@ -151,7 +151,7 @@ class WalletCard extends StatelessWidget {
                       children: [
                         Icon(Icons.delete_outlined, size: 20, color: AppColors.error),
                         const SizedBox(width: 8),
-                        Text('Delete', style: TextStyle(color: AppColors.error)),
+                        Text('Xóa', style: TextStyle(color: AppColors.error)),
                       ],
                     ),
                   ),

@@ -61,7 +61,7 @@ class MonthlyBudgetCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Spending $monthName',
+                  'Chi tiêu $monthName',
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
@@ -80,7 +80,7 @@ class MonthlyBudgetCard extends StatelessWidget {
                       Icon(Icons.touch_app, color: Colors.white, size: 14),
                       SizedBox(width: 4),
                       Text(
-                        'Set Budget',
+                        'Thiết lập ngân sách',
                         style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
@@ -105,7 +105,7 @@ class MonthlyBudgetCard extends StatelessWidget {
             ),
             const SizedBox(height: 4),
             Text(
-              'Total spent this month',
+              'Tổng chi trong tháng',
               style: TextStyle(
                 fontSize: 13,
                 color: Colors.white.withValues(alpha: 0.8),
@@ -130,7 +130,7 @@ class MonthlyBudgetCard extends StatelessWidget {
                   const SizedBox(width: 10),
                   Expanded(
                     child: Text(
-                      'Tap to set a monthly budget and track your spending',
+                      'Nhấn để đặt ngân sách tháng và theo dõi chi tiêu',
                       style: TextStyle(
                         fontSize: 12,
                         color: Colors.white.withValues(alpha: 0.95),
@@ -187,7 +187,7 @@ class MonthlyBudgetCard extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      'Budget $monthName',
+                      'Ngân sách $monthName',
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
@@ -207,7 +207,7 @@ class MonthlyBudgetCard extends StatelessWidget {
                           Icon(Icons.check_circle, color: Colors.white, size: 12),
                           SizedBox(width: 4),
                           Text(
-                            'Active',
+                            'Đang áp dụng',
                             style: TextStyle(
                               fontSize: 10,
                               color: Colors.white,
@@ -279,7 +279,7 @@ class MonthlyBudgetCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Daily: ₫${_formatNumber(dailyBudgetMin.toInt())} - ${_formatNumber(dailyBudgetMax.toInt())}',
+                  'Mỗi ngày: ₫${_formatNumber(dailyBudgetMin.toInt())} - ${_formatNumber(dailyBudgetMax.toInt())}',
                   style: TextStyle(
                     fontSize: 13,
                     color: Colors.white.withValues(alpha: 0.9),
@@ -301,7 +301,7 @@ class MonthlyBudgetCard extends StatelessWidget {
                       ),
                       const SizedBox(width: 4),
                       Text(
-                        '$daysLeft days left',
+                        'Còn $daysLeft ngày',
                         style: const TextStyle(
                           fontSize: 12,
                           color: Colors.white,

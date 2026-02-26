@@ -56,13 +56,13 @@ class _TransferBetweenWalletsScreenState extends State<TransferBetweenWalletsScr
     if (!_formKey.currentState!.validate()) return;
     if (_sourceWallet == null || _destinationWallet == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please select both source and destination wallets')),
+        const SnackBar(content: Text('Vui lòng chọn cả ví nguồn và ví nhận')),
       );
       return;
     }
     if (_sourceWallet!.id == _destinationWallet!.id) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Source and destination wallets must be different')),
+        const SnackBar(content: Text('Ví nguồn và ví nhận phải khác nhau')),
       );
       return;
     }
@@ -70,14 +70,14 @@ class _TransferBetweenWalletsScreenState extends State<TransferBetweenWalletsScr
     final amount = double.tryParse(_amountController.text.replaceAll(',', '')) ?? 0;
     if (amount <= 0) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter a valid amount')),
+        const SnackBar(content: Text('Vui lòng nhập số tiền hợp lệ')),
       );
       return;
     }
 
     if (amount > _sourceWallet!.balance) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Insufficient balance in source wallet')),
+        const SnackBar(content: Text('Số dư ví nguồn không đủ')),
       );
       return;
     }
@@ -88,7 +88,7 @@ class _TransferBetweenWalletsScreenState extends State<TransferBetweenWalletsScr
     final now = DateTime.now();
     final note = _noteController.text.trim().isNotEmpty 
         ? _noteController.text.trim() 
-        : 'Transfer from ${_sourceWallet!.name} to ${_destinationWallet!.name}';
+        : 'Chuyển từ ${_sourceWallet!.name} sang ${_destinationWallet!.name}';
 
     // Expense transaction from source wallet
     final expenseTransaction = TransactionModel(
@@ -96,7 +96,7 @@ class _TransferBetweenWalletsScreenState extends State<TransferBetweenWalletsScr
       amount: -amount.abs(),
       type: TransactionType.expense,
       categoryId: 'transfer',
-      categoryName: 'Transfer',
+      categoryName: 'Chuyển khoản',
       categoryIcon: 'swap_horiz',
       walletId: _sourceWallet!.id,
       note: note,
@@ -113,7 +113,7 @@ class _TransferBetweenWalletsScreenState extends State<TransferBetweenWalletsScr
       amount: amount.abs(),
       type: TransactionType.income,
       categoryId: 'transfer',
-      categoryName: 'Transfer',
+      categoryName: 'Chuyển khoản',
       categoryIcon: 'swap_horiz',
       walletId: _destinationWallet!.id,
       note: note,
@@ -148,7 +148,7 @@ class _TransferBetweenWalletsScreenState extends State<TransferBetweenWalletsScr
     // Show success and pop
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('Successfully transferred ${amount.toCurrency(_sourceWallet!.currency)}'),
+        content: Text('Chuyển thành công ${amount.toCurrency(_sourceWallet!.currency)}'),
         backgroundColor: const Color(0xFF00B894),
       ),
     );
@@ -176,7 +176,7 @@ class _TransferBetweenWalletsScreenState extends State<TransferBetweenWalletsScr
                   onPressed: () => Navigator.pop(context),
                 ),
                 title: Text(
-                  'Transfer',
+                  'Chuyển khoản',
                   style: TextStyle(
                     color: isDark ? Colors.white : Colors.black87,
                     fontWeight: FontWeight.bold,
@@ -211,7 +211,7 @@ class _TransferBetweenWalletsScreenState extends State<TransferBetweenWalletsScr
                           
                           // Source Wallet
                           _buildWalletSelector(
-                            label: 'From',
+                            label: 'Từ',
                             selectedWallet: _sourceWallet,
                             wallets: wallets,
                             isDark: isDark,
@@ -249,7 +249,7 @@ class _TransferBetweenWalletsScreenState extends State<TransferBetweenWalletsScr
                           
                           // Destination Wallet
                           _buildWalletSelector(
-                            label: 'To',
+                            label: 'Đến',
                             selectedWallet: _destinationWallet,
                             wallets: wallets,
                             isDark: isDark,
@@ -304,7 +304,7 @@ class _TransferBetweenWalletsScreenState extends State<TransferBetweenWalletsScr
           ),
           const SizedBox(height: 12),
           const Text(
-            'Transfer Between Wallets',
+            'Chuyển tiền giữa các ví',
             style: TextStyle(
               color: Colors.white,
               fontSize: 18,
@@ -313,7 +313,7 @@ class _TransferBetweenWalletsScreenState extends State<TransferBetweenWalletsScr
           ),
           const SizedBox(height: 4),
           Text(
-            'Move money between your accounts',
+            'Chuyển tiền giữa các tài khoản của bạn',
             style: TextStyle(
               color: Colors.white.withOpacity(0.8),
               fontSize: 14,
@@ -411,7 +411,7 @@ class _TransferBetweenWalletsScreenState extends State<TransferBetweenWalletsScr
                   const SizedBox(width: 12),
                   Expanded(
                     child: Text(
-                      'Select Wallet',
+                      'Chọn ví',
                       style: TextStyle(
                         fontSize: 16,
                         color: isDark ? Colors.grey[500] : Colors.grey[600],
@@ -455,7 +455,7 @@ class _TransferBetweenWalletsScreenState extends State<TransferBetweenWalletsScr
             Padding(
               padding: const EdgeInsets.all(20),
               child: Text(
-                'Select Wallet',
+                'Chọn ví',
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -518,7 +518,7 @@ class _TransferBetweenWalletsScreenState extends State<TransferBetweenWalletsScr
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Amount',
+          'Số tiền',
           style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w600,
@@ -573,11 +573,11 @@ class _TransferBetweenWalletsScreenState extends State<TransferBetweenWalletsScr
           ),
           validator: (value) {
             if (value == null || value.isEmpty) {
-              return 'Please enter an amount';
+              return 'Vui lòng nhập số tiền';
             }
             final amount = double.tryParse(value.replaceAll(',', ''));
             if (amount == null || amount <= 0) {
-              return 'Please enter a valid amount';
+              return 'Vui lòng nhập số tiền hợp lệ';
             }
             return null;
           },
@@ -591,7 +591,7 @@ class _TransferBetweenWalletsScreenState extends State<TransferBetweenWalletsScr
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Note (Optional)',
+          'Ghi chú (tuỳ chọn)',
           style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w600,
@@ -606,7 +606,7 @@ class _TransferBetweenWalletsScreenState extends State<TransferBetweenWalletsScr
             color: isDark ? Colors.white : const Color(0xFF2D3436),
           ),
           decoration: InputDecoration(
-            hintText: 'Add a note...',
+            hintText: 'Thêm ghi chú...',
             hintStyle: TextStyle(
               color: isDark ? Colors.grey[600] : Colors.grey[400],
             ),
@@ -666,7 +666,7 @@ class _TransferBetweenWalletsScreenState extends State<TransferBetweenWalletsScr
                 )
               : const Icon(Icons.send, color: Colors.white),
           label: Text(
-            _isLoading ? 'Processing...' : 'Transfer Now',
+            _isLoading ? 'Đang xử lý...' : 'Chuyển ngay',
             style: const TextStyle(
               color: Colors.white,
               fontSize: 16,
@@ -707,7 +707,7 @@ class _TransferBetweenWalletsScreenState extends State<TransferBetweenWalletsScr
             ),
             const SizedBox(height: 24),
             Text(
-              'Need More Wallets',
+              'Cần thêm ví',
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
@@ -716,7 +716,7 @@ class _TransferBetweenWalletsScreenState extends State<TransferBetweenWalletsScr
             ),
             const SizedBox(height: 8),
             Text(
-              'You need at least 2 wallets to make a transfer. Create another wallet first.',
+              'Bạn cần ít nhất 2 ví để chuyển tiền. Hãy tạo thêm một ví.',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 14,

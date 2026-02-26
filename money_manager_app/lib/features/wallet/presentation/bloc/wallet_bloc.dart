@@ -34,7 +34,7 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
       final totalBalance = await getTotalBalanceUseCase();
       emit(WalletLoaded(wallets: wallets, totalBalance: totalBalance));
     } catch (e) {
-      emit(WalletError(message: 'Failed to load wallets: ${e.toString()}'));
+      emit(WalletError(message: 'Không thể tải danh sách ví: ${e.toString()}'));
     }
   }
 
@@ -61,13 +61,13 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
       final totalBalance = await getTotalBalanceUseCase();
       
       emit(WalletOperationSuccess(
-        message: 'Wallet created successfully!',
+        message: 'Tạo ví thành công!',
         wallets: wallets,
         totalBalance: totalBalance,
       ));
     } catch (e) {
       emit(WalletError(
-        message: 'Failed to create wallet: ${e.toString()}',
+        message: 'Không thể tạo ví: ${e.toString()}',
         previousWallets: currentWallets,
       ));
     }
@@ -86,13 +86,13 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
       final totalBalance = await getTotalBalanceUseCase();
       
       emit(WalletOperationSuccess(
-        message: 'Wallet updated successfully!',
+        message: 'Cập nhật ví thành công!',
         wallets: wallets,
         totalBalance: totalBalance,
       ));
     } catch (e) {
       emit(WalletError(
-        message: 'Failed to update wallet: ${e.toString()}',
+        message: 'Không thể cập nhật ví: ${e.toString()}',
         previousWallets: currentWallets,
       ));
     }
@@ -111,13 +111,13 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
       final totalBalance = await getTotalBalanceUseCase();
       
       emit(WalletOperationSuccess(
-        message: 'Wallet deleted successfully!',
+        message: 'Xóa ví thành công!',
         wallets: wallets,
         totalBalance: totalBalance,
       ));
     } catch (e) {
       emit(WalletError(
-        message: 'Failed to delete wallet: ${e.toString()}',
+        message: 'Không thể xóa ví: ${e.toString()}',
         previousWallets: currentWallets,
       ));
     }

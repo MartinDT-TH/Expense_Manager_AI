@@ -564,14 +564,14 @@ class BeautifulWalletCard extends StatelessWidget {
   String _getWalletTypeName(String type) {
     switch (type.toUpperCase()) {
       case 'BANK':
-        return 'BANK';
+        return 'NGÂN HÀNG';
       case 'E_WALLET':
-        return 'E-WALLET';
+        return 'VÍ ĐIỆN TỬ';
       case 'CREDIT_CARD':
-        return 'CREDIT';
+        return 'THẺ TÍN DỤNG';
       case 'CASH':
       default:
-        return 'CASH';
+        return 'TIỀN MẶT';
     }
   }
 

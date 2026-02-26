@@ -131,7 +131,7 @@ class _WalletsViewState extends State<_WalletsView> {
                   child: Padding(
                     padding: EdgeInsets.fromLTRB(18 * scale, 20 * scale, 18 * scale, 10 * scale),
                     child: Text(
-                      'All Wallets',
+                      'Tất cả ví',
                       style: TextStyle(
                         fontSize: 16 * scale,
                         fontWeight: FontWeight.bold,
@@ -166,7 +166,7 @@ class _WalletsViewState extends State<_WalletsView> {
         backgroundColor: const Color(0xFF6C5CE7),
         icon: const Icon(Icons.add, color: Colors.white),
         label: Text(
-          'Add Wallet',
+          'Thêm ví',
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.w600,
@@ -208,7 +208,7 @@ class _WalletsViewState extends State<_WalletsView> {
                   onPressed: () => Navigator.pop(context),
                 ),
                 Text(
-                  'My Wallets',
+                  'Ví của tôi',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 18 * scale,
@@ -253,7 +253,7 @@ class _WalletsViewState extends State<_WalletsView> {
                       ),
                       SizedBox(width: 10 * scale),
                       const Text(
-                        'Total Balance',
+                        'Tổng số dư',
                         style: TextStyle(
                           color: Colors.white70,
                           fontSize: 13,
@@ -484,7 +484,7 @@ class _WalletsViewState extends State<_WalletsView> {
           ),
           SizedBox(height: 16 * scale),
           Text(
-            'No Wallets Yet',
+            'Chưa có ví',
             style: TextStyle(
               fontSize: 18 * scale,
               fontWeight: FontWeight.bold,
@@ -493,7 +493,7 @@ class _WalletsViewState extends State<_WalletsView> {
           ),
           SizedBox(height: 8 * scale),
           Text(
-            'Create your first wallet to start\ntracking your finances',
+            'Tạo ví đầu tiên để bắt đầu\ntheo dõi tài chính',
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 12 * scale,
@@ -504,7 +504,7 @@ class _WalletsViewState extends State<_WalletsView> {
           ElevatedButton.icon(
             onPressed: () => _showAddWalletDialog(context),
             icon: const Icon(Icons.add, color: Colors.white),
-            label: Text('Create Wallet', style: TextStyle(color: Colors.white, fontSize: 13 * scale)),
+            label: Text('Tạo ví', style: TextStyle(color: Colors.white, fontSize: 13 * scale)),
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFF6C5CE7),
               padding: EdgeInsets.symmetric(horizontal: 28 * scale, vertical: 12 * scale),
@@ -553,14 +553,14 @@ class _WalletsViewState extends State<_WalletsView> {
   String _getWalletTypeName(String type) {
     switch (type.toUpperCase()) {
       case 'BANK':
-        return 'Bank Account';
+        return 'Tài khoản ngân hàng';
       case 'E_WALLET':
-        return 'E-Wallet';
+        return 'Ví điện tử';
       case 'CREDIT_CARD':
-        return 'Credit Card';
+        return 'Thẻ tín dụng';
       case 'CASH':
       default:
-        return 'Cash';
+        return 'Tiền mặt';
     }
   }
 }

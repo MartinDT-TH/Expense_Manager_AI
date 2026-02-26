@@ -37,25 +37,25 @@ class _AddWalletBottomSheetState extends State<AddWalletBottomSheet> {
   final List<Map<String, dynamic>> _walletTypes = [
     {
       'value': 'CASH',
-      'label': 'Cash',
+      'label': 'Tiền mặt',
       'icon': Icons.payments,
       'colors': [const Color(0xFF6C5CE7), const Color(0xFF8B7CF7)],
     },
     {
       'value': 'BANK',
-      'label': 'Bank',
+      'label': 'Ngân hàng',
       'icon': Icons.account_balance,
       'colors': [const Color(0xFF667EEA), const Color(0xFF764BA2)],
     },
     {
       'value': 'E_WALLET',
-      'label': 'E-Wallet',
+      'label': 'Ví điện tử',
       'icon': Icons.phone_android,
       'colors': [const Color(0xFF11998E), const Color(0xFF38EF7D)],
     },
     {
       'value': 'CREDIT_CARD',
-      'label': 'Credit',
+      'label': 'Thẻ tín dụng',
       'icon': Icons.credit_card,
       'colors': [const Color(0xFFFF416C), const Color(0xFFFF4B2B)],
     },
@@ -100,7 +100,7 @@ class _AddWalletBottomSheetState extends State<AddWalletBottomSheet> {
       if (isEditing) {
         // Không cho phép edit nữa - chỉ show message
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Editing wallet is not allowed. Please delete and create a new one.')),
+          const SnackBar(content: Text('Không thể chỉnh sửa ví. Hãy xóa và tạo mới.')),
         );
         Navigator.pop(context);
       } else {
@@ -168,7 +168,7 @@ class _AddWalletBottomSheetState extends State<AddWalletBottomSheet> {
                     ),
                     SizedBox(width: 12 * scale),
                     Text(
-                      isEditing ? 'Edit Wallet' : 'New Wallet',
+                      isEditing ? 'Sửa ví' : 'Ví mới',
                       style: TextStyle(
                         fontSize: 18 * scale,
                         fontWeight: FontWeight.bold,
@@ -186,7 +186,7 @@ class _AddWalletBottomSheetState extends State<AddWalletBottomSheet> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Wallet Type',
+                      'Loại ví',
                       style: TextStyle(
                         fontSize: 13 * scale,
                         fontWeight: FontWeight.w600,
@@ -264,13 +264,13 @@ class _AddWalletBottomSheetState extends State<AddWalletBottomSheet> {
                 padding: EdgeInsets.symmetric(horizontal: 20 * scale),
                 child: _buildTextField(
                   controller: _nameController,
-                  label: 'Wallet Name',
-                  hint: 'e.g. My Cash Wallet',
+                  label: 'Tên ví',
+                  hint: 'vd. Ví tiền mặt của tôi',
                   icon: Icons.wallet,
                   isDark: isDark,
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
-                      return 'Please enter wallet name';
+                      return 'Vui lòng nhập tên ví';
                     }
                     return null;
                   },
@@ -290,7 +290,7 @@ class _AddWalletBottomSheetState extends State<AddWalletBottomSheet> {
                       flex: 3,
                       child: _buildTextField(
                         controller: _balanceController,
-                        label: 'Initial Balance',
+                        label: 'Số dư ban đầu',
                         hint: '0',
                         icon: Icons.attach_money,
                         isDark: isDark,
@@ -308,7 +308,7 @@ class _AddWalletBottomSheetState extends State<AddWalletBottomSheet> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Currency',
+                            'Tiền tệ',
                             style: TextStyle(
                               fontSize: 13 * scale,
                               fontWeight: FontWeight.w600,
@@ -419,7 +419,7 @@ class _AddWalletBottomSheetState extends State<AddWalletBottomSheet> {
                             ),
                           ),
                           child: Text(
-                            isEditing ? 'Update Wallet' : 'Create Wallet',
+                            isEditing ? 'Cập nhật ví' : 'Tạo ví',
                             style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w600,

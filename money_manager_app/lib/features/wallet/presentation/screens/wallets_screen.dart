@@ -28,7 +28,7 @@ class _WalletsView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Wallet Management'),
+        title: const Text('Quản lý ví'),
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
@@ -86,14 +86,14 @@ class _WalletsView extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    'No wallets yet',
+                    'Chưa có ví',
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
                           color: AppColors.textSecondary,
                         ),
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Tap + to create your first wallet',
+                    'Nhấn + để tạo ví đầu tiên',
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           color: AppColors.textHint,
                         ),
@@ -119,7 +119,7 @@ class _WalletsView extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      'Total Balance',
+                      'Tổng số dư',
                       style: TextStyle(
                         color: Colors.white70,
                         fontSize: 14,
@@ -193,8 +193,8 @@ class _WalletsView extends StatelessWidget {
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
-        title: const Text('Delete Wallet'),
-        content: Text('Are you sure you want to delete "$name"?'),
+        title: const Text('Xóa ví'),
+        content: Text('Bạn có chắc muốn xóa "$name" không?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
@@ -206,7 +206,7 @@ class _WalletsView extends StatelessWidget {
               Navigator.pop(context);
             },
             style: TextButton.styleFrom(foregroundColor: AppColors.error),
-            child: const Text('Delete'),
+            child: const Text('Xóa'),
           ),
         ],
       ),

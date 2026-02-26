@@ -56,7 +56,7 @@ class _WalletDetailScreenState extends State<WalletDetailScreen> {
               // Wallet đã bị xóa, pop ra màn trước
               Navigator.of(context).pop();
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Wallet has been deleted')),
+                const SnackBar(content: Text('Ví đã bị xóa')),
               );
               return;
             }
@@ -115,7 +115,7 @@ class _WalletDetailScreenState extends State<WalletDetailScreen> {
                           // Navigate to all transactions
                         },
                         child: const Text(
-                          'See All',
+                          'Xem tất cả',
                           style: TextStyle(
                             color: Color(0xFF6C5CE7),
                             fontWeight: FontWeight.w600,
@@ -197,7 +197,7 @@ class _WalletDetailScreenState extends State<WalletDetailScreen> {
                   ),
                   const Expanded(
                     child: Text(
-                      'Account',
+                      'Tài khoản',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: Colors.white,
@@ -245,7 +245,7 @@ class _WalletDetailScreenState extends State<WalletDetailScreen> {
         children: [
           // Current Balance Label
           Text(
-            'Current Balance',
+            'Số dư hiện tại',
             style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w500,
@@ -292,7 +292,7 @@ class _WalletDetailScreenState extends State<WalletDetailScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Initial Balance',
+                    'Số dư ban đầu',
                     style: TextStyle(
                       fontSize: 10,
                       fontWeight: FontWeight.w500,
@@ -584,7 +584,7 @@ class _WalletDetailScreenState extends State<WalletDetailScreen> {
                             borderRadius: BorderRadius.circular(4),
                           ),
                           child: const Text(
-                            'Bill',
+                            'Hóa đơn',
                             style: TextStyle(
                               fontSize: 10,
                               fontWeight: FontWeight.w600,
@@ -652,7 +652,7 @@ class _WalletDetailScreenState extends State<WalletDetailScreen> {
           ),
           const SizedBox(height: 8),
           Text(
-            'Add your first transaction',
+            'Thêm giao dịch đầu tiên',
             style: TextStyle(
               fontSize: 14,
               color: isDark ? Colors.grey[600] : Colors.grey[500],
@@ -697,7 +697,7 @@ class _WalletDetailScreenState extends State<WalletDetailScreen> {
                 child: const Icon(Icons.delete, color: Colors.red),
               ),
               title: const Text(
-                'Delete Wallet',
+                'Xóa ví',
                 style: TextStyle(
                   fontWeight: FontWeight.w500,
                   color: Colors.red,
@@ -728,11 +728,11 @@ class _WalletDetailScreenState extends State<WalletDetailScreen> {
       builder: (dialogContext) => AlertDialog(
         backgroundColor: isDark ? const Color(0xFF1E1E1E) : Colors.white,
         title: Text(
-          'Delete Wallet',
+          'Xóa ví',
           style: TextStyle(color: isDark ? Colors.white : Colors.black87),
         ),
         content: Text(
-          'Are you sure you want to delete "${_currentWallet.name}"? This action cannot be undone.',
+          'Bạn có chắc muốn xóa "${_currentWallet.name}" không? Thao tác này không thể hoàn tác.',
           style: TextStyle(color: isDark ? Colors.grey[400] : Colors.grey[700]),
         ),
         actions: [
@@ -749,7 +749,7 @@ class _WalletDetailScreenState extends State<WalletDetailScreen> {
               Navigator.pop(dialogContext);
             },
             style: TextButton.styleFrom(foregroundColor: Colors.red),
-            child: const Text('Delete'),
+            child: const Text('Xóa'),
           ),
         ],
       ),
@@ -849,7 +849,7 @@ class _WalletDetailScreenState extends State<WalletDetailScreen> {
                   children: [
                     // Date
                     _buildDetailRow(
-                      'Date',
+                      'Ngày',
                       _formatDate(transaction.transactionDate),
                       Icons.calendar_today_outlined,
                       isDark,
@@ -859,7 +859,7 @@ class _WalletDetailScreenState extends State<WalletDetailScreen> {
                     
                     // Wallet
                     _buildDetailRow(
-                      'Wallet',
+                      'Ví',
                       _currentWallet.name,
                       Icons.account_balance_wallet_outlined,
                       isDark,
@@ -869,7 +869,7 @@ class _WalletDetailScreenState extends State<WalletDetailScreen> {
                     if (transaction.note != null && transaction.note!.isNotEmpty) ...[
                       const SizedBox(height: 16),
                       _buildDetailRow(
-                        'Note',
+                        'Ghi chú',
                         transaction.note!,
                         Icons.note_outlined,
                         isDark,
@@ -880,7 +880,7 @@ class _WalletDetailScreenState extends State<WalletDetailScreen> {
                     if (transaction.createdByUserName != null && transaction.groupId != null) ...[
                       const SizedBox(height: 16),
                       _buildDetailRow(
-                        'Created by',
+                        'Tạo bởi',
                         transaction.createdByUserName!,
                         Icons.person_outline,
                         isDark,
@@ -892,7 +892,7 @@ class _WalletDetailScreenState extends State<WalletDetailScreen> {
                     if (transaction.groupId != null && transaction.groupName != null) ...[
                       const SizedBox(height: 16),
                       _buildDetailRow(
-                        'Group',
+                        'Nhóm',
                         transaction.groupName!,
                         Icons.group_outlined,
                         isDark,
@@ -912,7 +912,7 @@ class _WalletDetailScreenState extends State<WalletDetailScreen> {
                           ),
                           const SizedBox(width: 8),
                           Text(
-                            'Bill / Receipt',
+                            'Hóa đơn / Biên lai',
                             style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w600,
@@ -965,7 +965,7 @@ class _WalletDetailScreenState extends State<WalletDetailScreen> {
                                           ),
                                           const SizedBox(height: 8),
                                           Text(
-                                            'Unable to load image',
+                                            'Không thể tải hình ảnh',
                                             style: TextStyle(
                                               color: isDark ? Colors.grey[500] : Colors.grey[600],
                                             ),
@@ -995,7 +995,7 @@ class _WalletDetailScreenState extends State<WalletDetailScreen> {
                                         ),
                                         SizedBox(width: 4),
                                         Text(
-                                          'Tap to view',
+                                          'Nhấn để xem',
                                           style: TextStyle(
                                             color: Colors.white,
                                             fontSize: 12,
@@ -1123,7 +1123,7 @@ class _WalletDetailScreenState extends State<WalletDetailScreen> {
                             ),
                             const SizedBox(height: 12),
                             Text(
-                              'Unable to load image',
+                              'Không thể tải hình ảnh',
                               style: TextStyle(
                                 color: isDark ? Colors.grey[500] : Colors.grey[600],
                                 fontSize: 16,
@@ -1171,7 +1171,7 @@ class _WalletDetailScreenState extends State<WalletDetailScreen> {
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: const Text(
-                    'Pinch to zoom • Drag to pan',
+                    'Chụm để phóng to • Kéo để di chuyển',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 12,
@@ -1234,14 +1234,14 @@ class _WalletDetailScreenState extends State<WalletDetailScreen> {
   }
 
   String _formatMonth(DateTime date) {
-    final months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
-                    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    final months = ['Th1', 'Th2', 'Th3', 'Th4', 'Th5', 'Th6', 
+                    'Th7', 'Th8', 'Th9', 'Th10', 'Th11', 'Th12'];
     return '${months[date.month - 1]}/${date.year}';
   }
 
   String _formatDate(DateTime date) {
-    final months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
-                    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    final months = ['Th1', 'Th2', 'Th3', 'Th4', 'Th5', 'Th6', 
+                    'Th7', 'Th8', 'Th9', 'Th10', 'Th11', 'Th12'];
     return '${date.day} ${months[date.month - 1]} ${date.year}, ${date.hour}:${date.minute.toString().padLeft(2, '0')}';
   }
 
