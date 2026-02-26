@@ -28,7 +28,7 @@ class _CategoryPickerSheetState extends State<CategoryPickerSheet> {
   final List<Category> _incomeCategories = [
     Category(
       id: '1',
-      name: 'Salary',
+      name: 'Lương',
       iconCode: 'attach_money',
       type: CategoryType.income,
       isSystem: true,
@@ -37,7 +37,7 @@ class _CategoryPickerSheetState extends State<CategoryPickerSheet> {
     ),
     Category(
       id: '2',
-      name: 'Gifts',
+      name: 'Quà tặng',
       iconCode: 'card_giftcard',
       type: CategoryType.income,
       isSystem: true,
@@ -46,7 +46,7 @@ class _CategoryPickerSheetState extends State<CategoryPickerSheet> {
     ),
     Category(
       id: '3',
-      name: 'Wages',
+      name: 'Tiền công',
       iconCode: 'account_balance_wallet',
       type: CategoryType.income,
       isSystem: true,
@@ -55,7 +55,7 @@ class _CategoryPickerSheetState extends State<CategoryPickerSheet> {
     ),
     Category(
       id: '4',
-      name: 'Interest',
+      name: 'Lãi suất',
       iconCode: 'trending_up',
       type: CategoryType.income,
       isSystem: true,
@@ -64,7 +64,7 @@ class _CategoryPickerSheetState extends State<CategoryPickerSheet> {
     ),
     Category(
       id: '5',
-      name: 'Savings',
+      name: 'Tiết kiệm',
       iconCode: 'savings',
       type: CategoryType.income,
       isSystem: true,
@@ -76,7 +76,7 @@ class _CategoryPickerSheetState extends State<CategoryPickerSheet> {
   final List<Category> _expenseCategories = [
     Category(
       id: '10',
-      name: 'Food',
+      name: 'Ăn uống',
       iconCode: 'restaurant',
       type: CategoryType.expense,
       isSystem: true,
@@ -85,7 +85,7 @@ class _CategoryPickerSheetState extends State<CategoryPickerSheet> {
     ),
     Category(
       id: '11',
-      name: 'Transport',
+      name: 'Di chuyển',
       iconCode: 'directions_car',
       type: CategoryType.expense,
       isSystem: true,
@@ -94,7 +94,7 @@ class _CategoryPickerSheetState extends State<CategoryPickerSheet> {
     ),
     Category(
       id: '12',
-      name: 'Shopping',
+      name: 'Mua sắm',
       iconCode: 'shopping_bag',
       type: CategoryType.expense,
       isSystem: true,
@@ -103,7 +103,7 @@ class _CategoryPickerSheetState extends State<CategoryPickerSheet> {
     ),
     Category(
       id: '13',
-      name: 'Health',
+      name: 'Sức khỏe',
       iconCode: 'local_hospital',
       type: CategoryType.expense,
       isSystem: true,
@@ -112,7 +112,7 @@ class _CategoryPickerSheetState extends State<CategoryPickerSheet> {
     ),
     Category(
       id: '14',
-      name: 'Entertainment',
+      name: 'Giải trí',
       iconCode: 'sports_esports',
       type: CategoryType.expense,
       isSystem: true,
@@ -121,7 +121,7 @@ class _CategoryPickerSheetState extends State<CategoryPickerSheet> {
     ),
     Category(
       id: '15',
-      name: 'Bills',
+      name: 'Hóa đơn',
       iconCode: 'receipt',
       type: CategoryType.expense,
       isSystem: true,
@@ -156,7 +156,7 @@ class _CategoryPickerSheetState extends State<CategoryPickerSheet> {
           
           // Title
           Text(
-            'CHOOSE CATEGORY',
+            'CHỌN DANH MỤC',
             style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w600,
@@ -207,7 +207,7 @@ class _CategoryPickerSheetState extends State<CategoryPickerSheet> {
                   ),
                 ),
                 child: const Text(
-                  'Add new category',
+                  'Thêm danh mục mới',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
@@ -295,7 +295,7 @@ class _CategoryPickerSheetState extends State<CategoryPickerSheet> {
           ),
           const SizedBox(height: 8),
           Text(
-            'Add\nCategory',
+            'Thêm\nDanh mục',
             style: TextStyle(
               fontSize: 11,
               color: Colors.grey[600],

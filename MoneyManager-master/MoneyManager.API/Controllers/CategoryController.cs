@@ -134,7 +134,7 @@ public class CategoryController : ControllerBase
         var category = await _categoryService.GetCategoryByIdAsync(id, user.Id);
         if (category == null)
         {
-            return NotFound(new { message = "Category not found." });
+            return NotFound(new { message = "Không tìm th?y danh m?c." });
         }
 
         return Ok(category);
@@ -217,7 +217,7 @@ public class CategoryController : ControllerBase
             var result = await _categoryService.DeleteCategoryAsync(id, user.Id);
             if (!result)
             {
-                return NotFound(new { message = "Category not found." });
+                return NotFound(new { message = "Không tìm th?y danh m?c." });
             }
 
             return Ok(new { message = "Category deleted successfully." });
@@ -236,3 +236,4 @@ public class CategoryController : ControllerBase
         }
     }
 }
+

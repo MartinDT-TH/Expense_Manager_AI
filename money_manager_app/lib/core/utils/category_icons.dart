@@ -636,19 +636,19 @@ class CategoryIcons {
 
   /// Grouped icons by category for better UI selection
   static const Map<String, List<String>> iconGroups = {
-    '🍔 Food & Drinks': [
+    '🍔 Ăn uống': [
       'restaurant', 'restaurant_menu', 'fastfood', 'local_pizza', 'bakery_dining',
       'ramen_dining', 'lunch_dining', 'dinner_dining', 'brunch_dining', 'breakfast_dining',
       'set_meal', 'rice_bowl', 'icecream', 'cake', 'coffee', 'local_cafe', 'local_bar',
       'wine_bar', 'sports_bar', 'liquor', 'local_drink', 'emoji_food_beverage',
       'takeout_dining', 'delivery_dining', 'tapas', 'kitchen', 'cookie',
     ],
-    '🛒 Shopping': [
+    '🛒 Mua sắm': [
       'shopping_cart', 'shopping_bag', 'shopping_basket', 'local_grocery_store',
       'local_mall', 'storefront', 'store', 'checkroom', 'dry_cleaning', 'iron',
       'wallet', 'redeem', 'sell', 'local_offer', 'loyalty', 'diamond',
     ],
-    '🚗 Transportation': [
+    '🚗 Di chuyển': [
       'directions_car', 'directions_bus', 'directions_railway', 'directions_subway',
       'directions_bike', 'directions_walk', 'directions_boat', 'commute', 'flight',
       'flight_takeoff', 'flight_land', 'local_taxi', 'local_gas_station', 'ev_station',
@@ -656,7 +656,7 @@ class CategoryIcons {
       'pedal_bike', 'motorcycle', 'train', 'tram', 'airport_shuttle', 'car_rental',
       'car_repair', 'tire_repair', 'sailing', 'houseboat',
     ],
-    '🏠 Home & Utilities': [
+    '🏠 Nhà & Tiện ích': [
       'home', 'house', 'cottage', 'apartment', 'villa', 'bungalow', 'cabin',
       'bed', 'bedroom_parent', 'bathroom', 'bathtub', 'shower', 'living', 'chair',
       'table_restaurant', 'weekend', 'door_sliding', 'window', 'lightbulb', 'power',
@@ -666,7 +666,7 @@ class CategoryIcons {
       'construction', 'roofing', 'foundation', 'format_paint', 'grass', 'yard',
       'fence', 'outdoor_grill', 'deck', 'umbrella',
     ],
-    '🏥 Health & Fitness': [
+    '🏥 Sức khỏe & Thể chất': [
       'medical_services', 'local_hospital', 'local_pharmacy', 'medication',
       'medication_liquid', 'vaccines', 'healing', 'health_and_safety', 'monitor_heart',
       'favorite', 'favorite_border', 'psychology', 'self_improvement', 'fitness_center',
@@ -674,14 +674,14 @@ class CategoryIcons {
       'nordic_walking', 'spa', 'face_retouching_natural', 'face', 'masks',
       'accessibility', 'blind', 'elderly', 'pregnant_woman', 'stroller',
     ],
-    '📚 Education': [
+    '📚 Giáo dục': [
       'school', 'cast_for_education', 'menu_book', 'auto_stories', 'book',
       'library_books', 'import_contacts', 'chrome_reader_mode', 'article', 'newspaper',
       'history_edu', 'science', 'biotech', 'calculate', 'architecture', 'draw',
       'edit', 'create', 'design_services', 'translate', 'language', 'abc',
       'class_', 'backpack', 'workspace_premium',
     ],
-    '🎬 Entertainment': [
+    '🎬 Giải trí': [
       'movie', 'movie_filter', 'theaters', 'live_tv', 'music_note', 'library_music',
       'headphones', 'headset', 'speaker', 'piano', 'sports_esports', 'videogame_asset',
       'casino', 'attractions', 'roller_skating', 'skateboarding', 'snowboarding',
@@ -693,7 +693,7 @@ class CategoryIcons {
       'golf_course', 'sports_score', 'emoji_events', 'celebration', 'party_mode',
       'nightlife', 'festival',
     ],
-    '✈️ Travel & Vacation': [
+    '✈️ Du lịch & Nghỉ dưỡng': [
       'luggage', 'local_airport', 'hotel', 'holiday_village', 'beach_access',
       'park', 'forest', 'landscape', 'terrain', 'photo_camera', 'camera_alt',
       'photo', 'panorama', 'map', 'explore', 'tour', 'museum', 'church',
@@ -703,7 +703,7 @@ class CategoryIcons {
       'local_car_wash', 'local_florist', 'local_fire_department', 'local_police',
       'local_post_office', 'local_printshop', 'compass_calibration', 'flag', 'public',
     ],
-    '💻 Technology': [
+    '💻 Công nghệ': [
       'devices', 'computer', 'laptop', 'laptop_mac', 'laptop_chromebook',
       'desktop_mac', 'desktop_windows', 'tablet', 'tablet_mac', 'tablet_android',
       'phone_android', 'phone_iphone', 'smartphone', 'watch', 'smart_display',
@@ -714,11 +714,11 @@ class CategoryIcons {
       'cloud_upload', 'cloud_download', 'settings', 'build', 'code', 'terminal',
       'bug_report', 'apps',
     ],
-    '👶 Family & Kids': [
+    '👶 Gia đình & Trẻ em': [
       'child_care', 'child_friendly', 'family_restroom', 'baby_changing_station',
       'toys', 'pets', 'cruelty_free', 'card_giftcard',
     ],
-    '💼 Work & Business': [
+    '💼 Công việc & Kinh doanh': [
       'work', 'work_outline', 'work_history', 'business', 'business_center',
       'corporate_fare', 'point_of_sale', 'receipt', 'receipt_long', 'request_quote',
       'description', 'assignment', 'assignment_ind', 'badge', 'contact_mail',
@@ -728,7 +728,7 @@ class CategoryIcons {
       'alarm', 'pending_actions', 'task', 'task_alt', 'checklist', 'fact_check',
       'rule', 'gavel', 'policy', 'verified', 'approval',
     ],
-    '💰 Money & Finance': [
+    '💰 Tài chính': [
       'payments', 'payment', 'trending_up', 'trending_down', 'attach_money',
       'money', 'money_off', 'currency_exchange', 'account_balance',
       'account_balance_wallet', 'savings', 'monetization_on', 'price_check',
@@ -739,22 +739,22 @@ class CategoryIcons {
       'pie_chart', 'bar_chart', 'show_chart', 'timeline', 'leaderboard',
       'stacked_line_chart', 'ssid_chart', 'waterfall_chart', 'addchart', 'insert_chart',
     ],
-    '🔒 Security': [
+    '🔒 Bảo mật': [
       'security', 'shield', 'admin_panel_settings', 'lock', 'lock_open',
       'vpn_key', 'key', 'password', 'fingerprint', 'face_unlock_sharp',
     ],
-    '🌿 Nature': [
+    '🌿 Thiên nhiên': [
       'nature', 'nature_people', 'eco', 'energy_savings_leaf', 'compost',
       'recycling', 'delete_sweep', 'water', 'waves', 'wb_sunny', 'light_mode',
       'dark_mode', 'nights_stay', 'thunderstorm', 'sunny_snowing', 'volcano',
     ],
-    '💬 Communication': [
+    '💬 Liên lạc': [
       'email', 'mail', 'send', 'message', 'chat', 'chat_bubble', 'forum',
       'comment', 'textsms', 'call', 'phone_in_talk', 'video_call', 'duo',
       'notifications', 'notifications_active', 'campaign', 'announcement',
       'rss_feed', 'share', 'ios_share', 'qr_code', 'qr_code_scanner',
     ],
-    '⭐ General': [
+    '⭐ Chung': [
       'category', 'label', 'label_important', 'folder', 'folder_open',
       'folder_special', 'star', 'star_border', 'star_half', 'grade',
       'thumb_up', 'thumb_down', 'sentiment_satisfied', 'sentiment_dissatisfied',

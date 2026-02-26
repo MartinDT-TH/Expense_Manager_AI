@@ -86,7 +86,7 @@ public class CategoryService : ICategoryService
             
             if (parent == null)
             {
-                throw new KeyNotFoundException("Parent category not found.");
+                throw new KeyNotFoundException("Parent Không tìm th?y danh m?c.");
             }
 
             // Child category must have same type as parent
@@ -122,7 +122,7 @@ public class CategoryService : ICategoryService
 
         if (category == null)
         {
-            throw new KeyNotFoundException("Category not found.");
+            throw new KeyNotFoundException("Không tìm th?y danh m?c.");
         }
 
         // Cannot edit system categories
@@ -152,7 +152,7 @@ public class CategoryService : ICategoryService
             
             if (parent == null)
             {
-                throw new KeyNotFoundException("Parent category not found.");
+                throw new KeyNotFoundException("Parent Không tìm th?y danh m?c.");
             }
 
             if (parent.Type != category.Type)
@@ -269,3 +269,4 @@ public class CategoryService : ICategoryService
         return response;
     }
 }
+
