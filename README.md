@@ -1,4 +1,4 @@
-# Money Manager App
+# Smart Money App
 
 A full-stack personal finance management application with AI-powered receipt scanning, real-time group expense sharing, and comprehensive financial analytics.
 
@@ -18,7 +18,7 @@ A full-stack personal finance management application with AI-powered receipt sca
 
 ## Overview
 
-Money Manager is a cross-platform mobile application designed to help users track personal and group expenses, manage multiple wallets, and gain insights through visual analytics. The application follows an **offline-first architecture** with background synchronization, ensuring seamless user experience regardless of network connectivity.
+Smart Money is a cross-platform mobile application designed to help users track personal and group expenses, manage multiple wallets, and gain insights through visual analytics. The application follows an **offline-first architecture** with background synchronization, ensuring seamless user experience regardless of network connectivity.
 
 ### Business Model
 
@@ -441,3 +441,4 @@ This project is proprietary software developed for educational purposes.
 ## Contributors
 
 Developed as a capstone project demonstrating full-stack mobile development with modern technologies and best practices.
+

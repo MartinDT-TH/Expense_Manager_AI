@@ -1,4 +1,4 @@
-# 🚀 Hướng dẫn Setup & Chạy Money Manager App
+# 🚀 Hướng dẫn Setup & Chạy Smart Money App
 
 ## 📋 Yêu cầu hệ thống
 
@@ -72,7 +72,7 @@ static const String pcIpAddress = '192.168.2.152';  // ← Đổi IP ở đây
 
 Chạy PowerShell với quyền **Administrator**:
 ```powershell
-netsh advfirewall firewall add rule name="Money Manager API" dir=in action=allow protocol=tcp localport=5166
+netsh advfirewall firewall add rule name="Smart Money API" dir=in action=allow protocol=tcp localport=5166
 ```
 
 ---
@@ -198,6 +198,49 @@ flutter run
 
 ---
 
+## 📴 Test đồng bộ Offline (Wallet, Category, Transaction)
+
+App hỗ trợ offline-first: tạo/sửa/xóa Ví, Danh mục, Giao dịch khi mất mạng vẫn lưu local; khi online lại sẽ tự đồng bộ qua `sync_queue`.
+
+### Chuẩn bị
+1. Đăng nhập app, đảm bảo đã có ít nhất 1 ví và vài giao dịch (online).
+2. Backend đang chạy và app từng kết nối thành công.
+
+### Test 1: Tạo mới khi offline
+1. **Tắt WiFi/3G** trên máy (hoặc chặn app khỏi mạng).
+2. Tạo **Ví mới** (VD: "Ví offline") → Lưu.
+3. Tạo **Danh mục mới** (nếu có màn hình tạo category) → Lưu.
+4. Tạo **Giao dịch mới** (Thu/Chi) → Lưu.
+5. Kiểm tra: danh sách Ví/Danh mục/Giao dịch vẫn hiển thị đầy đủ (kể cả mục vừa tạo).
+6. Mở màn hình có **số mục chờ đồng bộ** (pending sync) → phải tăng (ít nhất 3 nếu tạo đủ 3 loại).
+
+### Test 2: Online lại — đồng bộ tự động
+1. **Bật lại mạng**.
+2. Chờ 5–10 giây (hoặc mở lại app) để SyncService chạy auto-sync.
+3. Hoặc kéo refresh / nhấn nút "Đồng bộ" nếu có.
+4. Kiểm tra:
+   - Số mục chờ đồng bộ về 0 (hoặc giảm đúng số đã sync).
+   - Ví/Danh mục/Giao dịch tạo lúc offline vẫn còn, không mất.
+   - Trên backend (Swagger/DB): có bản ghi Ví/Danh mục/Giao dịch tương ứng.
+
+### Test 3: Không xóa dữ liệu local khi pull
+1. Tắt mạng, tạo 1 Ví mới (chưa sync).
+2. Bật mạng, vào màn hình danh sách Ví (trigger getWallets → pull từ server).
+3. Kiểm tra: Ví tạo offline vẫn còn trong danh sách (merge, không wipe toàn bảng).
+
+### Test 4: Sửa / Xóa khi offline
+1. Tắt mạng.
+2. Sửa tên một Ví hoặc một Giao dịch → Lưu.
+3. Xóa một Giao dịch (hoặc soft-delete Ví nếu app hỗ trợ).
+4. Bật mạng, chờ sync.
+5. Kiểm tra: thay đổi đã lên server (hoặc bản ghi đã xóa trên server).
+
+### Debug sync lỗi
+- Trong debug build, lỗi sync được in ra console: `Sync failed wallet|category|transaction/...`.
+- Số mục chờ lấy từ `sync_queue`; UI dùng `SyncService.pendingCount` / `refreshPendingCount()`.
+
+---
+
 ## 🐛 Troubleshooting
 
 ### Lỗi "Connection refused"
@@ -223,3 +266,4 @@ cd android
 cd ..
 flutter run
 ```
+
