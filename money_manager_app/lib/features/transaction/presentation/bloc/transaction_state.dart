@@ -83,7 +83,7 @@ class TransactionCreated extends TransactionState {
 
   const TransactionCreated({
     required this.transaction,
-    this.message = 'Transaction created successfully',
+    this.message = 'Tạo giao dịch thành công',
   });
 
   @override

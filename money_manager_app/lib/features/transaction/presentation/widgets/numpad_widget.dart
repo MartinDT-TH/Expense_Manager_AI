@@ -27,7 +27,7 @@ class NumpadWidget extends StatelessWidget {
           // Row 1: AC, /, *, -
           Row(
             children: [
-              _buildButton('Ac', isOperator: true, onTap: onClearPressed),
+              _buildButton('Xóa', isOperator: true, onTap: onClearPressed),
               _buildButton('÷', isOperator: true, onTap: () => onOperatorPressed('/')),
               _buildButton('×', isOperator: true, onTap: () => onOperatorPressed('*')),
               _buildButton('−', isOperator: true, color: AppColors.expense, onTap: () => onOperatorPressed('-')),
@@ -171,7 +171,7 @@ class NumpadWidget extends StatelessWidget {
               child: isTop
                   ? const SizedBox.shrink()
                   : const Text(
-                      'Apply',
+                      'Áp dụng',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 18,

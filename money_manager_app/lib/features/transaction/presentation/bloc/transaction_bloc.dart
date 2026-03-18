@@ -49,7 +49,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
         hasMore: response.page < response.totalPages,
       ));
     } catch (e) {
-      emit(TransactionError(message: 'Failed to load transactions: ${e.toString()}'));
+      emit(TransactionError(message: 'Không thể tải giao dịch: ${e.toString()}'));
     }
   }
 
@@ -98,7 +98,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
         ));
       } catch (e) {
         emit(TransactionError(
-          message: 'Failed to load more transactions: ${e.toString()}',
+          message: 'Không thể tải thêm giao dịch: ${e.toString()}',
           previousTransactions: _allTransactions,
         ));
       }
@@ -114,7 +114,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
       final recentTransactions = await repository.getRecentTransactions(count: event.count);
       emit(RecentTransactionsLoaded(recentTransactions: recentTransactions));
     } catch (e) {
-      emit(TransactionError(message: 'Failed to load recent transactions: ${e.toString()}'));
+      emit(TransactionError(message: 'Không thể tải giao dịch gần đây: ${e.toString()}'));
     }
   }
 
@@ -157,7 +157,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
       emit(TransactionCreated(transaction: newTransaction));
     } catch (e) {
       emit(TransactionError(
-        message: 'Failed to create transaction: ${e.toString()}',
+        message: 'Không thể tạo giao dịch: ${e.toString()}',
         previousTransactions: _allTransactions,
       ));
     }
@@ -185,7 +185,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
           .toList();
 
       emit(TransactionOperationSuccess(
-        message: 'Transaction deleted successfully!',
+        message: 'Xóa giao dịch thành công!',
         transactions: _allTransactions,
       ));
       
@@ -202,7 +202,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
       ));
     } catch (e) {
       emit(TransactionError(
-        message: 'Failed to delete transaction: ${e.toString()}',
+        message: 'Không thể xóa giao dịch: ${e.toString()}',
         previousTransactions: previousTransactions,
       ));
     }

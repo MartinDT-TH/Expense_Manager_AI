@@ -165,20 +165,17 @@ public class ReportService : IReportService
         var format = request.Format?.ToUpper() ?? "EXCEL";
         byte[] fileBytes;
         string fileName;
-        string mimeType;
 
         if (format == "CSV")
         {
             var content = GenerateCsv(transactions);
             fileBytes = Encoding.UTF8.GetBytes(content);
             fileName = $"MoneyManager_Report_{DateTime.UtcNow:yyyyMMdd}.csv";
-            mimeType = "text/csv";
         }
         else // Default to Excel
         {
             fileBytes = GenerateExcel(transactions, request.StartDate, request.EndDate);
             fileName = $"MoneyManager_Report_{DateTime.UtcNow:yyyyMMdd}.xlsx";
-            mimeType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
         }
 
         var base64Content = Convert.ToBase64String(fileBytes);
