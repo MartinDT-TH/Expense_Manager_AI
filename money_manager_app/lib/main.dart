@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -116,32 +117,47 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   }
 }
 
-/// Wrapper for authenticated home that shows sync status banner
-class _AuthenticatedHome extends StatelessWidget {
+/// Wrapper for authenticated home that shows sync status banner and listens for auto-sync toast.
+class _AuthenticatedHome extends StatefulWidget {
   final SyncService syncService;
 
   const _AuthenticatedHome({required this.syncService});
 
-  void _handleSyncPressed(BuildContext context) async {
-    final result = await syncService.syncNow();
-    
-    if (!context.mounted) return;
-    
-    // Show result snackbar
+  @override
+  State<_AuthenticatedHome> createState() => _AuthenticatedHomeState();
+}
+
+class _AuthenticatedHomeState extends State<_AuthenticatedHome> {
+  StreamSubscription? _syncToastSubscription;
+
+  @override
+  void initState() {
+    super.initState();
+    _syncToastSubscription = widget.syncService.syncToastStream.listen(_showSyncToast);
+  }
+
+  @override
+  void dispose() {
+    _syncToastSubscription?.cancel();
+    super.dispose();
+  }
+
+  void _showSyncToast(SyncToastEvent event) {
+    if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Row(
           children: [
             Icon(
-              result.success ? Icons.check_circle : Icons.error_outline,
+              event.success ? Icons.check_circle : Icons.error_outline,
               color: Colors.white,
               size: 20,
             ),
             const SizedBox(width: 12),
-            Expanded(child: Text(result.message)),
+            Expanded(child: Text(event.message)),
           ],
         ),
-        backgroundColor: result.success ? Colors.green.shade600 : Colors.red.shade600,
+        backgroundColor: event.success ? Colors.green.shade600 : Colors.red.shade600,
         behavior: SnackBarBehavior.floating,
         margin: const EdgeInsets.all(16),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
@@ -150,24 +166,24 @@ class _AuthenticatedHome extends StatelessWidget {
     );
   }
 
+  void _handleSyncPressed(BuildContext context) async {
+    final result = await widget.syncService.syncNow();
+    if (!context.mounted) return;
+    _showSyncToast(SyncToastEvent(result.message, result.success));
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListenableBuilder(
-      listenable: syncService,
+      listenable: widget.syncService,
       builder: (context, _) {
-        // Only show banner if there are pending items or syncing
-        final showBanner = syncService.pendingCount > 0 || syncService.isSyncing;
-        
+        final showBanner = widget.syncService.pendingCount > 0 || widget.syncService.isSyncing;
         if (!showBanner) {
           return const HomeScreen();
         }
-        
-        // Use Stack to overlay banner on top of HomeScreen
         return Stack(
           children: [
-            // Main home content
             const HomeScreen(),
-            // Pending sync banner at top with SafeArea
             Positioned(
               top: 0,
               left: 0,
@@ -175,8 +191,8 @@ class _AuthenticatedHome extends StatelessWidget {
               child: SafeArea(
                 bottom: false,
                 child: PendingSyncBanner(
-                  pendingCount: syncService.pendingCount,
-                  isSyncing: syncService.isSyncing,
+                  pendingCount: widget.syncService.pendingCount,
+                  isSyncing: widget.syncService.isSyncing,
                   onSyncPressed: () => _handleSyncPressed(context),
                 ),
               ),
