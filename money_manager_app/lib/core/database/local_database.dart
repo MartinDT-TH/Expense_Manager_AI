@@ -1,10 +1,14 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
+import 'migrations/migration_v6.dart';
+import 'migrations/migration_v7.dart';
+import 'migrations/migration_v8.dart';
+import 'migrations/migration_v9.dart';
 
 class LocalDatabase {
   static Database? _database;
   static const String _databaseName = 'money_manager.db';
-  static const int _databaseVersion = 5; // Version 5: Added created_by fields to transactions
+  static const int _databaseVersion = 9; // Version 9: offline-first transactions
 
   Future<Database> get database async {
     if (_database != null) return _database!;
@@ -56,20 +60,31 @@ class LocalDatabase {
       )
     ''');
 
-    // Transactions table
+    // Transactions table (with offline-first support)
     await db.execute('''
       CREATE TABLE transactions (
         id TEXT PRIMARY KEY,
         amount REAL NOT NULL,
+        type TEXT DEFAULT 'EXPENSE',
         note TEXT,
         transaction_date TEXT NOT NULL,
         wallet_id TEXT NOT NULL,
+        wallet_name TEXT,
         category_id TEXT NOT NULL,
+        category_name TEXT,
+        category_icon TEXT,
         group_id TEXT,
+        group_name TEXT,
         bill_image_url TEXT,
+        receipt_url TEXT,
+        location TEXT,
+        is_recurring INTEGER DEFAULT 0,
+        recurring_id TEXT,
         created_by_user_id TEXT,
         created_by_user_name TEXT,
         is_deleted INTEGER DEFAULT 0,
+        created_at TEXT NOT NULL,
+        updated_at TEXT NOT NULL,
         last_updated_at TEXT NOT NULL,
         is_synced INTEGER DEFAULT 0,
         FOREIGN KEY (wallet_id) REFERENCES wallets (id),
@@ -77,14 +92,18 @@ class LocalDatabase {
       )
     ''');
 
-    // Budgets table
+    // Budgets table (with is_recurring and category info for offline)
     await db.execute('''
       CREATE TABLE budgets (
         id TEXT PRIMARY KEY,
-        category_id TEXT NOT NULL,
+        category_id TEXT,
+        category_name TEXT,
+        category_icon TEXT,
         amount_limit REAL NOT NULL,
         start_date TEXT NOT NULL,
         end_date TEXT NOT NULL,
+        is_recurring INTEGER DEFAULT 0,
+        owner_id TEXT,
         is_deleted INTEGER DEFAULT 0,
         last_updated_at TEXT NOT NULL,
         is_synced INTEGER DEFAULT 0,
@@ -130,7 +149,7 @@ class LocalDatabase {
       )
     ''');
 
-    // User table
+    // User table (extended profile)
     await db.execute('''
       CREATE TABLE user (
         id TEXT PRIMARY KEY,
@@ -138,7 +157,16 @@ class LocalDatabase {
         full_name TEXT NOT NULL,
         role TEXT NOT NULL,
         avatar_url TEXT,
-        is_premium INTEGER DEFAULT 0
+        is_premium INTEGER DEFAULT 0,
+        phone TEXT,
+        address TEXT,
+        date_of_birth TEXT,
+        gender TEXT,
+        two_factor_enabled INTEGER DEFAULT 0,
+        two_factor_secret TEXT,
+        is_google_linked INTEGER DEFAULT 0,
+        google_email TEXT,
+        has_password INTEGER DEFAULT 1
       )
     ''');
 
@@ -154,12 +182,42 @@ class LocalDatabase {
       )
     ''');
 
+    // Notifications table
+    await db.execute('''
+      CREATE TABLE notifications (
+        id TEXT PRIMARY KEY,
+        title TEXT NOT NULL,
+        body TEXT NOT NULL,
+        type TEXT NOT NULL,
+        data TEXT,
+        is_read INTEGER DEFAULT 0,
+        created_at TEXT NOT NULL
+      )
+    ''');
+
+    // User settings table
+    await db.execute('''
+      CREATE TABLE user_settings (
+        key TEXT PRIMARY KEY,
+        value TEXT NOT NULL,
+        updated_at TEXT NOT NULL
+      )
+    ''');
+
     // Create indexes for performance
     await db.execute('CREATE INDEX idx_transactions_wallet ON transactions(wallet_id)');
     await db.execute('CREATE INDEX idx_transactions_category ON transactions(category_id)');
     await db.execute('CREATE INDEX idx_transactions_date ON transactions(transaction_date)');
+    await db.execute('CREATE INDEX idx_transactions_is_deleted ON transactions(is_deleted)');
+    await db.execute('CREATE INDEX idx_transactions_is_synced ON transactions(is_synced)');
+    await db.execute('CREATE INDEX idx_transactions_type ON transactions(type)');
     await db.execute('CREATE INDEX idx_budgets_category ON budgets(category_id)');
+    await db.execute('CREATE INDEX idx_budgets_dates ON budgets(start_date, end_date)');
+    await db.execute('CREATE INDEX idx_budgets_owner ON budgets(owner_id)');
+    await db.execute('CREATE INDEX idx_budgets_recurring ON budgets(is_recurring)');
     await db.execute('CREATE INDEX idx_categories_parent ON categories(parent_id)');
+    await db.execute('CREATE INDEX idx_wallets_is_deleted ON wallets(is_deleted)');
+    await db.execute('CREATE INDEX idx_notifications_unread ON notifications(is_read, created_at DESC)');
 
     // Insert default categories
     await _insertDefaultCategories(db);
@@ -240,6 +298,26 @@ class LocalDatabase {
     if (oldVersion < 5) {
       await db.execute('ALTER TABLE transactions ADD COLUMN created_by_user_id TEXT');
       await db.execute('ALTER TABLE transactions ADD COLUMN created_by_user_name TEXT');
+    }
+
+    // Version 6: Notifications, extended user profile, 2FA, performance indexes
+    if (oldVersion < 6) {
+      await MigrationV6.migrate(db);
+    }
+
+    // Version 7: Budget improvements (is_recurring, category info, owner_id)
+    if (oldVersion < 7) {
+      await MigrationV7.migrate(db);
+    }
+
+    // Version 8: Align user auth columns with model (is_google_linked, has_password)
+    if (oldVersion < 8) {
+      await MigrationV8.migrate(db);
+    }
+
+    // Version 9: Offline-first transactions (extended schema)
+    if (oldVersion < 9) {
+      await MigrationV9.migrate(db);
     }
   }
 
