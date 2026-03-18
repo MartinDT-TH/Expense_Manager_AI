@@ -578,11 +578,9 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                   onValueChanged: (dates) {
                     if (dates.isNotEmpty) {
                       final date = dates[0];
-                      if (date != null) {
-                        Navigator.pop(ctx);
-                        setState(() => selectedDate = date);
-                        _applyFilters(context);
-                      }
+                      Navigator.pop(ctx);
+                      setState(() => selectedDate = date);
+                      _applyFilters(context);
                     }
                   },
                 ),
@@ -713,6 +711,8 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
     final iconColors = _getCategoryColors(transaction.categoryName);
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final hasReceipt = transaction.receiptUrl != null && transaction.receiptUrl!.isNotEmpty;
+    final isOfflineTransaction = transaction.id.startsWith('temp_');
+    final needsSync = !transaction.isSynced;
     
     return GestureDetector(
       onTap: () => _showTransactionDetail(context, transaction, isDark),
@@ -722,6 +722,10 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
         decoration: BoxDecoration(
           color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
           borderRadius: BorderRadius.circular(16),
+          // Add subtle border for unsynced transactions
+          border: needsSync
+              ? Border.all(color: Colors.orange.withOpacity(0.3), width: 1)
+              : null,
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(isDark ? 0.2 : 0.03),
@@ -732,8 +736,9 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
         ),
         child: Row(
           children: [
-            // Icon with receipt indicator
+            // Icon with receipt/sync indicator
             Stack(
+              clipBehavior: Clip.none,
               children: [
                 Container(
                   width: 50,
@@ -744,8 +749,31 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                   ),
                   child: Icon(iconData, color: iconColors['iconColor'], size: 24),
                 ),
-                // Receipt indicator badge
-                if (hasReceipt)
+                // Sync status badge (priority over receipt badge)
+                if (needsSync)
+                  Positioned(
+                    right: -4,
+                    top: -4,
+                    child: Container(
+                      width: 18,
+                      height: 18,
+                      decoration: BoxDecoration(
+                        color: Colors.orange.shade600,
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
+                          width: 2,
+                        ),
+                      ),
+                      child: const Icon(
+                        Icons.cloud_upload_outlined,
+                        color: Colors.white,
+                        size: 10,
+                      ),
+                    ),
+                  )
+                // Receipt indicator badge (only show if synced)
+                else if (hasReceipt)
                   Positioned(
                     right: -2,
                     bottom: -2,
@@ -790,7 +818,37 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
-                      if (hasReceipt)
+                      // Sync status badge
+                      if (needsSync)
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                          margin: const EdgeInsets.only(left: 8),
+                          decoration: BoxDecoration(
+                            color: Colors.orange.shade50,
+                            borderRadius: BorderRadius.circular(4),
+                            border: Border.all(color: Colors.orange.shade200),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                isOfflineTransaction ? Icons.wifi_off : Icons.cloud_upload_outlined,
+                                size: 10,
+                                color: Colors.orange.shade700,
+                              ),
+                              const SizedBox(width: 3),
+                              Text(
+                                isOfflineTransaction ? 'Offline' : 'Chờ sync',
+                                style: TextStyle(
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.orange.shade700,
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      else if (hasReceipt)
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                           margin: const EdgeInsets.only(left: 8),
@@ -944,14 +1002,6 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
     return {'bgColor': const Color(0xFFE3F2FD), 'iconColor': const Color(0xFF1976D2)};
   }
 
-  String _formatDate(DateTime date) {
-    const months = [
-      'Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6',
-      'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'
-    ];
-    return '${date.day} ${months[date.month - 1]} ${date.year}';
-  }
-
   String _formatDateVN(DateTime date) {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
@@ -1037,7 +1087,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          transaction.categoryName ?? 'Transaction',
+                          transaction.categoryName ?? 'Giao dịch',
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,

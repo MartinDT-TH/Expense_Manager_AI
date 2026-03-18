@@ -640,7 +640,7 @@ class _AddTransactionViewState extends State<_AddTransactionView> {
             const SizedBox(width: 12),
             Expanded(
               child: Text(
-                'Insufficient Balance',
+                'Số dư không đủ',
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
@@ -655,7 +655,7 @@ class _AddTransactionViewState extends State<_AddTransactionView> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'The expense amount exceeds your wallet balance.',
+              'Số tiền chi vượt quá số dư ví.',
               style: TextStyle(
                 fontSize: 14,
                 color: isDark ? Colors.grey[400] : Colors.grey[600],
@@ -678,14 +678,14 @@ class _AddTransactionViewState extends State<_AddTransactionView> {
                   ),
                   const Divider(height: 16),
                   _buildBalanceRow(
-                    'Wallet Balance',
+                    'Số dư ví',
                     '${formatter.format(balance)} ₫',
                     const Color(0xFF00B894),
                     isDark,
                   ),
                   const Divider(height: 16),
                   _buildBalanceRow(
-                    'Exceeds by',
+                    'Vượt quá',
                     '${formatter.format(amount - balance)} ₫',
                     Colors.orange,
                     isDark,
@@ -777,19 +777,19 @@ class _AddTransactionViewState extends State<_AddTransactionView> {
     final amount = double.tryParse(displayValue) ?? 0;
     if (amount <= 0) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter a valid amount')),
+        const SnackBar(content: Text('Vui lòng nhập số tiền hợp lệ')),
       );
       return;
     }
     if (selectedCategory == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please select a category')),
+        const SnackBar(content: Text('Vui lòng chọn danh mục')),
       );
       return;
     }
     if (selectedWallet == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please select a wallet')),
+        const SnackBar(content: Text('Vui lòng chọn ví')),
       );
       return;
     }
@@ -804,7 +804,7 @@ class _AddTransactionViewState extends State<_AddTransactionView> {
     if (_isUploadingImage) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-            content: Text('Please wait for image upload to complete')),
+            content: Text('Vui lòng chờ tải ảnh hoàn tất')),
       );
       return;
     }
@@ -881,7 +881,7 @@ class _AddTransactionViewState extends State<_AddTransactionView> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              'SELECT WALLET',
+              'CHỌN VÍ',
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
@@ -986,7 +986,7 @@ class _AddTransactionViewState extends State<_AddTransactionView> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              'SELECT GROUP (OPTIONAL)',
+              'CHỌN NHÓM (TUỲ CHỌN)',
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
@@ -996,7 +996,7 @@ class _AddTransactionViewState extends State<_AddTransactionView> {
             ),
             const SizedBox(height: 8),
             Text(
-              'Share this transaction with a group',
+              'Chia sẻ giao dịch này với một nhóm',
               style: TextStyle(
                 fontSize: 12,
                 color: Colors.grey[500],
@@ -1019,7 +1019,7 @@ class _AddTransactionViewState extends State<_AddTransactionView> {
                   ),
                 ),
                 title: const Text(
-                  'No group (personal)',
+                  'Không có nhóm (cá nhân)',
                   style: TextStyle(fontWeight: FontWeight.normal),
                 ),
                 onTap: () {
@@ -1037,12 +1037,12 @@ class _AddTransactionViewState extends State<_AddTransactionView> {
                           size: 48, color: Colors.grey[400]),
                       const SizedBox(height: 8),
                       Text(
-                        'No groups yet',
+                        'Chưa có nhóm',
                         style: TextStyle(color: Colors.grey[600]),
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        'Create or join a group in Profile',
+                        'Tạo hoặc tham gia nhóm trong Hồ sơ',
                         style: TextStyle(color: Colors.grey[400], fontSize: 12),
                       ),
                     ],
@@ -1082,7 +1082,7 @@ class _AddTransactionViewState extends State<_AddTransactionView> {
                         ),
                       ),
                       subtitle: Text(
-                        '${group.memberCount} members',
+                        '${group.memberCount} thành viên',
                         style: TextStyle(
                           color: Colors.grey[600],
                           fontSize: 12,
@@ -1155,7 +1155,7 @@ class _AddTransactionViewState extends State<_AddTransactionView> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'ADD NOTE',
+              'THÊM GHI CHÚ',
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
@@ -1169,7 +1169,7 @@ class _AddTransactionViewState extends State<_AddTransactionView> {
               autofocus: true,
               maxLines: 3,
               decoration: InputDecoration(
-                hintText: 'Enter note...',
+                hintText: 'Nhập ghi chú...',
                 filled: true,
                 fillColor: Colors.grey[100],
                 border: OutlineInputBorder(
@@ -1188,7 +1188,7 @@ class _AddTransactionViewState extends State<_AddTransactionView> {
                     Navigator.pop(context);
                   },
                   child:
-                      Text('Clear', style: TextStyle(color: Colors.grey[600])),
+                      Text('Xóa', style: TextStyle(color: Colors.grey[600])),
                 ),
                 const SizedBox(width: 16),
                 ElevatedButton(
@@ -1234,7 +1234,7 @@ class _AddTransactionViewState extends State<_AddTransactionView> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                'ADD BILL IMAGE',
+                'THÊM ẢNH HÓA ĐƠN',
                 style: TextStyle(
                   fontSize: 13 * scale,
                   fontWeight: FontWeight.w600,
@@ -1248,9 +1248,9 @@ class _AddTransactionViewState extends State<_AddTransactionView> {
                 children: [
                   _buildImageSourceOption(
                     icon: Icons.document_scanner_rounded,
-                    label: 'Scan Bill',
+                    label: 'Quét hóa đơn',
                     color: const Color(0xFFE17055),
-                    badgeText: 'Premium',
+                    badgeText: 'Cao cấp',
                     onTap: () {
                       Navigator.pop(context);
                       _scanBillWithOcr();
@@ -1258,7 +1258,7 @@ class _AddTransactionViewState extends State<_AddTransactionView> {
                   ),
                   _buildImageSourceOption(
                     icon: Icons.camera_alt_rounded,
-                    label: 'Camera',
+                    label: 'Máy ảnh',
                     color: operatorPurple,
                     onTap: () {
                       Navigator.pop(context);
@@ -1267,7 +1267,7 @@ class _AddTransactionViewState extends State<_AddTransactionView> {
                   ),
                   _buildImageSourceOption(
                     icon: Icons.photo_library_rounded,
-                    label: 'Gallery',
+                    label: 'Thư viện',
                     color: const Color(0xFF00B894),
                     onTap: () {
                       Navigator.pop(context);
@@ -1277,7 +1277,7 @@ class _AddTransactionViewState extends State<_AddTransactionView> {
                   if (_selectedImageFile != null || _uploadedImageUrl != null)
                     _buildImageSourceOption(
                       icon: Icons.delete_rounded,
-                      label: 'Remove',
+                      label: 'Xóa',
                       color: Colors.red,
                       onTap: () {
                         Navigator.pop(context);
@@ -1304,7 +1304,7 @@ class _AddTransactionViewState extends State<_AddTransactionView> {
                     SizedBox(width: 8 * scale),
                     Expanded(
                       child: Text(
-                        'Use "Scan Bill" to automatically extract amount, date, and merchant from your receipt!',
+                        'Dùng "Quét hóa đơn" để tự động lấy số tiền, ngày và cửa hàng từ hóa đơn của bạn!',
                         style: TextStyle(
                           fontSize: 11 * scale,
                           color: isDark ? Colors.grey[300] : Colors.grey[700],
@@ -1459,7 +1459,7 @@ class _AddTransactionViewState extends State<_AddTransactionView> {
         _uploadedImageUrl = result.secureUrl;
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Bill image uploaded successfully!'),
+            content: Text('Tải ảnh hóa đơn thành công!'),
             backgroundColor: Color(0xFF00B894),
             duration: Duration(seconds: 2),
           ),
@@ -1467,7 +1467,7 @@ class _AddTransactionViewState extends State<_AddTransactionView> {
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Upload failed: ${result.error ?? "Unknown error"}'),
+            content: Text('Tải lên thất bại: ${result.error ?? "Lỗi không xác định"}'),
             backgroundColor: Colors.red,
           ),
         );
@@ -1522,7 +1522,7 @@ class _AddTransactionViewState extends State<_AddTransactionView> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content:
-                Text('Upload failed: ${uploadResult.error ?? "Unknown error"}'),
+                Text('Tải lên thất bại: ${uploadResult.error ?? "Lỗi không xác định"}'),
             backgroundColor: Colors.red,
           ),
         );
@@ -1583,7 +1583,7 @@ class _AddTransactionViewState extends State<_AddTransactionView> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('OCR failed: ${e.message}'),
+            content: Text('OCR thất bại: ${e.message}'),
             backgroundColor: Colors.red,
           ),
         );
@@ -1596,7 +1596,7 @@ class _AddTransactionViewState extends State<_AddTransactionView> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Scan failed: $e'),
+            content: Text('Quét thất bại: $e'),
             backgroundColor: Colors.red,
           ),
         );
@@ -1643,7 +1643,7 @@ class _AddTransactionViewState extends State<_AddTransactionView> {
           children: [
             Icon(Icons.check_circle, color: Colors.white, size: 20),
             SizedBox(width: 8),
-            Text('Scan data applied! Review and save your transaction.'),
+            Text('Đã áp dụng dữ liệu quét! Vui lòng kiểm tra và lưu giao dịch.'),
           ],
         ),
         backgroundColor: Color(0xFF00B894),
@@ -1676,7 +1676,7 @@ class _AddTransactionViewState extends State<_AddTransactionView> {
             ),
             const SizedBox(width: 12),
             Text(
-              'Premium Feature',
+              'Tính năng cao cấp',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -1690,7 +1690,7 @@ class _AddTransactionViewState extends State<_AddTransactionView> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Smart Bill Scanning is a premium feature that uses AI to automatically extract transaction details from your receipts.',
+              'Quét hóa đơn thông minh là tính năng cao cấp dùng AI để tự động trích xuất chi tiết giao dịch từ hóa đơn.',
               style: TextStyle(
                 color: isDark ? Colors.grey[400] : Colors.grey[700],
                 height: 1.5,
@@ -1706,11 +1706,11 @@ class _AddTransactionViewState extends State<_AddTransactionView> {
               child: Column(
                 children: [
                   _buildPremiumFeatureRow(
-                      Icons.auto_awesome, 'Auto-extract amount'),
+                      Icons.auto_awesome, 'Tự động lấy số tiền'),
                   _buildPremiumFeatureRow(
-                      Icons.calendar_today, 'Detect transaction date'),
-                  _buildPremiumFeatureRow(Icons.store, 'Identify merchant'),
-                  _buildPremiumFeatureRow(Icons.category, 'Suggest category'),
+                      Icons.calendar_today, 'Nhận diện ngày giao dịch'),
+                  _buildPremiumFeatureRow(Icons.store, 'Nhận diện cửa hàng'),
+                  _buildPremiumFeatureRow(Icons.category, 'Gợi ý danh mục'),
                 ],
               ),
             ),
@@ -1720,7 +1720,7 @@ class _AddTransactionViewState extends State<_AddTransactionView> {
           TextButton(
             onPressed: () => Navigator.pop(context),
             child: Text(
-              'Maybe Later',
+              'Để sau',
               style: TextStyle(color: Colors.grey[600]),
             ),
           ),
@@ -1730,7 +1730,7 @@ class _AddTransactionViewState extends State<_AddTransactionView> {
               // TODO: Navigate to premium upgrade screen
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
-                  content: Text('Premium upgrade coming soon!'),
+                  content: Text('Nâng cấp Premium sắp có!'),
                   backgroundColor: Color(0xFF6C5CE7),
                 ),
               );
@@ -1747,7 +1747,7 @@ class _AddTransactionViewState extends State<_AddTransactionView> {
                 const Icon(Icons.workspace_premium, color: Colors.white, size: 16),
                 SizedBox(width: 6 * scale),
                 const Text(
-                  'Upgrade Now',
+                  'Nâng cấp ngay',
                   style: TextStyle(color: Colors.white),
                 ),
               ],
@@ -1830,7 +1830,7 @@ class _AddTransactionViewState extends State<_AddTransactionView> {
                       _removeImage();
                     },
                     icon: const Icon(Icons.delete, color: Colors.red),
-                    label: const Text('Remove',
+                    label: const Text('Xóa',
                         style: TextStyle(color: Colors.red)),
                   ),
                   ElevatedButton(
@@ -1841,7 +1841,7 @@ class _AddTransactionViewState extends State<_AddTransactionView> {
                         borderRadius: BorderRadius.circular(20),
                       ),
                     ),
-                    child: const Text('Close',
+                    child: const Text('Đóng',
                         style: TextStyle(color: Colors.white)),
                   ),
                 ],
@@ -1894,7 +1894,7 @@ class _AddTransactionViewState extends State<_AddTransactionView> {
                   const SizedBox(width: 6),
                   Text(
                     _isOcrScanning
-                        ? 'Scanning...'
+                        ? 'Đang quét...'
                         : '${(_uploadProgress * 100).toInt()}%',
                     style: TextStyle(
                       fontSize: 13,
@@ -1930,7 +1930,7 @@ class _AddTransactionViewState extends State<_AddTransactionView> {
                     ),
                   const SizedBox(width: 6),
                   Text(
-                    hasImage ? 'Bill' : 'Scan',
+                    hasImage ? 'Hóa đơn' : 'Quét',
                     style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w500,
@@ -1984,7 +1984,7 @@ class _AddTransactionViewState extends State<_AddTransactionView> {
           setState(() => _isSaving = false);
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Error: ${state.message}'),
+              content: Text('Lỗi: ${state.message}'),
               backgroundColor: Colors.red,
             ),
           );
@@ -2063,6 +2063,10 @@ class _AddTransactionViewState extends State<_AddTransactionView> {
 
                         return Column(
                           children: [
+                            Expanded(
+                              child: SingleChildScrollView(
+                                child: Column(
+                                  children: [
                             // Compact Controls Row
                             Padding(
                               padding: const EdgeInsets.symmetric(
@@ -2261,7 +2265,7 @@ class _AddTransactionViewState extends State<_AddTransactionView> {
                                             Expanded(
                                               child: Text(
                                                 selectedWallet?.name ??
-                                                    'Select wallet *',
+                                                    'Chọn ví *',
                                                 style: TextStyle(
                                                   fontSize: 13,
                                                   fontWeight: FontWeight.w500,
@@ -2322,7 +2326,7 @@ class _AddTransactionViewState extends State<_AddTransactionView> {
                                           const SizedBox(width: 6),
                                           Text(
                                             _noteController.text.isNotEmpty
-                                                ? 'Has note'
+                                                ? 'Có ghi chú'
                                                 : 'Ghi chú',
                                             style: TextStyle(
                                               fontSize: 13,
@@ -2452,7 +2456,11 @@ class _AddTransactionViewState extends State<_AddTransactionView> {
                               ),
                             ),
 
-                            const Spacer(),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 8),
 
                             // Amount Display
                             _buildAmountDisplay(),
@@ -2667,9 +2675,7 @@ class _AddTransactionViewState extends State<_AddTransactionView> {
                 child: _buildWideNumpadButton('0', () => _onNumberPressed('0')),
               ),
               const SizedBox(width: 8),
-              Expanded(
-                child: _buildNumpadButton('.', () => _onNumberPressed('.')),
-              ),
+              _buildNumpadButton('.', () => _onNumberPressed('.')),
               const SizedBox(width: 8),
               Expanded(
                 child: _buildBackspaceButton(),

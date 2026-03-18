@@ -152,7 +152,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                                 gradient: LinearGradient(
                                   colors: [Colors.purple.shade300, Colors.purple.shade600],
                                 ),
-                                image: _avatarUrl != null
+                                image: (_avatarUrl != null && _avatarUrl!.trim().isNotEmpty)
                                     ? DecorationImage(
                                         image: NetworkImage(_avatarUrl!),
                                         fit: BoxFit.cover,
@@ -165,7 +165,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                                         color: Colors.white,
                                       ),
                                     )
-                                  : _avatarUrl == null
+                                  : (_avatarUrl == null || _avatarUrl!.trim().isEmpty)
                                       ? Center(
                                           child: Text(
                                             _fullNameController.text.isNotEmpty

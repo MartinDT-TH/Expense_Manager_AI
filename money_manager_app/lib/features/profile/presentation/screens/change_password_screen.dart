@@ -64,7 +64,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
           backgroundColor: const Color(0xFF6C5CE7),
           elevation: 0,
           title: const Text(
-            'Change Password',
+            'Đổi mật khẩu',
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
           ),
           centerTitle: true,
@@ -96,7 +96,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                       const SizedBox(width: 12),
                       const Expanded(
                         child: Text(
-                          'Your password must be at least 6 characters long.',
+                          'Mật khẩu phải có ít nhất 6 ký tự.',
                           style: TextStyle(fontSize: 14),
                         ),
                       ),
@@ -110,14 +110,14 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   // Current Password
                   _buildPasswordField(
                     controller: _currentPasswordController,
-                    label: 'Current Password',
+                    label: 'Mật khẩu hiện tại',
                     obscure: _obscureCurrentPassword,
                     onToggleObscure: () {
                       setState(() => _obscureCurrentPassword = !_obscureCurrentPassword);
                     },
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter your current password';
+                        return 'Vui lòng nhập mật khẩu hiện tại';
                       }
                       return null;
                     },
@@ -129,17 +129,17 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 // New Password
                 _buildPasswordField(
                   controller: _newPasswordController,
-                  label: 'New Password',
+                  label: 'Mật khẩu mới',
                   obscure: _obscureNewPassword,
                   onToggleObscure: () {
                     setState(() => _obscureNewPassword = !_obscureNewPassword);
                   },
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter a new password';
+                      return 'Vui lòng nhập mật khẩu mới';
                     }
                     if (value.length < 6) {
-                      return 'Password must be at least 6 characters';
+                      return 'Mật khẩu phải có ít nhất 6 ký tự';
                     }
                     return null;
                   },
@@ -150,17 +150,17 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 // Confirm Password
                 _buildPasswordField(
                   controller: _confirmPasswordController,
-                  label: 'Confirm New Password',
+                  label: 'Xác nhận mật khẩu mới',
                   obscure: _obscureConfirmPassword,
                   onToggleObscure: () {
                     setState(() => _obscureConfirmPassword = !_obscureConfirmPassword);
                   },
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please confirm your new password';
+                      return 'Vui lòng xác nhận mật khẩu mới';
                     }
                     if (value != _newPasswordController.text) {
-                      return 'Passwords do not match';
+                      return 'Mật khẩu không khớp';
                     }
                     return null;
                   },
@@ -190,7 +190,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                             ),
                           )
                         : const Text(
-                            'Change Password',
+                            'Đổi mật khẩu',
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
