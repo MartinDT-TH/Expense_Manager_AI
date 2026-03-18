@@ -167,6 +167,7 @@ void _initCategoryFeature() {
       remoteDataSource: sl(),
       localDataSource: sl(),
       networkInfo: sl(),
+      syncQueue: sl(),
     ),
   );
 
@@ -203,6 +204,7 @@ void _initWalletFeature() {
       remoteDataSource: sl(),
       localDataSource: sl(),
       networkInfo: sl(),
+      syncQueue: sl(),
     ),
   );
 

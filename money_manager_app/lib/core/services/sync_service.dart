@@ -3,6 +3,14 @@ import 'package:flutter/foundation.dart';
 import '../network/network_info.dart';
 import '../sync/sync_queue_processor.dart';
 
+/// Event để UI hiển thị toast khi auto-sync / periodic sync xong.
+class SyncToastEvent {
+  final String message;
+  final bool success;
+
+  SyncToastEvent(this.message, this.success);
+}
+
 /// Service to manage data synchronization
 /// Handles auto-sync when network becomes available
 /// Provides sync status information to UI
@@ -12,7 +20,9 @@ class SyncService extends ChangeNotifier {
 
   StreamSubscription<bool>? _connectivitySubscription;
   Timer? _periodicSyncTimer;
-  
+  final StreamController<SyncToastEvent> _syncToastController =
+      StreamController<SyncToastEvent>.broadcast();
+
   bool _isSyncing = false;
   int _pendingCount = 0;
   String? _lastSyncError;
@@ -24,6 +34,9 @@ class SyncService extends ChangeNotifier {
   String? get lastSyncError => _lastSyncError;
   DateTime? get lastSyncTime => _lastSyncTime;
   bool get hasPendingSync => _pendingCount > 0;
+
+  /// Stream sự kiện toast khi auto-sync hoặc periodic sync hoàn tất (chỉ khi có pending > 0).
+  Stream<SyncToastEvent> get syncToastStream => _syncToastController.stream;
 
   SyncService({
     required this.networkInfo,
@@ -58,9 +71,10 @@ class SyncService extends ChangeNotifier {
   void dispose() {
     _connectivitySubscription?.cancel();
     _periodicSyncTimer?.cancel();
+    _syncToastController.close();
     super.dispose();
   }
-  
+
   /// Reset sync service state (call on logout)
   void reset() {
     _connectivitySubscription?.cancel();
@@ -84,7 +98,6 @@ class SyncService extends ChangeNotifier {
       );
     }
 
-    // Check network first
     if (!await networkInfo.checkConnection()) {
       return SyncResult(
         success: false,
@@ -92,38 +105,53 @@ class SyncService extends ChangeNotifier {
       );
     }
 
-    // Set syncing state BEFORE any async work
     _isSyncing = true;
     _lastSyncError = null;
     notifyListeners();
-    
-    // Small delay to ensure UI updates before heavy sync work
+
+    final pendingBefore = await getPendingCount();
+    final startTime = DateTime.now();
+    if (kDebugMode) {
+      debugPrint('[Sync] start pendingCount=$pendingBefore at ${startTime.toIso8601String()}');
+    }
+
     await Future.delayed(const Duration(milliseconds: 50));
 
     try {
-      // Process sync queue (handles all entity types including transactions)
       final queueResult = await syncQueueProcessor.processQueue();
-
-      // Update pending count
       await _updatePendingCount();
 
-      _lastSyncTime = DateTime.now();
+      final endTime = DateTime.now();
+      final durationMs = endTime.difference(startTime).inMilliseconds;
+      _lastSyncTime = endTime;
       _isSyncing = false;
       notifyListeners();
+
+      if (kDebugMode) {
+        debugPrint(
+          '[Sync] end at ${endTime.toIso8601String()} duration=${durationMs}ms '
+          'synced=${queueResult.synced} failed=${queueResult.failed} pendingAfter=$_pendingCount',
+        );
+      }
+
+      final message = _pendingCount == 0
+          ? 'Đồng bộ thành công!'
+          : 'Đồng bộ hoàn tất, còn $_pendingCount mục chờ';
 
       return SyncResult(
         success: queueResult.success,
         synced: queueResult.synced,
         failed: queueResult.failed,
-        message: _pendingCount == 0 
-            ? 'Đồng bộ thành công!' 
-            : 'Đồng bộ hoàn tất, còn $_pendingCount mục chờ',
+        message: message,
       );
     } catch (e) {
       _lastSyncError = e.toString();
       _isSyncing = false;
       notifyListeners();
-
+      final endTime = DateTime.now();
+      if (kDebugMode) {
+        debugPrint('[Sync] error after ${endTime.difference(startTime).inMilliseconds}ms: $e');
+      }
       return SyncResult(
         success: false,
         message: 'Lỗi đồng bộ: $e',
@@ -143,24 +171,26 @@ class SyncService extends ChangeNotifier {
     }
   }
 
-  /// Auto-sync when network becomes available
+  /// Auto-sync when network becomes available. Nếu có pending và sync xong thì gửi toast.
   Future<void> _performAutoSync() async {
     if (_isSyncing) return;
-    
     final pending = await getPendingCount();
-    if (pending > 0) {
-      await syncNow();
+    if (pending == 0) return;
+    final result = await syncNow();
+    if (!_syncToastController.isClosed) {
+      _syncToastController.add(SyncToastEvent(result.message, result.success));
     }
   }
 
-  /// Periodic sync (runs every 5 minutes)
+  /// Periodic sync (every 5 min). Nếu có pending và sync xong thì gửi toast.
   Future<void> _performPeriodicSync() async {
     if (!await networkInfo.checkConnection()) return;
     if (_isSyncing) return;
-    
     final pending = await getPendingCount();
-    if (pending > 0) {
-      await syncNow();
+    if (pending == 0) return;
+    final result = await syncNow();
+    if (!_syncToastController.isClosed) {
+      _syncToastController.add(SyncToastEvent(result.message, result.success));
     }
   }
 
