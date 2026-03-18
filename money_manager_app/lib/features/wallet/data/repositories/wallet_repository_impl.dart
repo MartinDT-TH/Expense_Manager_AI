@@ -1,5 +1,6 @@
 import 'package:uuid/uuid.dart';
 import '../../../../core/network/network_info.dart';
+import '../../../../core/sync/sync_queue_processor.dart';
 import '../../domain/entities/wallet.dart';
 import '../../domain/repositories/wallet_repository.dart';
 import '../datasources/wallet_local_datasource.dart';
@@ -10,11 +11,13 @@ class WalletRepositoryImpl implements WalletRepository {
   final WalletRemoteDataSource remoteDataSource;
   final WalletLocalDataSource localDataSource;
   final NetworkInfo networkInfo;
+  final SyncQueueProcessor syncQueue;
 
   WalletRepositoryImpl({
     required this.remoteDataSource,
     required this.localDataSource,
     required this.networkInfo,
+    required this.syncQueue,
   });
 
   @override
@@ -51,10 +54,8 @@ class WalletRepositoryImpl implements WalletRepository {
       isSynced: false,
     );
 
-    // Save locally first
     await localDataSource.saveWallet(newWallet);
 
-    // Try to sync with server
     if (await networkInfo.checkConnection()) {
       try {
         final remoteWallet = await remoteDataSource.createWallet(newWallet);
@@ -63,8 +64,20 @@ class WalletRepositoryImpl implements WalletRepository {
         ));
         return remoteWallet;
       } catch (e) {
-        // Keep local version
+        await syncQueue.addToQueue(
+          entityType: 'wallet',
+          entityId: newWallet.id,
+          action: SyncAction.create,
+          data: newWallet.toJson(),
+        );
       }
+    } else {
+      await syncQueue.addToQueue(
+        entityType: 'wallet',
+        entityId: newWallet.id,
+        action: SyncAction.create,
+        data: newWallet.toJson(),
+      );
     }
 
     return newWallet;
@@ -92,8 +105,20 @@ class WalletRepositoryImpl implements WalletRepository {
         await localDataSource.markAsSynced(wallet.id);
         return remoteWallet;
       } catch (e) {
-        // Keep local version
+        await syncQueue.addToQueue(
+          entityType: 'wallet',
+          entityId: wallet.id,
+          action: SyncAction.update,
+          data: updatedWallet.toJson(),
+        );
       }
+    } else {
+      await syncQueue.addToQueue(
+        entityType: 'wallet',
+        entityId: wallet.id,
+        action: SyncAction.update,
+        data: updatedWallet.toJson(),
+      );
     }
 
     return updatedWallet;
@@ -108,8 +133,20 @@ class WalletRepositoryImpl implements WalletRepository {
         await remoteDataSource.deleteWallet(id);
         await localDataSource.markAsSynced(id);
       } catch (e) {
-        // Will sync later
+        await syncQueue.addToQueue(
+          entityType: 'wallet',
+          entityId: id,
+          action: SyncAction.delete,
+          data: {'id': id},
+        );
       }
+    } else {
+      await syncQueue.addToQueue(
+        entityType: 'wallet',
+        entityId: id,
+        action: SyncAction.delete,
+        data: {'id': id},
+      );
     }
   }
 

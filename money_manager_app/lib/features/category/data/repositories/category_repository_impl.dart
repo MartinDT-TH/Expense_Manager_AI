@@ -3,6 +3,7 @@ import 'package:uuid/uuid.dart';
 import '../../../../core/error/failures.dart';
 import '../../../../core/error/exceptions.dart';
 import '../../../../core/network/network_info.dart';
+import '../../../../core/sync/sync_queue_processor.dart';
 import '../../domain/entities/category.dart';
 import '../../domain/repositories/category_repository.dart';
 import '../datasources/category_local_datasource.dart';
@@ -13,12 +14,14 @@ class CategoryRepositoryImpl implements CategoryRepository {
   final CategoryLocalDataSource localDataSource;
   final CategoryRemoteDataSource remoteDataSource;
   final NetworkInfo networkInfo;
+  final SyncQueueProcessor syncQueue;
   final Uuid _uuid = const Uuid();
 
   CategoryRepositoryImpl({
     required this.localDataSource,
     required this.remoteDataSource,
     required this.networkInfo,
+    required this.syncQueue,
   });
 
   @override
@@ -125,18 +128,28 @@ class CategoryRepositoryImpl implements CategoryRepository {
         isDeleted: false,
       );
 
-      // Save to local first
       await localDataSource.insertCategory(newCategory);
 
-      // Try to sync to server
       if (networkInfo.isConnected) {
         try {
           final remoteCategory = await remoteDataSource.createCategory(newCategory);
           await localDataSource.markAsSynced(remoteCategory.id);
           return Right(remoteCategory);
         } catch (_) {
-          // Ignore remote errors, data is saved locally
+          await syncQueue.addToQueue(
+            entityType: 'category',
+            entityId: newCategory.id,
+            action: SyncAction.create,
+            data: newCategory.toJson(),
+          );
         }
+      } else {
+        await syncQueue.addToQueue(
+          entityType: 'category',
+          entityId: newCategory.id,
+          action: SyncAction.create,
+          data: newCategory.toJson(),
+        );
       }
 
       return Right(newCategory);
@@ -160,18 +173,28 @@ class CategoryRepositoryImpl implements CategoryRepository {
         category.copyWith(updatedAt: DateTime.now()),
       );
 
-      // Update locally first
       await localDataSource.updateCategory(updatedCategory);
 
-      // Try to sync to server
       if (networkInfo.isConnected) {
         try {
           final remoteCategory = await remoteDataSource.updateCategory(updatedCategory);
           await localDataSource.markAsSynced(remoteCategory.id);
           return Right(remoteCategory);
         } catch (_) {
-          // Ignore remote errors
+          await syncQueue.addToQueue(
+            entityType: 'category',
+            entityId: category.id,
+            action: SyncAction.update,
+            data: updatedCategory.toJson(),
+          );
         }
+      } else {
+        await syncQueue.addToQueue(
+          entityType: 'category',
+          entityId: category.id,
+          action: SyncAction.update,
+          data: updatedCategory.toJson(),
+        );
       }
 
       return Right(updatedCategory);
@@ -191,17 +214,27 @@ class CategoryRepositoryImpl implements CategoryRepository {
         return const Left(ValidationFailure(message: 'Cannot delete system category'));
       }
 
-      // Soft delete locally
       await localDataSource.deleteCategory(id);
 
-      // Try to sync to server
       if (networkInfo.isConnected) {
         try {
           await remoteDataSource.deleteCategory(id);
           await localDataSource.markAsSynced(id);
         } catch (_) {
-          // Ignore remote errors
+          await syncQueue.addToQueue(
+            entityType: 'category',
+            entityId: id,
+            action: SyncAction.delete,
+            data: {'id': id},
+          );
         }
+      } else {
+        await syncQueue.addToQueue(
+          entityType: 'category',
+          entityId: id,
+          action: SyncAction.delete,
+          data: {'id': id},
+        );
       }
 
       return const Right(null);
@@ -246,11 +279,4 @@ class CategoryRepositoryImpl implements CategoryRepository {
     }
   }
 
-  Future<void> _syncInBackground() async {
-    try {
-      await syncCategories();
-    } catch (_) {
-      // Ignore background sync errors
-    }
-  }
 }

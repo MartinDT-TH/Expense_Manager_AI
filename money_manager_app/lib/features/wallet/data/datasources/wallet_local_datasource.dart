@@ -58,20 +58,32 @@ class WalletLocalDataSourceImpl implements WalletLocalDataSource {
   @override
   Future<void> saveWallets(List<WalletModel> wallets) async {
     final db = await database.database;
-    
-    // Xóa tất cả wallets cũ trước khi sync từ server
-    // để tránh duplicate khi server reset data với ID mới
-    await db.delete('wallets');
-    
+
+    // Merge: không xóa toàn bộ — giữ bản ghi local chưa sync (is_synced=0)
+    final serverIds = wallets.map((w) => w.id).toList();
+
     final batch = db.batch();
     for (final wallet in wallets) {
+      final data = wallet.toDatabase();
+      data['is_synced'] = 1; // Dữ liệu từ server = đã sync
       batch.insert(
         'wallets',
-        wallet.toDatabase(),
+        data,
         conflictAlgorithm: ConflictAlgorithm.replace,
       );
     }
     await batch.commit(noResult: true);
+
+    // Xóa bản ghi đã sync trên server nhưng không còn trong response (bị xóa ở thiết bị khác)
+    // Không xóa bản ghi is_synced=0 (local chưa sync)
+    if (serverIds.isNotEmpty) {
+      final placeholders = List.filled(serverIds.length, '?').join(',');
+      await db.delete(
+        'wallets',
+        where: 'is_synced = 1 AND id NOT IN ($placeholders)',
+        whereArgs: serverIds,
+      );
+    }
   }
 
   @override

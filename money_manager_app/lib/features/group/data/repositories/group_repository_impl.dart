@@ -21,7 +21,8 @@ class GroupRepositoryImpl implements GroupRepository {
 
   @override
   Future<List<Group>> getGroups() async {
-    if (await networkInfo.isConnected) {
+    final hasConnection = await networkInfo.checkConnection();
+    if (hasConnection) {
       try {
         final remoteGroups = await remoteDataSource.getGroups();
         await localDataSource.saveGroups(remoteGroups);
@@ -37,7 +38,8 @@ class GroupRepositoryImpl implements GroupRepository {
 
   @override
   Future<Group?> getGroupById(String id) async {
-    if (await networkInfo.isConnected) {
+    final hasConnection = await networkInfo.checkConnection();
+    if (hasConnection) {
       try {
         final remoteGroup = await remoteDataSource.getGroupById(id);
         if (remoteGroup != null) {
@@ -107,7 +109,8 @@ class GroupRepositoryImpl implements GroupRepository {
 
   @override
   Future<List<GroupMember>> getGroupMembers(String groupId) async {
-    if (await networkInfo.isConnected) {
+    final hasConnection = await networkInfo.checkConnection();
+    if (hasConnection) {
       try {
         final remoteMembers = await remoteDataSource.getGroupMembers(groupId);
         await localDataSource.saveGroupMembers(remoteMembers);

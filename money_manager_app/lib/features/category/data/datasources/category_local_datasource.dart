@@ -116,23 +116,31 @@ class CategoryLocalDataSourceImpl implements CategoryLocalDataSource {
   @override
   Future<void> upsertCategories(List<CategoryModel> categories) async {
     final db = await database.database;
-    
-    // Xóa tất cả categories cũ trước khi sync từ server
-    // để tránh duplicate khi server reset data với ID mới
-    await db.delete('categories');
-    
+
+    // Merge: không xóa toàn bộ — giữ bản ghi local chưa sync (is_synced=0)
+    final serverIds = categories.map((c) => c.id).toList();
+
     final batch = db.batch();
-    
     for (final category in categories) {
       final data = category.toLocalDb();
-      data['is_synced'] = 1;
+      data['is_synced'] = 1; // Dữ liệu từ server = đã sync
       batch.insert(
         'categories',
         data,
         conflictAlgorithm: ConflictAlgorithm.replace,
       );
     }
-    
     await batch.commit(noResult: true);
+
+    // Xóa bản ghi đã sync nhưng không còn trong response (bị xóa ở thiết bị khác)
+    // Không xóa bản ghi is_synced=0 (user category chưa sync)
+    if (serverIds.isNotEmpty) {
+      final placeholders = List.filled(serverIds.length, '?').join(',');
+      await db.delete(
+        'categories',
+        where: 'is_synced = 1 AND id NOT IN ($placeholders)',
+        whereArgs: serverIds,
+      );
+    }
   }
 }
