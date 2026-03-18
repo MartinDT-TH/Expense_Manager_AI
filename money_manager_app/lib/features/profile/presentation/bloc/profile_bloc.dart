@@ -24,7 +24,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       if (result.success && result.profile != null) {
         emit(ProfileLoaded(profile: result.profile!));
       } else {
-        emit(ProfileError(message: result.message ?? 'Failed to load profile'));
+        emit(ProfileError(message: result.message ?? 'Không thể tải hồ sơ'));
       }
     } catch (e) {
       emit(ProfileError(message: e.toString()));
@@ -45,10 +45,10 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       if (result.success && result.profile != null) {
         emit(ProfileUpdated(
           profile: result.profile!,
-          message: result.message ?? 'Profile updated successfully',
+          message: result.message ?? 'Cập nhật hồ sơ thành công',
         ));
       } else {
-        emit(ProfileError(message: result.message ?? 'Failed to update profile'));
+        emit(ProfileError(message: result.message ?? 'Không thể cập nhật hồ sơ'));
       }
     } catch (e) {
       emit(ProfileError(message: e.toString()));
@@ -85,10 +85,10 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       if (result.success && result.profile != null) {
         emit(ProfileUpdated(
           profile: result.profile!,
-          message: result.message ?? 'Avatar updated successfully',
+          message: result.message ?? 'Cập nhật ảnh đại diện thành công',
         ));
       } else {
-        emit(ProfileError(message: result.message ?? 'Failed to update avatar'));
+        emit(ProfileError(message: result.message ?? 'Không thể cập nhật ảnh đại diện'));
       }
     } catch (e) {
       emit(ProfileError(message: e.toString()));

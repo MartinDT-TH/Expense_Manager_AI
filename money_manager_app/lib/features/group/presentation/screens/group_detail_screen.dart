@@ -57,7 +57,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen>
         context.read<GroupBloc>().add(LoadGroupDetail(widget.groupId));
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('New transaction added!'),
+            content: Text('Có giao dịch mới!'),
             backgroundColor: AppColors.primary,
             duration: Duration(seconds: 2),
           ),
@@ -74,10 +74,10 @@ class _GroupDetailScreenState extends State<GroupDetailScreen>
     _memberJoinedSub = _signalRService.onMemberJoined.listen((data) {
       if (mounted) {
         context.read<GroupBloc>().add(LoadGroupDetail(widget.groupId));
-        final memberName = data['userName'] ?? 'New member';
+        final memberName = data['userName'] ?? 'Thành viên mới';
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('$memberName joined the group'),
+            content: Text('$memberName đã tham gia nhóm'),
             backgroundColor: AppColors.success,
             duration: const Duration(seconds: 2),
           ),
@@ -130,7 +130,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen>
         if (state is InviteCodeRegenerated) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('New invite code: ${state.inviteCode}'),
+              content: Text('Mã mời mới: ${state.inviteCode}'),
               backgroundColor: AppColors.success,
             ),
           );
@@ -138,7 +138,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen>
         if (state is MemberKicked) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-              content: Text('Member removed'),
+              content: Text('Đã xóa thành viên'),
               backgroundColor: AppColors.success,
             ),
           );
@@ -153,7 +153,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen>
               backgroundColor: const Color(0xFF6C5CE7),
               iconTheme: const IconThemeData(color: Colors.white),
               title: const Text(
-                'Group Details',
+                'Chi tiết nhóm',
                 style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
               ),
               centerTitle: true,
@@ -169,12 +169,12 @@ class _GroupDetailScreenState extends State<GroupDetailScreen>
               backgroundColor: const Color(0xFF6C5CE7),
               iconTheme: const IconThemeData(color: Colors.white),
               title: const Text(
-                'Group Details',
+                'Chi tiết nhóm',
                 style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
               ),
               centerTitle: true,
             ),
-            body: const Center(child: Text('Group not found')),
+            body: const Center(child: Text('Không tìm thấy nhóm')),
           );
         }
 
@@ -200,7 +200,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen>
                       unselectedLabelColor: Colors.grey,
                       indicatorColor: AppColors.primary,
                       tabs: const [
-                        Tab(text: 'Members'),
+                        Tab(text: 'Thành viên'),
                         Tab(text: 'Giao dịch'),
                       ],
                     ),
@@ -258,7 +258,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen>
                 value: 'edit',
                 child: ListTile(
                   leading: Icon(Icons.edit),
-                  title: Text('Edit'),
+                  title: Text('Chỉnh sửa'),
                   contentPadding: EdgeInsets.zero,
                 ),
               ),
@@ -266,7 +266,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen>
                 value: 'regenerate_code',
                 child: ListTile(
                   leading: Icon(Icons.refresh),
-                  title: Text('Change Invite Code'),
+                  title: Text('Đổi mã mời'),
                   contentPadding: EdgeInsets.zero,
                 ),
               ),
@@ -274,7 +274,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen>
                 value: 'delete',
                 child: ListTile(
                   leading: Icon(Icons.delete, color: AppColors.error),
-                  title: Text('Delete Group',
+                  title: Text('Xóa nhóm',
                       style: TextStyle(color: AppColors.error)),
                   contentPadding: EdgeInsets.zero,
                 ),
@@ -285,7 +285,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen>
           IconButton(
             icon: const Icon(Icons.exit_to_app),
             onPressed: () => _showLeaveConfirmDialog(context),
-            tooltip: 'Leave Group',
+            tooltip: 'Rời nhóm',
           ),
       ],
     );
@@ -309,7 +309,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen>
               child: Column(
                 children: [
                   const Text(
-                    'TOTAL GROUP SPENDING',
+                    'TỔNG CHI NHÓM',
                     style: TextStyle(
                       fontSize: 12,
                       color: Colors.grey,
@@ -336,7 +336,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen>
                       ),
                       Container(width: 1, height: 40, color: Colors.grey[200]),
                       _buildSummaryItem(
-                        'Per Person',
+                        'Theo người',
                         _currencyFormat.format(perPerson),
                         AppColors.primary,
                       ),
@@ -375,7 +375,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen>
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Text(
-                            'Invite Code',
+                            'Mã mời',
                             style: TextStyle(
                               fontSize: 12,
                               color: Colors.grey,
@@ -396,12 +396,12 @@ class _GroupDetailScreenState extends State<GroupDetailScreen>
                     IconButton(
                       icon: const Icon(Icons.copy),
                       onPressed: () => _copyInviteCode(group.inviteCode!),
-                      tooltip: 'Copy',
+                      tooltip: 'Sao chép',
                     ),
                     IconButton(
                       icon: const Icon(Icons.share),
                       onPressed: () => _shareInviteCode(group),
-                      tooltip: 'Share',
+                      tooltip: 'Chia sẻ',
                     ),
                   ],
                 ),
@@ -439,7 +439,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen>
   Widget _buildMembersTab(
       BuildContext context, Group group, List<GroupMember> members) {
     if (members.isEmpty) {
-      return const Center(child: Text('No members yet'));
+      return const Center(child: Text('Chưa có thành viên'));
     }
 
     // Sort: Admin trước, sau đó theo contribution
@@ -505,7 +505,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen>
                       borderRadius: BorderRadius.circular(4),
                     ),
                     child: const Text(
-                      'Admin',
+                      'Quản trị viên',
                       style: TextStyle(
                         fontSize: 10,
                         color: AppColors.primary,
@@ -534,7 +534,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen>
                   ),
                 ),
                 Text(
-                  balance >= 0 ? 'To Receive' : 'To Pay',
+                  balance >= 0 ? 'Sẽ nhận' : 'Cần trả',
                   style: TextStyle(
                     fontSize: 11,
                     color: Colors.grey[500],
@@ -634,7 +634,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen>
           ),
         ),
         title: Text(
-          tx.categoryName ?? 'Unknown',
+          tx.categoryName ?? 'Không xác định',
           style: const TextStyle(fontWeight: FontWeight.w500),
         ),
         subtitle: Column(
@@ -769,7 +769,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen>
                   children: [
                     // Date
                     _buildDetailRow(
-                      'Date',
+                      'Ngày',
                       DateFormat('dd MMM yyyy').format(transaction.transactionDate),
                       Icons.calendar_today_outlined,
                       isDark,
@@ -780,7 +780,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen>
                     // Wallet
                     if (transaction.walletName != null)
                       _buildDetailRow(
-                        'Wallet',
+                        'Ví',
                         transaction.walletName!,
                         Icons.account_balance_wallet_outlined,
                         isDark,
@@ -790,7 +790,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen>
                     if (transaction.createdByUserName != null) ...[
                       const SizedBox(height: 16),
                       _buildDetailRow(
-                        'Created by',
+                        'Tạo bởi',
                         transaction.createdByUserName!,
                         Icons.person_outline,
                         isDark,
@@ -802,7 +802,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen>
                     if (transaction.note != null && transaction.note!.isNotEmpty) ...[
                       const SizedBox(height: 16),
                       _buildDetailRow(
-                        'Note',
+                        'Ghi chú',
                         transaction.note!,
                         Icons.note_outlined,
                         isDark,
@@ -813,7 +813,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen>
                     if (transaction.groupId != null && transaction.groupName != null) ...[
                       const SizedBox(height: 16),
                       _buildDetailRow(
-                        'Group',
+                        'Nhóm',
                         transaction.groupName!,
                         Icons.group_outlined,
                         isDark,
@@ -833,7 +833,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen>
                           ),
                           const SizedBox(width: 8),
                           Text(
-                            'Bill / Receipt',
+                            'Hóa đơn / Biên lai',
                             style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w600,
@@ -881,7 +881,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen>
                                     ),
                                     const SizedBox(height: 8),
                                     Text(
-                                      'Unable to load image',
+                                      'Không thể tải ảnh',
                                       style: TextStyle(
                                         color: isDark ? Colors.grey[500] : Colors.grey[600],
                                       ),
@@ -915,7 +915,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen>
                     ),
                   ),
                   child: const Text(
-                    'Close',
+                    'Đóng',
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                   ),
                 ),
@@ -982,8 +982,8 @@ class _GroupDetailScreenState extends State<GroupDetailScreen>
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Leave Group?'),
-        content: const Text('You will no longer be able to view this group\'s expenses.'),
+        title: const Text('Rời nhóm?'),
+        content: const Text('Bạn sẽ không còn xem được chi tiêu của nhóm này.'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
@@ -995,7 +995,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen>
               context.read<GroupBloc>().add(LeaveGroup(widget.groupId));
             },
             style: TextButton.styleFrom(foregroundColor: AppColors.error),
-            child: const Text('Leave'),
+            child: const Text('Rời'),
           ),
         ],
       ),
@@ -1006,10 +1006,10 @@ class _GroupDetailScreenState extends State<GroupDetailScreen>
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Delete Group?'),
+        title: const Text('Xóa nhóm?'),
         content: Text(
-          'Group "${group.name}" and all data will be permanently deleted. '
-          'This action cannot be undone.',
+          'Nhóm "${group.name}" và toàn bộ dữ liệu sẽ bị xóa vĩnh viễn. '
+          'Thao tác này không thể hoàn tác.',
         ),
         actions: [
           TextButton(
@@ -1023,7 +1023,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen>
               Navigator.pop(context);
             },
             style: TextButton.styleFrom(foregroundColor: AppColors.error),
-            child: const Text('Delete'),
+            child: const Text('Xóa'),
           ),
         ],
       ),
@@ -1034,10 +1034,10 @@ class _GroupDetailScreenState extends State<GroupDetailScreen>
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Change Invite Code?'),
+        title: const Text('Đổi mã mời?'),
         content: const Text(
-          'The old invite code will no longer work. '
-          'People who haven\'t joined yet will need the new code.',
+          'Mã mời cũ sẽ không còn hiệu lực. '
+          'Người chưa tham gia sẽ cần mã mới.',
         ),
         actions: [
           TextButton(
@@ -1049,7 +1049,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen>
               Navigator.pop(ctx);
               context.read<GroupBloc>().add(RegenerateInviteCode(group.id));
             },
-            child: const Text('Change'),
+            child: const Text('Đổi'),
           ),
         ],
       ),
@@ -1065,7 +1065,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen>
           children: [
             ListTile(
               leading: const Icon(Icons.admin_panel_settings),
-              title: const Text('Make Admin'),
+              title: const Text('Đặt làm quản trị viên'),
               onTap: () {
                 Navigator.pop(ctx);
                 context.read<GroupBloc>().add(ChangeRole(
@@ -1077,7 +1077,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen>
             ),
             ListTile(
               leading: const Icon(Icons.person_remove, color: AppColors.error),
-              title: const Text('Remove from Group',
+              title: const Text('Xóa khỏi nhóm',
                   style: TextStyle(color: AppColors.error)),
               onTap: () {
                 Navigator.pop(ctx);
@@ -1097,19 +1097,19 @@ class _GroupDetailScreenState extends State<GroupDetailScreen>
     Clipboard.setData(ClipboardData(text: code));
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-        content: Text('Invite code copied'),
+        content: Text('Đã sao chép mã mời'),
         duration: Duration(seconds: 2),
       ),
     );
   }
 
   void _shareInviteCode(Group group) {
-    final message = 'Join group "${group.name}" on Smart Money!\n'
-        'Invite code: ${group.inviteCode}';
+    final message = 'Tham gia nhóm "${group.name}" trên Smart Money!\n'
+        'Mã mời: ${group.inviteCode}';
     Clipboard.setData(ClipboardData(text: message));
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-        content: Text('Share content copied'),
+        content: Text('Đã sao chép nội dung chia sẻ'),
         duration: Duration(seconds: 2),
       ),
     );

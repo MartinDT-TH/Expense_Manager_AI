@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/di/injection_container.dart';
 import '../../../../core/services/theme_service.dart';
 import '../../../../core/utils/category_icons.dart';
+import '../../../../core/ads/ad_banner_widget.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../../../auth/presentation/bloc/auth_event.dart';
 import '../../../auth/presentation/bloc/auth_state.dart';
@@ -26,6 +27,10 @@ import '../../../wallet/presentation/bloc/wallet_state.dart';
 import '../../../wallet/presentation/screens/wallets_screen_v2.dart';
 import '../../../group/presentation/bloc/group_bloc.dart';
 import '../../../group/presentation/screens/group_list_screen.dart';
+import '../../../profile/presentation/bloc/profile_bloc.dart';
+import '../../../profile/presentation/bloc/profile_event.dart';
+import '../../../profile/presentation/bloc/profile_state.dart';
+import '../../../profile/presentation/screens/profile_edit_screen.dart';
 import '../../../reports/presentation/screens/statistics_screen.dart';
 import '../widgets/home_header.dart';
 import '../widgets/monthly_budget_card.dart';
@@ -50,52 +55,65 @@ class _HomeScreenState extends State<HomeScreen> {
       builder: (context, authState) {
         final userId = authState is Authenticated ? authState.user.id : '';
 
-        return MultiBlocProvider(
-          // Key ensures new Blocs are created when user changes
-          key: ValueKey(userId),
-          providers: [
-            BlocProvider(
-              create: (_) => sl<WalletBloc>()..add(WalletsLoadRequested()),
+        return BlocListener<AuthBloc, AuthState>(
+          listenWhen: (previous, current) =>
+              current is Authenticated &&
+              (previous is! Authenticated ||
+                  (previous as Authenticated).user.id !=
+                      (current as Authenticated).user.id),
+          listener: (context, state) {
+            if (state is Authenticated) {
+              context.read<ProfileBloc>().add(LoadProfile());
+            }
+          },
+          child: MultiBlocProvider(
+            // Key ensures new Blocs are created when user changes
+            key: ValueKey(userId),
+            providers: [
+              BlocProvider(
+                create: (_) => sl<WalletBloc>()..add(WalletsLoadRequested()),
+              ),
+              BlocProvider(
+                create: (_) => sl<TransactionBloc>()
+                  ..add(TransactionsLoadRequested(
+                      filter: TransactionFilter(pageSize: 100))),
+              ),
+              BlocProvider(
+                create: (_) =>
+                    sl<BudgetBloc>()..add(const BudgetsLoadRequested()),
+              ),
+            ],
+            child: Builder(
+              builder: (context) {
+                final isDark = Theme.of(context).brightness == Brightness.dark;
+                return Scaffold(
+                  backgroundColor: isDark
+                      ? const Color(0xFF121212)
+                      : const Color(0xFFF8F9FE),
+                  body: IndexedStack(
+                    index: _currentIndex,
+                    children: [
+                      _DashboardTab(userId: userId),
+                      const TransactionsScreen(),
+                      const SizedBox(), // Placeholder for FAB
+                      const _StatisticsTab(),
+                      const _ProfileTab(),
+                    ],
+                  ),
+                  bottomNavigationBar: CustomBottomNav(
+                    currentIndex: _currentIndex,
+                    onTap: (index) {
+                      if (index != 2) {
+                        setState(() => _currentIndex = index);
+                      }
+                    },
+                    onFabPressed: () {
+                      AddTransactionOptionsSheet.show(context);
+                    },
+                  ),
+                );
+              },
             ),
-            BlocProvider(
-              create: (_) => sl<TransactionBloc>()
-                ..add(TransactionsLoadRequested(
-                    filter: TransactionFilter(pageSize: 100))),
-            ),
-            BlocProvider(
-              create: (_) =>
-                  sl<BudgetBloc>()..add(const BudgetsLoadRequested()),
-            ),
-          ],
-          child: Builder(
-            builder: (context) {
-              final isDark = Theme.of(context).brightness == Brightness.dark;
-              return Scaffold(
-                backgroundColor:
-                    isDark ? const Color(0xFF121212) : const Color(0xFFF8F9FE),
-                body: IndexedStack(
-                  index: _currentIndex,
-                  children: [
-                    _DashboardTab(userId: userId),
-                    const TransactionsScreen(),
-                    const SizedBox(), // Placeholder for FAB
-                    const _StatisticsTab(),
-                    const _ProfileTab(),
-                  ],
-                ),
-                bottomNavigationBar: CustomBottomNav(
-                  currentIndex: _currentIndex,
-                  onTap: (index) {
-                    if (index != 2) {
-                      setState(() => _currentIndex = index);
-                    }
-                  },
-                  onFabPressed: () {
-                    AddTransactionOptionsSheet.show(context);
-                  },
-                ),
-              );
-            },
           ),
         );
       },
@@ -120,9 +138,12 @@ class _DashboardTab extends StatelessWidget {
             // Header with wave background - get real data from WalletBloc
             BlocBuilder<AuthBloc, AuthState>(
               builder: (context, authState) {
-                String name = 'User';
+                String name = 'Người dùng';
+                name = 'Người dùng';
+                String? avatarUrl;
                 if (authState is Authenticated) {
                   name = authState.user.fullName;
+                  avatarUrl = authState.user.avatarUrl;
                 }
 
                 return BlocBuilder<WalletBloc, WalletState>(
@@ -135,14 +156,24 @@ class _DashboardTab extends StatelessWidget {
                       );
                     }
 
-                    return HomeHeader(
-                      userName: name,
-                      totalBalance: totalBalance,
-                      currency: 'VND',
-                      avatarUrl: null,
-                    );
-                  },
+                return HomeHeader(
+                  userName: name,
+                  totalBalance: totalBalance,
+                  currency: 'VND',
+                  avatarUrl: avatarUrl,
                 );
+              },
+            );
+          },
+        ),
+            BlocBuilder<AuthBloc, AuthState>(
+              builder: (context, authState) {
+                final isPremium =
+                    authState is Authenticated && authState.user.isPremium;
+                if (isPremium) {
+                  return const SizedBox.shrink();
+                }
+                return const Center(child: AdBannerWidget());
               },
             ),
 
@@ -210,7 +241,7 @@ class _DashboardTab extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'Monthly Summary',
+                                'Tổng quan tháng',
                                 style: TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
@@ -274,7 +305,7 @@ class _DashboardTab extends StatelessWidget {
                               (tx.transactionDate.isAfter(startOfMonth) ||
                                   tx.transactionDate
                                       .isAtSameMomentAs(startOfMonth))) {
-                            final categoryName = tx.categoryName ?? 'Other';
+                            final categoryName = tx.categoryName ?? 'Khác';
                             final amount = tx.amount.abs();
                             totalExpense += amount;
 
@@ -349,7 +380,7 @@ class _DashboardTab extends StatelessWidget {
             Icon(Icons.receipt_long, size: 48, color: Colors.grey),
             SizedBox(height: 12),
             Text(
-              'No expenses this month',
+              'Chưa có chi tiêu trong tháng này',
               style: TextStyle(color: Colors.grey, fontSize: 14),
             ),
           ],
@@ -360,18 +391,18 @@ class _DashboardTab extends StatelessWidget {
 
   String _getMonthName(int month) {
     const months = [
-      'January',
-      'February',
-      'March',
-      'April',
-      'May',
-      'June',
-      'July',
-      'August',
-      'September',
-      'October',
-      'November',
-      'December'
+      'Tháng 1',
+      'Tháng 2',
+      'Tháng 3',
+      'Tháng 4',
+      'Tháng 5',
+      'Tháng 6',
+      'Tháng 7',
+      'Tháng 8',
+      'Tháng 9',
+      'Tháng 10',
+      'Tháng 11',
+      'Tháng 12'
     ];
     return months[month - 1];
   }
@@ -423,7 +454,7 @@ class _ProfileTab extends StatelessWidget {
         backgroundColor: const Color(0xFF6C5CE7),
         elevation: 0,
         title: const Text(
-          'Profile',
+          'Hồ sơ',
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
         ),
         centerTitle: true,
@@ -434,76 +465,101 @@ class _ProfileTab extends StatelessWidget {
           // Profile Card
           BlocBuilder<AuthBloc, AuthState>(
             builder: (context, state) {
-              String name = 'User';
+              String name = 'Người dùng';
+              name = 'Người dùng';
               String email = '';
+              String? avatarUrl;
               if (state is Authenticated) {
                 name = state.user.fullName;
                 email = state.user.email;
+                avatarUrl = state.user.avatarUrl;
               }
-              return Container(
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
+              return Material(
+                color: Colors.transparent,
+                child: InkWell(
                   borderRadius: BorderRadius.circular(16),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.05),
-                      blurRadius: 10,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
-                ),
-                child: Row(
-                  children: [
-                    Container(
-                      width: 60,
-                      height: 60,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        gradient: LinearGradient(
-                          colors: [
-                            Colors.purple.shade300,
-                            Colors.purple.shade600,
-                          ],
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const ProfileEditScreen(),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.05),
+                          blurRadius: 10,
+                          offset: const Offset(0, 4),
                         ),
-                      ),
-                      child: Center(
-                        child: Text(
-                          name.isNotEmpty ? name[0].toUpperCase() : 'U',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
+                      ],
+                    ),
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 60,
+                          height: 60,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            gradient: LinearGradient(
+                              colors: [
+                                Colors.purple.shade300,
+                                Colors.purple.shade600,
+                              ],
+                            ),
+                            image: (avatarUrl != null && avatarUrl!.trim().isNotEmpty)
+                                ? DecorationImage(
+                                    image: NetworkImage(avatarUrl!),
+                                    fit: BoxFit.cover,
+                                  )
+                                : null,
+                          ),
+                          child: (avatarUrl == null || avatarUrl!.trim().isEmpty)
+                              ? Center(
+                                  child: Text(
+                                    name.isNotEmpty ? name[0].toUpperCase() : 'N',
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                )
+                              : null,
+                        ),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                name,
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xFF2D3436),
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                email,
+                                style: const TextStyle(
+                                  color: Color(0xFF636E72),
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                      ),
+                        Icon(Icons.chevron_right, color: Colors.grey[400]),
+                      ],
                     ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            name,
-                            style: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xFF2D3436),
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            email,
-                            style: const TextStyle(
-                              color: Color(0xFF636E72),
-                              fontSize: 14,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Icon(Icons.chevron_right, color: Colors.grey[400]),
-                  ],
+                  ),
                 ),
               );
             },
@@ -515,7 +571,7 @@ class _ProfileTab extends StatelessWidget {
           _buildSettingsItem(
             context: context,
             icon: Icons.account_balance_wallet,
-            title: 'Wallet Management',
+            title: 'Quản lý ví',
             onTap: () {
               Navigator.push(
                 context,
@@ -533,7 +589,7 @@ class _ProfileTab extends StatelessWidget {
           _buildSettingsItem(
             context: context,
             icon: Icons.category,
-            title: 'Categories',
+            title: 'Danh mục',
             onTap: () {
               Navigator.push(
                 context,
@@ -549,7 +605,7 @@ class _ProfileTab extends StatelessWidget {
           _buildSettingsItem(
             context: context,
             icon: Icons.savings,
-            title: 'Budget',
+            title: 'Ngân sách',
             onTap: () async {
               await Navigator.push(
                 context,
@@ -566,8 +622,8 @@ class _ProfileTab extends StatelessWidget {
           _buildSettingsItem(
             context: context,
             icon: Icons.groups_rounded,
-            title: 'Group Fund',
-            subtitle: 'Manage shared expenses',
+            title: 'Quỹ nhóm',
+            subtitle: 'Quản lý chi tiêu chung',
             onTap: () {
               Navigator.push(
                 context,
@@ -583,7 +639,7 @@ class _ProfileTab extends StatelessWidget {
           _buildSettingsItem(
             context: context,
             icon: Icons.notifications,
-            title: 'Notifications',
+            title: 'Thông báo',
             onTap: () {},
           ),
           ListenableBuilder(
@@ -592,7 +648,7 @@ class _ProfileTab extends StatelessWidget {
               return _buildSettingsItem(
                 context: context,
                 icon: Icons.palette_rounded,
-                title: 'Theme',
+                title: 'Giao diện',
                 subtitle: sl<ThemeService>().themeModeString,
                 onTap: () {
                   Navigator.push(
@@ -608,8 +664,8 @@ class _ProfileTab extends StatelessWidget {
           _buildSettingsItem(
             context: context,
             icon: Icons.language,
-            title: 'Language',
-            subtitle: 'English',
+            title: 'Ngôn ngữ',
+            subtitle: 'Tiếng Việt',
             onTap: () {},
           ),
 
@@ -621,12 +677,12 @@ class _ProfileTab extends StatelessWidget {
               showDialog(
                 context: context,
                 builder: (context) => AlertDialog(
-                  title: const Text('Logout'),
-                  content: const Text('Are you sure you want to logout?'),
+                  title: const Text('Đăng xuất'),
+                  content: const Text('Bạn có chắc muốn đăng xuất?'),
                   actions: [
                     TextButton(
                       onPressed: () => Navigator.pop(context),
-                      child: const Text('Cancel'),
+                      child: const Text('Hủy'),
                     ),
                     TextButton(
                       onPressed: () {
@@ -634,7 +690,7 @@ class _ProfileTab extends StatelessWidget {
                         Navigator.pop(context);
                       },
                       child: const Text(
-                        'Logout',
+                        'Đăng xuất',
                         style: TextStyle(color: Colors.red),
                       ),
                     ),
@@ -654,7 +710,7 @@ class _ProfileTab extends StatelessWidget {
                   Icon(Icons.logout, color: Color(0xFFE17055)),
                   SizedBox(width: 8),
                   Text(
-                    'Logout',
+                    'Đăng xuất',
                     style: TextStyle(
                       color: Color(0xFFE17055),
                       fontWeight: FontWeight.w600,

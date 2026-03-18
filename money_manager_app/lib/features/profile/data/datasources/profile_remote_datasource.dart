@@ -69,7 +69,7 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
     } on DioException catch (e) {
       return ProfileResult(
         success: false,
-        message: e.response?.data['message'] ?? 'Failed to load profile',
+        message: e.response?.data['message'] ?? 'Không thể tải hồ sơ',
       );
     }
   }
@@ -91,7 +91,7 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
     } on DioException catch (e) {
       return ProfileResult(
         success: false,
-        message: e.response?.data['message'] ?? 'Failed to update profile',
+        message: e.response?.data['message'] ?? 'Không thể cập nhật hồ sơ',
       );
     }
   }
@@ -111,7 +111,7 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
     } on DioException catch (e) {
       return ProfileOperationResult(
         success: false,
-        message: e.response?.data['message'] ?? 'Failed to change password',
+        message: e.response?.data['message'] ?? 'Không thể đổi mật khẩu',
       );
     }
   }
@@ -126,7 +126,7 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
     } on DioException catch (e) {
       return ProfileResult(
         success: false,
-        message: e.response?.data['message'] ?? 'Failed to update avatar',
+        message: e.response?.data['message'] ?? 'Không thể cập nhật ảnh đại diện',
       );
     }
   }
@@ -139,7 +139,7 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
     } on DioException catch (e) {
       return ProfileOperationResult(
         success: false,
-        message: e.response?.data['message'] ?? 'Failed to delete avatar',
+        message: e.response?.data['message'] ?? 'Không thể xóa ảnh đại diện',
       );
     }
   }
